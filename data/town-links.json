@@ -1,0 +1,2810 @@
+{
+  "Abington": {
+    "url": "http://www.abingtonma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Acton": {
+    "url": "http://www.acton-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Acushnet": {
+    "url": "http://www.acushnet.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Adams": {
+    "url": "https://www.town.adams.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Agawam": {
+    "url": "http://www.agawam.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Alford": {
+    "url": "http://townofalford.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Amesbury": {
+    "url": "http://www.amesburyma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Amherst": {
+    "url": "http://www.amherstma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Andover": {
+    "url": "http://andoverma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Aquinnah": {
+    "url": "http://www.aquinnah-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Arlington": {
+    "url": "https://www.arlingtonma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Ashburnham": {
+    "url": "http://www.ashburnham-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Ashby": {
+    "url": "http://www.ci.ashby.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Ashfield": {
+    "url": "http://www.ashfield.org",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Ashland": {
+    "url": "http://www.AshlandMass.Com",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Athol": {
+    "url": "http://www.athol-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Attleboro": {
+    "url": "http://www.cityofattleboro.us",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Auburn": {
+    "url": "https://www.auburnma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Avon": {
+    "url": "https://www.avon-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Ayer": {
+    "url": "http://www.ayer.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Barnstable": {
+    "url": "http://town.barnstable.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Barre": {
+    "url": "https://www.townofbarre.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Becket": {
+    "url": "http://www.townofbecket.org",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Bedford": {
+    "url": "https://www.bedfordma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Belchertown": {
+    "url": "http://www.belchertown.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Bellingham": {
+    "url": "https://www.bellinghamma.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Belmont": {
+    "url": "https://www.belmont-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Berkley": {
+    "url": "http://www.townofberkleyma.com",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Berlin": {
+    "url": "http://www.townofberlin.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Bernardston": {
+    "url": "http://www.townofbernardston.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Beverly": {
+    "url": "http://www.beverlyma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Billerica": {
+    "url": "http://www.town.billerica.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Blackstone": {
+    "url": "https://www.townofblackstone.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Blandford": {
+    "url": "https://townofblandford.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Bolton": {
+    "url": "http://www.townofbolton.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Boston": {
+    "url": "https://www.boston.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Bourne": {
+    "url": "http://www.TownofBourne.com",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Boxborough": {
+    "url": "http://www.boxborough-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Boxford": {
+    "url": "http://www.town.boxford.ma.us",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Boylston": {
+    "url": "https://www.boylston-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Braintree": {
+    "url": "https://www.braintreema.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Brewster": {
+    "url": "http://www.brewster-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Bridgewater": {
+    "url": "http://www.bridgewaterma.org",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Brimfield": {
+    "url": "http://www.brimfieldma.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Brockton": {
+    "url": "http://www.brockton.ma.us",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Brookfield": {
+    "url": "http://www.brookfieldma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Brookline": {
+    "url": "http://www.brooklinema.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Buckland": {
+    "url": "http://town.buckland.ma.us",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Burlington": {
+    "url": "http://www.burlington.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Cambridge": {
+    "url": "http://www.cambridgema.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Canton": {
+    "url": "http://www.town.canton.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Carlisle": {
+    "url": "http://www.carlislema.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Carver": {
+    "url": "https://www.carverma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Charlemont": {
+    "url": "http://www.charlemont-ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Charlton": {
+    "url": "http://www.townofcharlton.net/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Chatham": {
+    "url": "http://www.chatham-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Chelmsford": {
+    "url": "http://www.townofchelmsford.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Chelsea": {
+    "url": "https://www.chelseama.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Cheshire": {
+    "url": "http://www.cheshire-ma.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Chester": {
+    "url": "http://townofchester.net/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Chesterfield": {
+    "url": "http://www.townofchesterfieldma.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Chicopee": {
+    "url": "http://www.chicopeema.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Chilmark": {
+    "url": "http://www.chilmarkma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Clarksburg": {
+    "url": "http://www.clarksburgma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Clinton": {
+    "url": "http://www.clintonma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Cohasset": {
+    "url": "https://cohassetma.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Colrain": {
+    "url": "http://colrain-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Concord": {
+    "url": "http://concordma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Conway": {
+    "url": "https://conwayma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Cummington": {
+    "url": "http://www.cummington-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Dalton": {
+    "url": "http://www.Dalton-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Danvers": {
+    "url": "https://www.danversma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Dartmouth": {
+    "url": "http://www.town.dartmouth.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Dedham": {
+    "url": "http://www.dedham-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Deerfield": {
+    "url": "http://www.deerfieldma.us",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Dennis": {
+    "url": "http://www.town.dennis.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Dighton": {
+    "url": "https://www.dighton-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Douglas": {
+    "url": "https://douglas-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Dover": {
+    "url": "https://www.doverma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Dracut": {
+    "url": "http://www.dracutma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Dudley": {
+    "url": "http://www.dudleyma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Dunstable": {
+    "url": "http://www.dunstable-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Duxbury": {
+    "url": "http://www.town.duxbury.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "East Bridgewater": {
+    "url": "https://www.eastbridgewaterma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "East Brookfield": {
+    "url": "http://www.eastbrookfieldma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "East Longmeadow": {
+    "url": "http://www.eastlongmeadowma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Eastham": {
+    "url": "http://www.eastham-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Easthampton": {
+    "url": "https://easthamptonma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Easton": {
+    "url": "http://www.easton.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Edgartown": {
+    "url": "http://www.edgartown-ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Egremont": {
+    "url": "http://www.egremont-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Erving": {
+    "url": "http://www.erving-ma.org",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Essex": {
+    "url": "http://www.essexma.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Everett": {
+    "url": "http://www.cityofeverett.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Fairhaven": {
+    "url": "http://www.fairhaven-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Fall River": {
+    "url": "http://www.fallriverma.org",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Falmouth": {
+    "url": "https://www.falmouthma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Fitchburg": {
+    "url": "http://www.ci.fitchburg.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Florida": {
+    "url": "https://www.townofflorida.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Foxborough": {
+    "url": "http://foxboroughma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Framingham": {
+    "url": "http://www.framinghamma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Franklin": {
+    "url": "https://www.franklinma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Freetown": {
+    "url": "http://www.freetownma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Gardner": {
+    "url": "http://www.gardner-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Georgetown": {
+    "url": "http://www.georgetownma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Gill": {
+    "url": "http://www.gillmass.org",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Gloucester": {
+    "url": "http://www.gloucester-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Goshen": {
+    "url": "http://www.goshen-ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Gosnold": {
+    "url": "https://www.townofgosnold.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Grafton": {
+    "url": "http://www.grafton-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Granby": {
+    "url": "http://www.granby-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Granville": {
+    "url": "https://www.townofgranville.net/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Great Barrington": {
+    "url": "http://www.townofgb.org",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Greenfield": {
+    "url": "http://greenfield-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Groton": {
+    "url": "https://www.grotonma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Groveland": {
+    "url": "http://www.grovelandma.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Hadley": {
+    "url": "http://www.hadleyma.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Halifax": {
+    "url": "http://www.halifax-ma.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Hamilton": {
+    "url": "http://www.hamiltonma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Hampden": {
+    "url": "https://www.hampdenma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Hancock": {
+    "url": "https://town.hancock.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Hanover": {
+    "url": "http://www.hanover-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Hanson": {
+    "url": "http://www.hanson-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Hardwick": {
+    "url": "https://www.hardwick-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Harvard": {
+    "url": "https://www.harvard-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Harwich": {
+    "url": "http://www.harwich-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Hatfield": {
+    "url": "http://www.townofhatfield.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Haverhill": {
+    "url": "https://www.cityofhaverhill.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Hawley": {
+    "url": "http://www.townofhawley.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Heath": {
+    "url": "http://www.townofheath.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Hingham": {
+    "url": "http://www.hingham-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Hinsdale": {
+    "url": "https://www.hinsdalemass.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Holbrook": {
+    "url": "http://holbrookma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Holden": {
+    "url": "https://www.holdenma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Holland": {
+    "url": "https://town.holland.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Holliston": {
+    "url": "http://www.townofholliston.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Holyoke": {
+    "url": "http://www.holyoke.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Hopedale": {
+    "url": "http://www.hopedale-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Hopkinton": {
+    "url": "http://www.hopkintonma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Hubbardston": {
+    "url": "http://www.hubbardstonma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Hudson": {
+    "url": "http://www.townofhudson.org",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Hull": {
+    "url": "http://www.town.hull.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Huntington": {
+    "url": "http://huntingtonma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Ipswich": {
+    "url": "http://www.ipswichma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Kingston": {
+    "url": "https://kingstonma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Lakeville": {
+    "url": "http://www.lakevillema.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Lancaster": {
+    "url": "http://www.ci.lancaster.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Lanesborough": {
+    "url": "http://www.lanesborough-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Lawrence": {
+    "url": "http://www.cityoflawrence.com",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Lee": {
+    "url": "http://www.lee.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Leicester": {
+    "url": "http://www.leicesterma.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Lenox": {
+    "url": "http://www.townoflenox.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Leominster": {
+    "url": "http://www.leominster-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Leverett": {
+    "url": "http://www.leverett.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Lexington": {
+    "url": "http://www.lexingtonma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Leyden": {
+    "url": "http://www.townofleyden.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Lincoln": {
+    "url": "http://www.lincolntown.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Littleton": {
+    "url": "http://www.littletonma.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Longmeadow": {
+    "url": "https://www.longmeadowma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Lowell": {
+    "url": "https://www.lowellma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Ludlow": {
+    "url": "https://www.ludlow.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Lunenburg": {
+    "url": "http://www.lunenburgma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Lynn": {
+    "url": "https://www.lynnma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Lynnfield": {
+    "url": "http://www.town.lynnfield.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Malden": {
+    "url": "http://www.cityofmalden.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Manchester-by-the-Sea": {
+    "url": "http://www.manchester.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Mansfield": {
+    "url": "http://www.mansfieldma.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Marblehead": {
+    "url": "http://www.marblehead.org",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Marion": {
+    "url": "http://www.marionma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Marlborough": {
+    "url": "http://www.marlborough-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Marshfield": {
+    "url": "https://www.marshfield-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Mashpee": {
+    "url": "http://www.mashpeema.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Mattapoisett": {
+    "url": "http://www.mattapoisett.net/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Maynard": {
+    "url": "http://www.townofmaynard-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Medfield": {
+    "url": "http://www.town.medfield.net/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Medford": {
+    "url": "https://www.medfordma.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Medway": {
+    "url": "http://www.townofmedway.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Melrose": {
+    "url": "http://www.cityofmelrose.org",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Mendon": {
+    "url": "http://www.mendonma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Merrimac": {
+    "url": "https://townofmerrimac.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Methuen": {
+    "url": "https://www.cityofmethuen.net/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Middleborough": {
+    "url": "https://www.middleboroughma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Middlefield": {
+    "url": "https://www.middlefield-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Middleton": {
+    "url": "https://www.middletonma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Milford": {
+    "url": "https://www.milfordma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Millbury": {
+    "url": "https://www.millburyma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Millis": {
+    "url": "https://www.millisma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Millville": {
+    "url": "http://www.millvillema.org",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Milton": {
+    "url": "http://www.townofmilton.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Monroe": {
+    "url": "https://www.franklincc.org/index.php/relocate-here/town-profiles/42-monroe",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Monson": {
+    "url": "http://www.monson-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Montague": {
+    "url": "https://montague-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Monterey": {
+    "url": "http://www.montereyma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Montgomery": {
+    "url": "https://montgomeryma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Mount Washington": {
+    "url": "https://mountwashington-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Nahant": {
+    "url": "http://www.nahant.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Nantucket": {
+    "url": "http://www.nantucket-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Natick": {
+    "url": "https://www.natickma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Needham": {
+    "url": "http://www.needhamma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "New Ashford": {
+    "url": "https://www.newashford-ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "New Bedford": {
+    "url": "http://www.newbedford-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "New Braintree": {
+    "url": "https://www.newbraintreema.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "New Marlborough": {
+    "url": "https://www.newmarlboroughma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "New Salem": {
+    "url": "https://newsalemma.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Newbury": {
+    "url": "http://www.townofnewbury.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Newburyport": {
+    "url": "http://www.cityofnewburyport.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Newton": {
+    "url": "http://www.newtonma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Norfolk": {
+    "url": "https://norfolk.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "North Adams": {
+    "url": "http://www.northadams-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "North Andover": {
+    "url": "https://www.northandoverma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "North Attleboro": {
+    "url": "https://www.nattleboro.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "North Brookfield": {
+    "url": "http://www.northbrookfield.net/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "North Reading": {
+    "url": "http://www.northreadingma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Northampton": {
+    "url": "http://www.northamptonma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Northborough": {
+    "url": "http://www.town.northborough.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Northbridge": {
+    "url": "http://www.northbridgemass.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Northfield": {
+    "url": "https://www.northfieldma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Norton": {
+    "url": "http://www.nortonma.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Norwell": {
+    "url": "http://www.townofnorwell.net",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Norwood": {
+    "url": "http://www.norwoodma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Oak Bluffs": {
+    "url": "http://www.oakbluffsma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Oakham": {
+    "url": "http://www.oakham-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Orange": {
+    "url": "http://townoforange.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Orleans": {
+    "url": "http://www.town.orleans.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Otis": {
+    "url": "https://townofotisma.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Oxford": {
+    "url": "https://www.oxfordma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Palmer": {
+    "url": "http://www.townofpalmer.com",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Paxton": {
+    "url": "http://www.townofpaxton.net/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Peabody": {
+    "url": "http://www.peabody-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Pelham": {
+    "url": "http://www.townofpelham.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Pembroke": {
+    "url": "http://www.pembroke-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Pepperell": {
+    "url": "http://www.town.pepperell.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Peru": {
+    "url": "https://www.townofperuma.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Petersham": {
+    "url": "http://www.townofpetersham.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Phillipston": {
+    "url": "http://www.phillipston-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Pittsfield": {
+    "url": "https://www.cityofpittsfield.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Plainfield": {
+    "url": "https://plainfield-ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Plainville": {
+    "url": "https://www.plainville.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Plymouth": {
+    "url": "http://www.plymouth-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Plympton": {
+    "url": "https://www.town.plympton.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Princeton": {
+    "url": "http://town.princeton.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Provincetown": {
+    "url": "http://www.provincetown-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Quincy": {
+    "url": "http://www.quincyma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Randolph": {
+    "url": "http://www.randolph-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Raynham": {
+    "url": "http://www.town.raynham.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Reading": {
+    "url": "http://www.readingma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Rehoboth": {
+    "url": "https://www.rehobothma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Revere": {
+    "url": "https://www.revere.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Richmond": {
+    "url": "http://www.richmondma.org",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Rochester": {
+    "url": "http://townofrochestermass.com",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Rockland": {
+    "url": "http://rockland-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Rockport": {
+    "url": "http://www.rockportma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Rowe": {
+    "url": "http://www.rowe-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Rowley": {
+    "url": "http://www.townofrowley.net",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Royalston": {
+    "url": "http://www.royalston-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Russell": {
+    "url": "http://www.townofrussell.us",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Rutland": {
+    "url": "https://www.rutlandma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Salem": {
+    "url": "https://www.salemma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Salisbury": {
+    "url": "http://www.salisburyma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Sandisfield": {
+    "url": "http://www.sandisfieldma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Sandwich": {
+    "url": "http://www.sandwichmass.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Saugus": {
+    "url": "http://www.saugus-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Savoy": {
+    "url": "https://townofsavoy.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Scituate": {
+    "url": "http://www.scituatema.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Seekonk": {
+    "url": "http://www.seekonk-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Sharon": {
+    "url": "http://www.townofsharon.net/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Sheffield": {
+    "url": "http://www.sheffieldma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Shelburne": {
+    "url": "http://www.townofshelburne.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Sherborn": {
+    "url": "http://www.sherbornma.org",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Shirley": {
+    "url": "http://www.shirley-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Shrewsbury": {
+    "url": "https://shrewsburyma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Shutesbury": {
+    "url": "http://www.shutesbury.org",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Somerset": {
+    "url": "http://www.townofsomerset.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Somerville": {
+    "url": "http://www.somervillema.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "South Hadley": {
+    "url": "http://www.southhadley.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Southampton": {
+    "url": "https://townofsouthampton.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Southborough": {
+    "url": "https://www.southboroughma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Southbridge": {
+    "url": "http://www.ci.southbridge.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Southwick": {
+    "url": "http://www.southwickma.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Spencer": {
+    "url": "http://www.spencerma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Springfield": {
+    "url": "https://www.springfield-ma.gov/cos/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Sterling": {
+    "url": "http://www.sterling-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Stockbridge": {
+    "url": "https://www.stockbridge-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Stoneham": {
+    "url": "http://www.stoneham-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Stoughton": {
+    "url": "https://www.stoughton.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Stow": {
+    "url": "http://www.stow-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Sturbridge": {
+    "url": "https://www.sturbridge.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Sudbury": {
+    "url": "https://sudbury.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Sunderland": {
+    "url": "http://www.townofsunderland.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Sutton": {
+    "url": "http://www.suttonma.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Swampscott": {
+    "url": "https://www.swampscottma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Swansea": {
+    "url": "https://www.swanseama.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Taunton": {
+    "url": "http://www.taunton-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Templeton": {
+    "url": "https://www.templetonma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Tewksbury": {
+    "url": "https://www.tewksbury-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Tisbury": {
+    "url": "http://www.tisburyma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Tolland": {
+    "url": "http://www.tolland-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Topsfield": {
+    "url": "http://www.topsfield-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Townsend": {
+    "url": "https://www.townsendma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Truro": {
+    "url": "http://www.truro-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Tyngsborough": {
+    "url": "http://www.tyngsboroughma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Tyringham": {
+    "url": "http://www.tyringham-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Upton": {
+    "url": "http://www.uptonma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Uxbridge": {
+    "url": "http://www.uxbridge-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Wakefield": {
+    "url": "http://www.wakefield.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Wales": {
+    "url": "http://www.townofwales.net/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Walpole": {
+    "url": "http://www.walpole-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Waltham": {
+    "url": "http://www.city.waltham.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Ware": {
+    "url": "http://www.townofware.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Wareham": {
+    "url": "http://www.wareham.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Warren": {
+    "url": "http://www.warren-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Warwick": {
+    "url": "http://www.warwickma.org",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Washington": {
+    "url": "http://www.washington-ma.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Watertown": {
+    "url": "http://www.watertown-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Wayland": {
+    "url": "http://www.wayland.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Webster": {
+    "url": "http://www.webster-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Wellesley": {
+    "url": "http://www.wellesleyma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Wellfleet": {
+    "url": "https://www.wellfleet-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Wendell": {
+    "url": "http://www.wendellmass.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Wenham": {
+    "url": "http://www.wenhamma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "West Boylston": {
+    "url": "http://www.westboylston-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "West Bridgewater": {
+    "url": "http://www.westbridgewaterma.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "West Brookfield": {
+    "url": "http://www.wbrookfield.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "West Newbury": {
+    "url": "https://www.wnewbury.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "West Springfield": {
+    "url": "http://www.townofwestspringfield.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "West Stockbridge": {
+    "url": "http://www.weststockbridge-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "West Tisbury": {
+    "url": "http://www.westtisbury-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Westborough": {
+    "url": "http://www.town.westborough.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Westfield": {
+    "url": "http://www.cityofwestfield.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Westford": {
+    "url": "https://westfordma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Westhampton": {
+    "url": "http://www.westhampton-ma.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Westminster": {
+    "url": "http://www.westminster-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Weston": {
+    "url": "http://www.weston.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Westport": {
+    "url": "http://www.westport-ma.com",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Westwood": {
+    "url": "http://www.townhall.westwood.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Weymouth": {
+    "url": "http://www.weymouth.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Whately": {
+    "url": "http://www.whately.org",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Whitman": {
+    "url": "http://www.whitman-ma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Wilbraham": {
+    "url": "http://www.wilbraham-ma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Williamsburg": {
+    "url": "https://www.burgy.org/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Williamstown": {
+    "url": "https://williamstownma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Wilmington": {
+    "url": "https://www.wilmingtonma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Winchendon": {
+    "url": "http://www.townofwinchendon.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Winchester": {
+    "url": "http://www.winchester.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Windsor": {
+    "url": "http://www.windsormass.com/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Winthrop": {
+    "url": "http://www.town.winthrop.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Woburn": {
+    "url": "https://www.woburnma.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Worcester": {
+    "url": "http://www.worcesterma.gov",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Worthington": {
+    "url": "http://www.worthington-ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Wrentham": {
+    "url": "https://www.wrentham.gov/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  },
+  "Yarmouth": {
+    "url": "http://www.yarmouth.ma.us/",
+    "townClerk": {
+      "name": "",
+      "phone": ""
+    },
+    "electedPositions": []
+  }
+}
