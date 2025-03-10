@@ -79,7 +79,7 @@ resource "aws_lambda_function" "public_api" {
   
   function_name = var.lambda_function_name
   role          = aws_iam_role.iam_for_public_api.arn
-  handler       = "index.handler"
+  handler       = "public_api.handler"
 
   source_code_hash = aws_s3_object.file_upload.etag
 
