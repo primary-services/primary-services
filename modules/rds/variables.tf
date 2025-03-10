@@ -9,3 +9,8 @@ variable "db_password" {
   type        = string
   sensitive   = true
 }
+
+variable "vpc_subnet_group" {
+  description = "Subnet group name for VPC"
+  type        = string
+}

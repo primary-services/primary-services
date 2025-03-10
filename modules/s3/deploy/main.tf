@@ -1,6 +1,5 @@
 resource "aws_s3_bucket" "deploy_bucket" {
-  bucket = "massachusetts-election-services-deployments"
-  tags = var.tags
+  bucket = "ma-election-services-deployments"
 }
 
 resource "aws_s3_bucket_ownership_controls" "deploy_bucket" {

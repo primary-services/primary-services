@@ -27,6 +27,6 @@ data "aws_iam_policy_document" "lambda_logging" {
 
 data "archive_file" "public_api_source" {
   type        = "zip"
-  source_dir  = "./modules/api/src"
+  source_dir  = "../../modules/lambdas/api/src"
   output_path = "./build/lambdas/public_api.zip"
 }

@@ -1,11 +1,3 @@
-module "aws_s3_bucket" {
-  source = "../s3_deploy"
-  tags = {
-    Terraform   = "true"
-    Environment = "dev"
-  }
-}
-
 # API Gateway
 resource "aws_api_gateway_rest_api" "public_api" {
   name        = "Public API"
@@ -70,7 +62,7 @@ resource "aws_api_gateway_stage" "public_api" {
 
 # Lambdas
 resource "aws_s3_object" "file_upload" {
-  bucket = module.aws_s3_bucket.name
+  bucket = var.s3_deploy_bucket
   key    = "api_source.zip"
   source = "${data.archive_file.public_api_source.output_path}"
   etag = filemd5("${data.archive_file.public_api_source.output_path}")
@@ -82,23 +74,30 @@ resource "aws_iam_role" "iam_for_public_api" {
 }
 
 resource "aws_lambda_function" "public_api" {
-  s3_bucket         = module.aws_s3_bucket.name
+  s3_bucket         = var.s3_deploy_bucket
   s3_key            = aws_s3_object.file_upload.key
   
   function_name = var.lambda_function_name
   role          = aws_iam_role.iam_for_public_api.arn
-  handler       = "public_api.handler"
+  handler       = "index.handler"
 
   source_code_hash = aws_s3_object.file_upload.etag
 
   runtime = "nodejs20.x"
   publish = true
 
+  vpc_config {
+    subnet_ids         = var.vpc_subnet_ids
+    security_group_ids = var.vpc_security_group_ids
+  }
+
   logging_config {
     log_format = "Text"
   }
 
   depends_on = [
+    aws_iam_role_policy_attachment.lambda_vpc_access_execution,
+    
     aws_iam_role_policy_attachment.public_api_logging,
     aws_cloudwatch_log_group.public_api,
   ]
@@ -132,4 +131,9 @@ resource "aws_iam_policy" "public_api_logging" {
 resource "aws_iam_role_policy_attachment" "public_api_logging" {
   role       = aws_iam_role.iam_for_public_api.name
   policy_arn = aws_iam_policy.public_api_logging.arn
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_vpc_access_execution" {
+  role       = aws_iam_role.iam_for_public_api.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
