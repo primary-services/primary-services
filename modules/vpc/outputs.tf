@@ -8,9 +8,14 @@ output "vpc_private_subnets" {
   value       = module.vpc.private_subnets
 }
 
-output "database_subnet_group" {
+output "database_subnet_group_id" {
   description = "IDs of the VPC's database subnets"
   value       = module.vpc.database_subnet_group
+}
+
+output "database_subnet_group" {
+  description = "Name of the VPC's database subnets"
+  value       = module.vpc.database_subnet_group_name 
 }
 
 output "default_security_group_id" {
