@@ -95,10 +95,19 @@ resource "aws_lambda_function" "public_api" {
     log_format = "Text"
   }
 
+  environment {
+    variables = {
+      DBSecret = var.db_creds_secret_name
+    }
+  }
+
   depends_on = [
     aws_iam_role_policy_attachment.lambda_vpc_access_execution,
     
     aws_iam_role_policy_attachment.public_api_logging,
+    aws_iam_role_policy_attachment.public_api_secrets,
+    aws_iam_role_policy_attachment.public_api_rds,
+    aws_iam_role_policy_attachment.public_api_ec2,
     aws_cloudwatch_log_group.public_api,
   ]
 }
@@ -128,9 +137,47 @@ resource "aws_iam_policy" "public_api_logging" {
   policy      = data.aws_iam_policy_document.lambda_logging.json
 }
 
+resource "aws_iam_policy" "public_api_secrets" {
+  name        = "public_api_secrets"
+  path        = "/"
+  description = "IAM policy for logging from a lambda"
+  policy      = data.aws_iam_policy_document.lambda_secrets.json
+}
+
+resource "aws_iam_policy" "public_api_rds" {
+  name        = "public_api_rds"
+  path        = "/"
+  description = "IAM policy for logging from a lambda"
+  policy      = data.aws_iam_policy_document.rds.json
+}
+
+resource "aws_iam_policy" "public_api_ec2" {
+  name        = "public_api_ec2"
+  path        = "/"
+  description = "IAM policy for logging from a lambda"
+  policy      = data.aws_iam_policy_document.ec2.json
+}
+
+
+
 resource "aws_iam_role_policy_attachment" "public_api_logging" {
   role       = aws_iam_role.iam_for_public_api.name
   policy_arn = aws_iam_policy.public_api_logging.arn
+}
+
+resource "aws_iam_role_policy_attachment" "public_api_secrets" {
+  role       = aws_iam_role.iam_for_public_api.name
+  policy_arn = aws_iam_policy.public_api_secrets.arn
+}
+
+resource "aws_iam_role_policy_attachment" "public_api_rds" {
+  role       = aws_iam_role.iam_for_public_api.name
+  policy_arn = aws_iam_policy.public_api_rds.arn
+}
+
+resource "aws_iam_role_policy_attachment" "public_api_ec2" {
+  role       = aws_iam_role.iam_for_public_api.name
+  policy_arn = aws_iam_policy.public_api_ec2.arn
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_vpc_access_execution" {

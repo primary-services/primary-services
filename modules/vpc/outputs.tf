@@ -4,18 +4,24 @@ output "vpc_public_subnets" {
 }
 
 output "vpc_private_subnets" {
-  description = "IDs of the VPC's public subnets"
+  description = "IDs of the VPC's private subnets"
   value       = module.vpc.private_subnets
 }
 
-output "database_subnet_group_id" {
+output "database_subnet_group_ids" {
   description = "IDs of the VPC's database subnets"
-  value       = module.vpc.database_subnet_group
+  value       = module.vpc.database_subnets
 }
 
 output "database_subnet_group" {
   description = "Name of the VPC's database subnets"
   value       = module.vpc.database_subnet_group_name 
+}
+
+output "database_security_group_id" {
+  description = "ID for the database security group"
+  # value       = module.rds_sg.security_group_id
+  value       = module.vpc.default_security_group_id
 }
 
 output "default_security_group_id" {
