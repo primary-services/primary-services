@@ -1,0 +1,105 @@
+form {
+	.block {
+		margin-top: 20px;
+	}
+
+	.input-wrapper {
+		display: inline-block;
+		padding-right: 60px;
+
+		&.split {
+			margin-right: -60px;
+		}
+
+		label {
+			display: block;
+			font-weight: bold;
+		}
+
+		input,
+		textarea,
+		select {
+			display: block;
+			width: 100%;
+			padding: 8px 12px;
+			border-radius: 5px;
+			box-shadow: 2px 2px 8px -2px black;
+			margin-bottom: 10px;
+			box-sizing: border-box;
+		}
+
+		& > div {
+			display: inline-block;
+			padding-right: 60px;
+
+			&:last-child {
+				margin-right: -60px !important;
+			}
+		}
+
+		&.radio {
+			display: block;
+
+			input {
+				width: auto;
+				padding: 8px 8px;
+				display: inline-block;
+			}
+
+			label {
+				display: inline-block;
+				padding-left: 10px;
+			}
+		}
+	}
+
+	.actions {
+		margin-top: 30px;
+	}
+
+	.autocomplete-box {
+		position: relative;
+		margin-bottom: 10px;
+		box-sizing: border-box;
+		padding-right: 0px;
+		display: block;
+
+		> div {
+			position: relative;
+		}
+
+		input {
+			margin-bottom: 2px;
+			box-sizing: border-box;
+		}
+
+		.results {
+			margin: 0px;
+			position: absolute;
+			top: 100%;
+			width: 100%;
+			box-sizing: border-box;
+			text-align: left;
+			margin-left: 0px;
+
+			li {
+				border-bottom: solid 1px #ccc;
+				margin: 0px;
+				width: 100%;
+				padding: 6px 12px;
+				margin-bottom: 2px;
+				background-color: white;
+				border-radius: 5px;
+				border: solid 1px;
+				cursor: pointer;
+				box-sizing: border-box;
+			}
+		}
+	}
+
+	.override-width {
+		input {
+			width: calc(100% - 32px);
+		}
+	}
+}

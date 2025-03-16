@@ -1,0 +1,57 @@
+#towns {
+	display: flex;
+
+	.sidebar {
+		flex: 0.2;
+		margin-right: 15px;
+		height: 100vh;
+		overflow: auto;
+
+		ul {
+			li {
+				width: 100%;
+
+				a {
+					padding-left: 10px;
+				}
+
+				span {
+					border: solid 1px;
+					background-color: white;
+				}
+			}
+		}
+	}
+
+	.page-content {
+		flex: 0.8;
+
+		form {
+			.input-wrapper {
+				padding-right: 10px;
+
+				& > div {
+					padding-right: 10px;
+				}
+
+				&.split {
+					margin-right: -10px;
+				}
+			}
+
+			section {
+				padding-bottom: 20px;
+
+				&.basic-info {
+					h2 {
+						margin-bottom: 10px;
+					}
+
+					a {
+						margin-right: 15px;
+					}
+				}
+			}
+		}
+	}
+}
