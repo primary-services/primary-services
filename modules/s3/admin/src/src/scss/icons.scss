@@ -1,0 +1,27 @@
+.icon {
+	&.rounded {
+		border: solid 1px;
+		border-radius: 20px;
+		padding: 5px;
+	}
+
+	&.left-aligned {
+		margin-right: 5px;
+	}
+
+	&.right-aligned {
+		margin-left: 5px;
+	}
+
+	&.affirm {
+		color: green;
+	}
+
+	&.cancel {
+		color: red;
+	}
+
+	&.clickable {
+		cursor: pointer;
+	}
+}
