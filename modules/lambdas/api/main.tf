@@ -70,6 +70,13 @@ resource "aws_api_gateway_stage" "public_api" {
 
 
 # Lambdas
+resource "aws_lambda_layer_version" "layer" {
+  layer_name          = "python-layer"
+  filename            = data.archive_file.layer.output_path
+  source_code_hash    = data.archive_file.layer.output_base64sha256
+  compatible_runtimes = ["python3.13"]
+}
+
 resource "aws_s3_object" "file_upload" {
   bucket = var.s3_deploy_bucket
   key    = "api_python_source.zip"
@@ -88,6 +95,7 @@ resource "aws_lambda_function" "public_api" {
   
   function_name = var.lambda_function_name
   role          = aws_iam_role.iam_for_public_api.arn
+  layers        = [aws_lambda_layer_version.layer.arn]
   handler       = "public_api.handler"
 
   source_code_hash = aws_s3_object.file_upload.etag

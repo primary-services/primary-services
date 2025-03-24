@@ -66,6 +66,23 @@ data "aws_iam_policy_document" "ec2" {
   }
 }
 
+resource "null_resource" "pip_install" {
+  triggers = {
+    shell_hash = "${sha256(file("../../src/requirements.txt"))}"
+  }
+
+  provisioner "local-exec" {
+    command = "python3 -m pip install -r ../../src/requirements.txt -t ../../src/layer/python"
+  }
+}
+
+data "archive_file" "layer" {
+  type        = "zip"
+  source_dir  = "../../src/layer"
+  output_path = "./build/lambdas/layer.zip"
+  depends_on  = [null_resource.pip_install]
+}
+
 data "archive_file" "public_api_source" {
   type        = "zip"
   source_dir  = "../../src/api"
