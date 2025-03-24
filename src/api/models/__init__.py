@@ -1,5 +1,2 @@
-from municipality import Municipality
-
-__all__ = [
-    'Municipality'
-]
+from models.municipality import *
+from models.base import *
