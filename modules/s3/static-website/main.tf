@@ -31,11 +31,12 @@ resource "aws_s3_object" "provision_source_files" {
 
   key          = each.value
   source       = "${var.source_files}/${each.value}"
+  etag         = filemd5("${var.source_files}/${each.value}")
   content_type = each.value
 }
 
 data "aws_s3_bucket" "selected_bucket" {
-  bucket = var.s3_bucket_id
+  bucket = aws_s3_bucket.s3-static-website.id
 }
 
 resource "aws_cloudfront_origin_access_control" "cf-s3-oac" {
@@ -59,7 +60,7 @@ resource "aws_cloudfront_distribution" "cf-dist" {
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = var.s3_bucket_id
+    target_origin_id = aws_s3_bucket.s3-static-website.id
     forwarded_values {
       query_string = false
 
@@ -75,18 +76,51 @@ resource "aws_cloudfront_distribution" "cf-dist" {
 
   price_class = "PriceClass_100"
 
-  # restrictions {
-  #   geo_restriction {
-  #     restriction_type = "whitelist"
-  #     locations        = ["IN", "US", "CA"]
-  #   }
-  # }
+  restrictions {
+    geo_restriction {
+      restriction_type = "whitelist"
+      locations        = ["IN", "US", "CA"]
+    }
+  }
 
   viewer_certificate {
     cloudfront_default_certificate = true
   }
 
+  custom_error_response {
+    error_code         = 403
+    response_code      = 200
+    response_page_path = "/index.html"
+  }
+ 
+  custom_error_response {
+    error_code         = 404
+    response_code      = 200
+    response_page_path = "/index.html"
+  }
+
   # tags = merge(var.common_tags, {
   #   Name = "${var.naming_prefix}-cloudfront"
   # })
+}
+
+data "aws_iam_policy_document" "s3_bucket_policy" {
+  statement {
+    actions   = ["s3:GetObject"]
+    resources = ["${aws_s3_bucket.s3-static-website.arn}/*"]
+    principals {
+      type        = "Service"
+      identifiers = ["cloudfront.amazonaws.com"]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "AWS:SourceArn"
+      values   = [aws_cloudfront_distribution.cf-dist.arn]
+    }
+  }
+}
+
+resource "aws_s3_bucket_policy" "static_site_bucket_policy" {
+  bucket = aws_s3_bucket.s3-static-website.id
+  policy = data.aws_iam_policy_document.s3_bucket_policy.json
 }
