@@ -72,7 +72,7 @@ resource "aws_api_gateway_stage" "public_api" {
 # Lambdas
 resource "aws_s3_object" "file_upload" {
   bucket = var.s3_deploy_bucket
-  key    = "api_source.zip"
+  key    = "api_python_source.zip"
   source = "${data.archive_file.public_api_source.output_path}"
   etag = filemd5("${data.archive_file.public_api_source.output_path}")
 }
@@ -90,9 +90,9 @@ resource "aws_lambda_function" "public_api" {
   role          = aws_iam_role.iam_for_public_api.arn
   handler       = "public_api.handler"
 
-  source_code_hash = aws_s3_object.file_upload.etag
+  source_code_hash = filebase64sha256(data.archive_file.public_api_source.output_path)
 
-  runtime = "nodejs20.x"
+  runtime = "python3.13"
   publish = true
 
   vpc_config {
