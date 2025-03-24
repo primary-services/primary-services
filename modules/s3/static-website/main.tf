@@ -23,6 +23,16 @@ resource "aws_s3_bucket_website_configuration" "static_site_bucket_website_confi
   }
 }
 
+locals {
+  content_types = {
+    css  = "text/css"
+    html = "text/html"
+    js   = "application/javascript"
+    json = "application/json"
+    txt  = "text/plain"
+  }
+}
+
 resource "aws_s3_object" "provision_source_files" {
   bucket = aws_s3_bucket.s3-static-website.id
 
@@ -32,7 +42,8 @@ resource "aws_s3_object" "provision_source_files" {
   key          = each.value
   source       = "${var.source_files}/${each.value}"
   etag         = filemd5("${var.source_files}/${each.value}")
-  content_type = each.value
+  content_type = lookup(local.content_types, element(split(".", each.value), length(split(".", each.value)) - 1), "text/plain")
+  content_encoding = "utf-8"
 }
 
 data "aws_s3_bucket" "selected_bucket" {
