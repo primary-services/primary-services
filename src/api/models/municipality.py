@@ -1,6 +1,6 @@
 from enum import Enum
 from sqlalchemy.orm import Mapped, mapped_column
-from models.base import db
+from models.base import BaseModel
 
 class MunicipalityType(Enum):
     STATE = "state"
@@ -8,7 +8,7 @@ class MunicipalityType(Enum):
     TOWN = "town"
     DISTRICT = "district"
 
-class Municipality(db.Model):
+class Municipality(BaseModel):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
     type: Mapped[MunicipalityType]

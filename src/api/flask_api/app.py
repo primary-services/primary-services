@@ -14,10 +14,9 @@ with app.app_context():
     
 @app.get("/towns")
 def get_towns():
-   query = db.select(Municipality).where(Municipality.type == MunicipalityType.TOWN)
-   towns = db.session.execute(query).scalars()
-   return jsonify(towns, status=200)
+   towns = Municipality.where(type=MunicipalityType.TOWN).all()
+   return [town.to_dict() for town in towns], 200
 
 @app.route('/')
 def index():
-    return jsonify(status=200, message='Hello Flask!')
+    return 'Hello world!', 200
