@@ -1,4 +1,4 @@
-from flask import app
+from flask_api import app
 import awsgi
 
 def handler(event, context):

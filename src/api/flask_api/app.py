@@ -1,14 +1,8 @@
 from models import Municipality, MunicipalityType
 
 from flask import Flask, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase
+from models import db
 from creds import CredentialsManager
-
-class Base(DeclarativeBase):
-  pass
-
-db = SQLAlchemy(model_class=Base)
 
 # create the app
 app = Flask(__name__)
