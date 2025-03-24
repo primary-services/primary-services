@@ -1,7 +1,5 @@
-from models import Municipality, MunicipalityType
-
+from models import db, Municipality, MunicipalityType
 from flask import Flask, jsonify
-from models import db
 from creds import CredentialsManager
 
 # create the app
