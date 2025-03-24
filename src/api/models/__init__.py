@@ -1,5 +1,1 @@
-from municipality import Municipality
-
-__all__ = [
-    'Municipality'
-]
+from .municipality import *

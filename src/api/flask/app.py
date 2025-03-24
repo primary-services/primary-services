@@ -1,5 +1,4 @@
-from models import Municipality
-from models.municipality import MunicipalityType
+from models import Municipality, MunicipalityType
 
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
