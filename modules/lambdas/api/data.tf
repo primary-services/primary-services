@@ -68,6 +68,6 @@ data "aws_iam_policy_document" "ec2" {
 
 data "archive_file" "public_api_source" {
   type        = "zip"
-  source_dir  = "../../modules/lambdas/api/src"
+  source_dir  = "../../src"
   output_path = "./build/lambdas/public_api.zip"
 }

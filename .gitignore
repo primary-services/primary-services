@@ -2,3 +2,4 @@ scraped-data
 .terraform
 build
 *.tfvars
+.DS_Store
