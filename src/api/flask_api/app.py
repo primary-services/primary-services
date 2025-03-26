@@ -14,8 +14,8 @@ with app.app_context():
     
 @app.get("/towns")
 def get_towns():
-   towns = Municipality.where(type=MunicipalityType.TOWN).all()
-   return [town.to_dict() for town in towns], 200
+    towns = Municipality.where(type=MunicipalityType.TOWN).all()
+    return jsonify([town.to_dict() for town in towns]), 200
 
 @app.route('/')
 def index():

@@ -68,11 +68,11 @@ data "aws_iam_policy_document" "ec2" {
 
 resource "null_resource" "pip_install" {
   triggers = {
-    shell_hash = "${sha256(file("../../src/requirements.txt"))}"
+    shell_hash = "${sha256(file("../../src/api/requirements.txt"))}"
   }
 
   provisioner "local-exec" {
-    command = "python3 -m pip install -r ../../src/requirements.txt -t ../../src/layer/python"
+    command = "python3 -m pip install -r ../../src/api/requirements.txt -t ../../src/layer/python/lib/python3.13/site-packages"
   }
 }
 

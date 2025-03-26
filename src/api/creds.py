@@ -8,8 +8,11 @@ class CredentialsManager:
     def __init__(self):
         self.rdsSecretName = os.environ.get("DBSecret")
 
-        session = boto3.Session(profile_name='elections')
-        self.client = session.client("secretsmanager", region_name="us-east-2")
+        if __name__ == '__main__':
+            session = boto3.Session(profile_name='elections')
+            self.client = session.client("secretsmanager", region_name="us-east-2")
+        else:
+            self.client = boto3.client('secretsmanager')
 
     def get_creds(self):
         data = self.client.get_secret_value(

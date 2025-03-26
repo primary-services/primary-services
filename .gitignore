@@ -623,3 +623,7 @@ src/election_venv/lib/python3.7/site-packages/setuptools/command/upload.py
 src/election_venv/lib/python3.7/site-packages/setuptools/command/upload_docs.py
 src/election_venv/lib/python3.7/site-packages/setuptools/extern/__init__.py
 src/api/election_venv
+src/api/psycopg2_binary.libs
+src/api/psycopg2
+src/api/psycopg2_binary-2.9.10.dist-info
+src/layer/python/lib/python3.13/site-packages

@@ -98,7 +98,7 @@ resource "aws_lambda_function" "public_api" {
   layers        = [aws_lambda_layer_version.layer.arn]
   handler       = "public_api.handler"
 
-  source_code_hash = aws_s3_object.file_upload.etag
+  source_code_hash = data.archive_file.public_api_source.output_md5
 
   runtime = "python3.13"
   publish = true

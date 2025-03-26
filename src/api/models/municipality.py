@@ -2,7 +2,7 @@ from enum import Enum
 from sqlalchemy.orm import Mapped, mapped_column
 from models.base import BaseModel
 
-class MunicipalityType(Enum):
+class MunicipalityType(str, Enum):
     STATE = "state"
     COUNTY = "county"
     TOWN = "town"
