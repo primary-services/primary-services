@@ -1,9 +1,12 @@
 from models import db, Municipality, MunicipalityType
 from flask import Flask, jsonify
+from flask_cors import CORS
 from creds import CredentialsManager
 
 # create the app
 app = Flask(__name__)
+CORS(app)
+
 # configure the SQLite database, relative to the app instance folder
 app.config["SQLALCHEMY_DATABASE_URI"] = CredentialsManager().get_db_url()
 # initialize the app with the extension
