@@ -19,6 +19,8 @@ export const Towns = () => {
     getTowns();
   }, []);
 
+  const saveOffice = () => {};
+
   return (
     <section id="towns" className="page">
       <div className="sidebar">
@@ -71,10 +73,16 @@ export const Towns = () => {
         <section className="uk-width-1-1">
           <div className="section-header">
             <h2>Offices</h2>
-            <span className="icon  rounded right-aligned" uk-icon="plus"></span>
+            <span
+              className="icon right-aligned"
+              data-uk-icon="plus-circle"
+              onClick={() => {
+                setEditing({});
+              }}
+            ></span>
           </div>
 
-          <ul className="grid-list offices uk-width-1-1">
+          {/*<ul className="grid-list offices uk-width-1-1">
             <li className="grid-list-header">
               <div></div>
               <div>Elected Office</div>
@@ -278,10 +286,10 @@ export const Towns = () => {
               <div>Nov 2025</div>
               <div>6</div>
             </li>
-          </ul>
+          </ul>*/}
         </section>
 
-        <section className="uk-flex">
+        {/*<section className="uk-flex">
           <section className="uk-width-1-2">
             <div className="section-header">
               <h2>Eligability Requirements</h2>
@@ -377,9 +385,9 @@ export const Towns = () => {
               </li>
             </ul>
           </section>
-        </section>
+        </section>*/}
 
-        <section className="uk-flex">
+        {/*<section className="uk-flex">
           <section className="uk-width-1-2">
             <div className="section-header">
               <h2>Deadlines</h2>
@@ -471,88 +479,20 @@ export const Towns = () => {
               </li>
             </ul>
           </section>
-        </section>
+        </section>*/}
       </div>
       <Slideout active={editing} setActive={setEditing}>
         <form>
-          <OfficeForm office={selected.office || {}} />
+          <OfficeForm
+            office={selected.office || {}}
+            onSave={() => {
+              saveOffice();
+            }}
+            onCancel={() => {
+              setEditing(false);
+            }}
+          />
         </form>
-        {/*<form>
-          <h3>Create Deadline</h3>
-          <div className="input-wrapper uk-width-1-1 split">
-            <div className="uk-width-3-5">
-              <label>Label</label>
-              <input type="text" value="" onInput={(e) => {}} />
-            </div>
-            <div className="uk-width-2-5">
-              <label>Deadline</label>
-              <input type="datetime-local" onInput={(e) => {}} />
-            </div>
-          </div>
-
-          <div className="input-wrapper uk-width-1-1">
-            <label>Description</label>
-            <textarea value="" rows="5" onInput={(e) => {}}></textarea>
-          </div>
-
-          <div className="input-wrapper uk-width-1-1">
-            <div className="btn blocky">Create Deadline</div>
-          </div>
-        </form>
-
-        <form>
-          <h3>Create Requirement</h3>
-          <div className="input-wrapper uk-width-1-1 split">
-            <div className="uk-width-3-5">
-              <label>Label</label>
-              <input type="text" value="" onInput={(e) => {}} />
-            </div>
-            <div className="uk-width-2-5">
-              <label>Form</label>
-              <select className="uk-select">
-                <option>-</option>
-                <option>Ballot Signatures</option>
-                <option>Thing to give to the town clerk</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="input-wrapper uk-width-1-1">
-            <label>Description</label>
-            <textarea value="" rows="5" onInput={(e) => {}}></textarea>
-          </div>
-
-          <div className="input-wrapper uk-width-1-1">
-            <div className="btn blocky">Create Requirement</div>
-          </div>
-        </form>
-
-        <form>
-          <h3>Create Reporting Requirement</h3>
-          <div className="input-wrapper uk-width-1-1 split">
-            <div className="uk-width-3-5">
-              <label>Label</label>
-              <input type="text" value="" onInput={(e) => {}} />
-            </div>
-            <div className="uk-width-2-5">
-              <label>Form</label>
-              <select className="uk-select">
-                <option>-</option>
-                <option>Form 25J</option>
-                <option>Form 62F</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="input-wrapper uk-width-1-1">
-            <label>Description</label>
-            <textarea value="" rows="5" onInput={(e) => {}}></textarea>
-          </div>
-
-          <div className="input-wrapper uk-width-1-1">
-            <div className="btn blocky">Create Reporting Requirement</div>
-          </div>
-        </form>*/}
       </Slideout>
     </section>
   );

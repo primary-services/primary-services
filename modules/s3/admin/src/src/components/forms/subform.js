@@ -44,8 +44,8 @@ export const SubForm = ({
 				<h3>{label}</h3>
 				{!child && (
 					<span
-						className="icon affirm clickable"
-						data-uk-icon="plus-circle"
+						className="icon action clickable"
+						data-uk-icon="plus"
 						onClick={addChild}
 					></span>
 				)}
@@ -60,7 +60,7 @@ export const SubForm = ({
 					<span
 						key="cancel"
 						className="icon cancel clickable"
-						data-uk-icon="close-circle"
+						data-uk-icon="close"
 						onClick={cancelChild}
 					></span>,
 				]}

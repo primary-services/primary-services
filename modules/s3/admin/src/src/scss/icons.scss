@@ -14,11 +14,27 @@
 	}
 
 	&.affirm {
-		color: green;
+		background-color: green;
+		color: white;
+		border: solid 2px darkgreen;
+		box-shadow: 0px 0px 8px -1px darkgreen;
+		border-radius: 5px;
+	}
+
+	&.action {
+		background-color: blue;
+		color: white;
+		border: solid 2px darkblue;
+		box-shadow: 0px 0px 8px -1px darkblue;
+		border-radius: 5px;
 	}
 
 	&.cancel {
-		color: red;
+		background-color: red;
+		color: white;
+		border: solid 2px darkred;
+		box-shadow: 0px 0px 8px -1px darkred;
+		border-radius: 5px;
 	}
 
 	&.clickable {

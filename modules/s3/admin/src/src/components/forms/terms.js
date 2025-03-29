@@ -119,9 +119,25 @@ export const TermForm = ({ child: term, setChild: setTerm }) => {
 				</div>
 
 				<SubForm
+					form={RequirementForm}
+					list={RequirementList}
+					label="Requirements"
+					items={term.election.requirements}
+					template={{
+						id: null,
+						label: "",
+						description: "",
+						form: null,
+						deadline: null,
+					}}
+					onSave={saveRequirements}
+					onValidate={validateRequirement}
+				/>
+
+				<SubForm
 					form={DeadlineForm}
 					list={DeadlineList}
-					label="Deadlines"
+					label="Additional Deadlines"
 					items={term.election.deadlines}
 					template={{
 						id: null,
@@ -136,7 +152,7 @@ export const TermForm = ({ child: term, setChild: setTerm }) => {
 				<SubForm
 					form={FormForm}
 					list={FormList}
-					label="Forms"
+					label="Addition Forms"
 					items={term.election.forms}
 					template={{
 						id: null,
@@ -146,22 +162,6 @@ export const TermForm = ({ child: term, setChild: setTerm }) => {
 					}}
 					onSave={saveForms}
 					onValidate={validateForm}
-				/>
-
-				<SubForm
-					form={RequirementForm}
-					list={RequirementList}
-					label="Requirements"
-					items={term.election.requirements}
-					template={{
-						id: null,
-						label: "",
-						description: "",
-						form: null,
-						deadline: null,
-					}}
-					onSave={saveRequirements}
-					onValidate={validateRequirement}
 				/>
 			</div>
 		</section>

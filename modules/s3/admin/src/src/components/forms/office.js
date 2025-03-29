@@ -4,7 +4,7 @@ import { TermForm } from "./terms.js";
 import { TermList } from "../lists/terms.js";
 import { SubForm } from "./subform.js";
 
-export const OfficeForm = ({ selected }) => {
+export const OfficeForm = ({ selected, onSave, onCancel }) => {
 	let [office, setOffice] = useState({
 		id: null,
 		title: "",
@@ -33,7 +33,13 @@ export const OfficeForm = ({ selected }) => {
 
 	const validateTerm = () => {};
 
-	const saveOffice = () => {};
+	const save = () => {
+		console.log(office);
+	};
+
+	const cancel = () => {
+		onCancel();
+	};
 
 	return (
 		<section id="office-form">
@@ -74,9 +80,9 @@ export const OfficeForm = ({ selected }) => {
 						<label>Min Hours</label>
 						<input
 							type="number"
-							value={office.salary}
+							value={office.commitment_min}
 							onInput={(e) => {
-								update("tenure", e.target.value);
+								update("commitment_min", e.target.value);
 							}}
 						/>
 					</div>
@@ -84,9 +90,9 @@ export const OfficeForm = ({ selected }) => {
 						<label>Max Hours</label>
 						<input
 							type="number"
-							value={office.salary}
+							value={office.commitment_max}
 							onInput={(e) => {
-								update("tenure", e.target.value);
+								update("commitment_max", e.target.value);
 							}}
 						/>
 					</div>
@@ -121,8 +127,12 @@ export const OfficeForm = ({ selected }) => {
 			</section>
 
 			<section className="actions">
-				<div className="btn blocky">Save</div>
-				<div className="btn blocky">Cancel</div>
+				<div className="btn blocky" onClick={save}>
+					Save
+				</div>
+				<div className="btn blocky" onClick={cancel}>
+					Cancel
+				</div>
 			</section>
 		</section>
 	);
