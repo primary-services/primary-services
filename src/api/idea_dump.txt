@@ -94,3 +94,12 @@ TODO
 		}
 	]
 }
+
+Possible solution for inhereted requirements
+
+- Municipalities should belong to other municipalities 
+- Office objects should look up the their chain of municipalities for inhereted responsibilities
+
+- Requirements created (or edited) at the municple level can be optionally marked as 'required' for 
+	all municipalities at or below them in the municipality chain. 
+- Any requirement required from a municipality higher up the chain, should show up automatically and can not be removed
