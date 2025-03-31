@@ -627,3 +627,4 @@ src/api/psycopg2_binary.libs
 src/api/psycopg2
 src/api/psycopg2_binary-2.9.10.dist-info
 src/layer/python/lib/python3.13/site-packages
+src/api/python

@@ -1,3 +1,17 @@
+import datetime
+
+from enum import Enum
+from typing import Optional, List
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.schema import ForeignKey
+from models.base import BaseModel
+
+class MunicipalityType(str, Enum):
+    STATE = "state"
+    COUNTY = "county"
+    TOWN = "town"
+    DISTRICT = "district"
+
 # municipalities
 # 	- id
 # 	- name
@@ -5,8 +19,11 @@
 
 class Municipality(BaseModel):
     id: Mapped[int] = mapped_column(primary_key=True)
-    parent_id: Mapped[Optional[int]] = mapped_column(ForeignKey(municipality.id))
-    parent: Mapped[Municipality] = relationship(remote_side([id]))
+    parent_id: Mapped[Optional[int]] = mapped_column(ForeignKey('municipality.id'))
+    parent: Mapped["Municipality"] = relationship(remote_side=[id])
+    requirements: Mapped[List["Requirement"]] = relationship()
+    forms: Mapped[List["Form"]] = relationship()
+    deadlines: Mapped[List["Deadline"]] = relationship()
     name: Mapped[str]
     type: Mapped[MunicipalityType]
     
@@ -39,7 +56,7 @@ class Office(BaseModel):
 	municipality: Mapped[Municipality] = relationship()
 	title: Mapped[str]
 	description: Mapped[str]
-	elected: Mapped[bool] = mapped_column(server_default=TRUE)
+	elected: Mapped[bool] = mapped_column(server_default='TRUE')
 	tenure: Mapped[int]
 	salary: Mapped[int]
 	min_hours: Mapped[int]
@@ -61,7 +78,7 @@ class Official(BaseModel):
 	office_id: Mapped[Optional[int]] = mapped_column(ForeignKey('office.id'))
 	office: Mapped[Office] = relationship()
 	term_id: Mapped[int] = mapped_column(ForeignKey('term.id'))
-	term: Mapped[Term] = relationship()
+	term: Mapped["Term"] = relationship()
 	name: Mapped[str]
 	phone: Mapped[str]
 	email: Mapped[str]
@@ -77,8 +94,8 @@ class Candidate(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
 	municipality_id: Mapped[int] = mapped_column(ForeignKey('municipality.id'))
 	municipality: Mapped[Municipality] = relationship()
-	election_id: Mapped[int] = mapped_column(ForeignKey(election.id))
-	election: Mapped[Election] = relationship()
+	election_id: Mapped[int] = mapped_column(ForeignKey('election.id'))
+	election: Mapped["Election"] = relationship()
 
 
 # terms
@@ -89,8 +106,8 @@ class Candidate(BaseModel):
 
 class Term(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
-	election_id: Mapped[int] mapped_column(ForeignKey('election.id'))
-	election: Mapped[Election] = relationship()
+	election_id: Mapped[int] = mapped_column(ForeignKey('election.id'))
+	election: Mapped["Election"] = relationship()
 	start: Mapped[datetime.date]
 	end: Mapped[datetime.date]
 	incumbents: Mapped[List[Official]] = relationship()
@@ -120,7 +137,6 @@ class Election(BaseModel):
 	type: Mapped[ElectionType]
 	election_date: Mapped[datetime.date]
 	
-
 	
 # requirements
 # 	- id 
@@ -130,11 +146,37 @@ class Election(BaseModel):
 # 	- description
 # 	- deadline
 
+class Requirement(BaseModel):
+	id: Mapped[int] = mapped_column(primary_key=True)
+	municipality_id: Mapped[int] = mapped_column(ForeignKey('municipality.id'))
+	municipality: Mapped[Municipality] = relationship()
+	form_id: Mapped[int] = mapped_column(ForeignKey('form.id'))
+	form: Mapped["Form"] = relationship()
+	scopes: Mapped[List["RequirementScope"]] = relationship()
+	deadline_id: Mapped[int] = mapped_column(ForeignKey('deadline.id'))
+	deadline: Mapped["Deadline"] = relationship()
+	title: Mapped[str]
+	description: Mapped[str]
+
+class RequirementScope(BaseModel):
+	id: Mapped[int] = mapped_column(primary_key=True)
+	requirement_id: Mapped[int] = mapped_column(ForeignKey('requirement.id'))
+	mandatory: Mapped[bool]
+	scope: Mapped[MunicipalityType]
+
 # forms 
 # 	- id
 # 	- title
 # 	- description
 # 	- url
+
+class Form(BaseModel):
+	id: Mapped[int] = mapped_column(primary_key=True)
+	municipality_id: Mapped[int] = mapped_column(ForeignKey('municipality.id'))
+	municipality: Mapped[Municipality] = relationship()
+	title: Mapped[str]
+	description: Mapped[str]
+	url: Mapped[str]
 
 # deadlines
 # 	- id 
@@ -142,4 +184,12 @@ class Election(BaseModel):
 # 	- title
 # 	- description
 # 	- deadline
+
+class Deadline(BaseModel):
+	id: Mapped[int] = mapped_column(primary_key=True)
+	municipality_id: Mapped[int] = mapped_column(ForeignKey('municipality.id'))
+	municipality: Mapped[Municipality] = relationship()
+	title: Mapped[str]
+	description: Mapped[str]
+	deadline: Mapped[datetime.date]
 
