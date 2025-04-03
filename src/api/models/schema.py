@@ -1,7 +1,9 @@
 import datetime
 
+# from enum import Enum
 from enum import Enum
-from typing import Optional, List
+from typing import Optional, List, get_args
+from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.schema import ForeignKey
 from models.base import BaseModel
@@ -25,7 +27,10 @@ class Municipality(BaseModel):
     forms: Mapped[List["Form"]] = relationship()
     deadlines: Mapped[List["Deadline"]] = relationship()
     name: Mapped[str]
-    type: Mapped[MunicipalityType]
+    type: Mapped[MunicipalityType] = mapped_column(ENUM(
+    	MunicipalityType, 
+    	name='municipalitytype', 
+    ))
     
 
 # office_templates
@@ -36,7 +41,7 @@ class Municipality(BaseModel):
 class OfficeTemplate(BaseModel):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str]
-    desription: Mapped[MunicipalityType]
+    description: Mapped[str]
     
 
 # offices
@@ -92,6 +97,7 @@ class Official(BaseModel):
 
 class Candidate(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
+	name: Mapped[str]
 	municipality_id: Mapped[int] = mapped_column(ForeignKey('municipality.id'))
 	municipality: Mapped[Municipality] = relationship()
 	election_id: Mapped[int] = mapped_column(ForeignKey('election.id'))
@@ -134,7 +140,10 @@ class Election(BaseModel):
 	office: Mapped[Office] = relationship()
 	term_id: Mapped[int] = mapped_column(ForeignKey('term.id'))
 	term: Mapped[Term] = relationship()
-	type: Mapped[ElectionType]
+	type: Mapped[ElectionType] = mapped_column(ENUM(
+		ElectionType, 
+		name='electiontype'
+	))
 	election_date: Mapped[datetime.date]
 	
 	
@@ -162,7 +171,11 @@ class RequirementScope(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
 	requirement_id: Mapped[int] = mapped_column(ForeignKey('requirement.id'))
 	mandatory: Mapped[bool]
-	scope: Mapped[MunicipalityType]
+	scope: Mapped[MunicipalityType] = mapped_column(ENUM(
+    	MunicipalityType, 
+    	name='municipalitytype', 
+    	create_type=False
+    ))
 
 # forms 
 # 	- id
