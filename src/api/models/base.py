@@ -7,7 +7,7 @@ class SQLAlchemyBase(DeclarativeBase):
   pass
 
 db = SQLAlchemy(model_class=SQLAlchemyBase)
-
+    
 class BaseModel(db.Model, AllFeaturesMixin):
     __abstract__ = True
     pass

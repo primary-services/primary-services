@@ -4,6 +4,42 @@ import { AppContexts } from "../providers";
 import { OfficeForm } from "../components/forms/office.js";
 import { Slideout } from "../components/slideout.js";
 
+const Clerk = ({ official }) => {
+  if (!official) {
+    return null;
+  }
+
+  return (
+    <div>
+      <div>
+        <b>
+          {official?.office?.title || "Clerk"}: {official?.name || ""}
+        </b>
+      </div>
+      <div>
+        {!!official.email && (
+          <div>
+            <b>Email: </b>
+            <a href={`mailto:${official.email}`}>{official.email}</a>
+          </div>
+        )}
+        {!!official.contact_form && (
+          <div>
+            <b>Contact Form: </b>
+            <a href={official.contact_form}>{official.contact_form}</a>
+          </div>
+        )}
+        {!!official.phone && (
+          <div>
+            <b>Phone: </b>
+            <a href={`tel:${official.phone}`}>{official.phone}</a>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 export const Towns = () => {
   const { towns, getTowns, getTown /*createTown*/ } = useContext(
     AppContexts.TownsContext,
@@ -18,6 +54,26 @@ export const Towns = () => {
   useEffect(() => {
     getTowns();
   }, []);
+
+  const getClerk = (t) => {
+    if (!t) {
+      return null;
+    }
+
+    return t.officials.find((o) => {
+      return o.office.title === "Clerk";
+    });
+  };
+
+  const getAssistantClerk = (t) => {
+    if (!t) {
+      return null;
+    }
+
+    return t.officials.find((o) => {
+      return o.office.title === "Assistant Clerk";
+    });
+  };
 
   // useEffect(() => {
   //   createTowns();
@@ -50,11 +106,9 @@ export const Towns = () => {
     <section id="towns" className="page">
       <div className="sidebar">
         <ul className="uk-list">
-          {Object.keys(towns).map((name) => {
-            let t = towns[name];
-
+          {(towns || []).map((t) => {
             return (
-              <li key={name}>
+              <li key={t.name}>
                 <span
                   uk-icon="icon: check"
                   uk-tooltip={
@@ -65,10 +119,10 @@ export const Towns = () => {
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
-                    setTown({ ...towns[name], name: name });
+                    setTown(t);
                   }}
                 >
-                  {name}
+                  {t.name}
                 </a>
               </li>
             );
@@ -81,17 +135,19 @@ export const Towns = () => {
         {/*!!town && <TownForm town={town} />*/}
 
         <h2>
-          <a href={town?.url || "#"} target="_blank">
+          <a href={town?.website || "#"} target="_blank">
             {town?.name || "Town Name"}
           </a>
         </h2>
 
-        <div>
-          <div>
-            <b>Town Clerk: "Unknown"</b>
+        <div className="uk-width-1-1 uk-flex">
+          <div className="uk-width-1-2">
+            {!!getClerk(town) && <Clerk official={getClerk(town)} />}
           </div>
-          <div>
-            <a href="#">email@clerk.com</a> <a href="#">Clerk Phone</a>
+          <div className="uk-width-1-2">
+            {!!getAssistantClerk(town) && (
+              <Clerk official={getAssistantClerk(town)} />
+            )}
           </div>
         </div>
 

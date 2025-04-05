@@ -3,6 +3,10 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from creds import CredentialsManager
 
+from sqlalchemy import select
+from sqlalchemy.sql import text
+
+
 # create the app
 app = Flask(__name__)
 CORS(app)
@@ -17,8 +21,35 @@ with app.app_context():
     
 @app.get("/towns")
 def get_towns():
-    towns = Municipality.where(type=MunicipalityType.TOWN).all()
-    return jsonify([town.to_dict() for town in towns]), 200
+    # Sorry, I can't figure out SQLAlchemy. It makes zero sense
+    towns = db.session.execute(
+        text("""
+            SELECT 
+               m.*, o.list AS officials 
+            FROM 
+                municipality AS m
+            LEFT JOIN LATERAL (
+                SELECT 
+                    JSONB_AGG(off.*) AS list
+                FROM (
+                    SELECT 
+                        official.*,
+                        TO_JSONB(office.*) AS office
+                    FROM 
+                        official
+                    LEFT JOIN
+                        office ON office.id = official.office_id
+                    WHERE 
+                        official.municipality_id = m.id
+                    
+               ) AS off
+            ) AS o ON TRUE
+            WHERE m.type = 'TOWN'
+        """)
+    ).mappings().all()   
+
+    return jsonify([dict(r) for r in towns]), 200
+    # return jsonify([town[0].to_dict() for town in towns]), 200
 
 @app.post("/town")
 def create_town():
@@ -51,8 +82,8 @@ def create_town():
     if (town["assistant_clerk"] != None and town["assistant_clerk"].get("name", None) != None):
         assistant_clerk_office = Office.create(
             municipality_id=created.id,
-            title="Clerk",
-            description="Current Town Clerk",
+            title="Assistant Clerk",
+            description="Current Assistant Town Clerk",
             elected=False,
         )
 

@@ -1,12 +1,12 @@
 // Import package components
 import { createContext, useState } from "react";
 
-import { TownList } from "../temp/towns.js";
+// import { TownList } from "../temp/towns.js";
 
 export const TownsContext = createContext();
 export const TownsProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
-  const [towns, setTowns] = useState({});
+  const [towns, setTowns] = useState([]);
 
   // This is all just test data
   const [deadlines, setDeadlines] = useState([
@@ -72,8 +72,13 @@ export const TownsProvider = ({ children }) => {
     forms,
 
     // Methods
-    getTowns: () => {
-      setTowns(TownList);
+    getTowns: async () => {
+      const resp = await fetch("http://127.0.0.1:5000/towns");
+      const list = await resp.json();
+
+      console.log(list);
+
+      setTowns(list);
     },
 
     getTown: (name) => {},

@@ -26,13 +26,13 @@ class Municipality(BaseModel):
     requirements: Mapped[List["Requirement"]] = relationship()
     forms: Mapped[List["Form"]] = relationship()
     deadlines: Mapped[List["Deadline"]] = relationship()
+    officials: Mapped[List["Official"]] = relationship(back_populates="municipality", lazy='selectin')
     name: Mapped[str]
     website: Mapped[str] = mapped_column(nullable=True)
     type: Mapped[MunicipalityType] = mapped_column(ENUM(
     	MunicipalityType, 
     	name='municipalitytype', 
     ))
-    
 
 # office_templates
 # 	- id
@@ -80,7 +80,7 @@ class Office(BaseModel):
 class Official(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
 	municipality_id: Mapped[int] = mapped_column(ForeignKey('municipality.id'), nullable=True)
-	municipality: Mapped[Municipality] = relationship()
+	municipality: Mapped[Municipality] = relationship(back_populates="officials")
 	office_id: Mapped[Optional[int]] = mapped_column(ForeignKey('office.id'), nullable=True)
 	office: Mapped[Office] = relationship()
 	term_id: Mapped[int] = mapped_column(ForeignKey('term.id'), nullable=True)
