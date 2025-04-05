@@ -1,0 +1,148 @@
+#towns {
+	display: flex;
+	padding-top: 0px;
+
+	.sidebar {
+		padding-top: 60px;
+		flex: 0.2;
+		height: 100vh;
+		overflow: auto;
+
+		ul {
+			li {
+				width: 100%;
+
+				a {
+					padding-left: 10px;
+				}
+
+				span {
+					border: solid 1px;
+					background-color: white;
+				}
+			}
+		}
+
+		border-right: solid 1px #ccc;
+		box-shadow: 0 0 0 0 #ccc;
+	}
+
+	.page-content {
+		padding-top: 60px;
+		padding-left: 60px;
+		flex: 0.8;
+		height: 100vh;
+		overflow: auto;
+
+		section {
+			&.uk-flex {
+				section:first-child {
+					padding-right: 10px;
+				}
+
+				section:last-child {
+					padding-left: 10px;
+				}
+			}
+
+			.section-header {
+				h2 {
+					display: inline-block;
+					vertical-align: middle;
+					margin-right: 10px;
+				}
+
+				.btn {
+					display: inline-block;
+					vertical-align: middle;
+				}
+			}
+		}
+
+		form {
+			.input-wrapper {
+				padding-right: 10px;
+
+				& > div {
+					padding-right: 10px;
+				}
+
+				&.split {
+					margin-right: -10px;
+				}
+			}
+
+			section {
+				padding-bottom: 20px;
+
+				&.basic-info {
+					h2 {
+						margin-bottom: 10px;
+					}
+
+					a {
+						margin-right: 15px;
+					}
+				}
+			}
+		}
+	}
+
+	// Grids
+	.grid-list {
+		padding-left: 0px;
+		margin-left: 0px;
+		list-style-type: none;
+
+		.grid-list-item,
+		.grid-list-header {
+			display: grid;
+			grid-template-rows: 35px;
+			border-bottom: solid 1px;
+			line-height: 35px;
+
+			&:last-child {
+				border-bottom: none;
+			}
+		}
+
+		.grid-list-header {
+			font-weight: bold;
+		}
+
+		&.offices {
+			.grid-list-item,
+			.grid-list-header {
+				grid-template-columns: 30px 1fr 1fr 1fr 1fr;
+			}
+		}
+
+		&.deadlines {
+			.grid-list-item,
+			.grid-list-header {
+				grid-template-columns: 30px auto 100px;
+			}
+		}
+
+		&.forms {
+			.grid-list-item,
+			.grid-list-header {
+				grid-template-columns: 30px auto 100px;
+			}
+		}
+
+		&.requirements {
+			.grid-list-item,
+			.grid-list-header {
+				grid-template-columns: 30px auto 100px 100px;
+			}
+		}
+
+		&.responsibilties {
+			.grid-list-item,
+			.grid-list-header {
+				grid-template-columns: 30px auto 100px 100px;
+			}
+		}
+	}
+}

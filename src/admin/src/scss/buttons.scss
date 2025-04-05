@@ -1,0 +1,38 @@
+.btn {
+	display: inline-block;
+	color: var(--democrat-blue);
+	text-decoration: none;
+
+	&:hover {
+		text-decoration: none;
+		color: var(--democrat-blue-light);
+	}
+
+	&.blocky {
+		background-color: var(--democrat-blue);
+		color: white;
+		padding: 6px 12px;
+		border-radius: 5px;
+		min-width: 100px;
+		box-shadow: 2px 2px 8px -2px black;
+
+		&:hover {
+			background-color: var(--democrat-blue-light);
+			color: white;
+		}
+
+		&.rev {
+			color: var(--democrat-blue);
+			background-color: white;
+
+			&:hover {
+				color: var(--democrat-blue-light);
+			}
+		}
+
+		span {
+			display: inline-block;
+			vertical-align: middle;
+		}
+	}
+}

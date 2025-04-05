@@ -78,3 +78,17 @@ Doesn't seem like the null_resource piece is actually working, so that has to be
 Then from the root
 `cd environments/dev`
 `terraform apply`
+
+### Migrations
+
+`cd src/api`
+
+Generate new migration
+`alembic revision --autogenerate -m "Message"`
+
+Run Migrations
+`alembic upgrade head`
+
+### Running locally
+
+`DBSecret=DevDBCredentials PYTHON_ENV=local flask --app flask_api.app run`

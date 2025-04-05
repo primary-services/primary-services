@@ -1,0 +1,120 @@
+@use "./buttons.scss";
+@use "./forms.scss";
+@use "./slideout.scss";
+@use "./lists.scss";
+@use "./icons.scss";
+@use "./grids.scss";
+
+@use "./pages/towns.scss";
+
+:root {
+	--democrat-blue: #0044c9;
+	--democrat-blue-light: #2a5fc6;
+	--light-blue: #c2cbdb;
+	--page-width: 1280px;
+}
+
+html {
+	min-height: 100vh;
+	width: 100%;
+}
+
+body {
+	font-family: "Montserrat", serif !important;
+	min-height: 100vh;
+	width: 100%;
+	background-color: red;
+}
+
+#root {
+	background-color: white;
+	width: 100%;
+	min-height: 100vh;
+}
+
+h2 {
+	margin-top: 15px;
+}
+
+header {
+	color: white;
+	background-color: var(--democrat-blue);
+	box-shadow: 0px 0px 13px 4px var(--democrat-blue);
+	padding: 0px 20px;
+
+	nav {
+		display: block;
+		margin: 0px auto;
+
+		.logo {
+			img {
+				display: inline-block;
+				height: 40px;
+			}
+
+			h2 {
+				display: inline-block;
+				color: white;
+				margin: 0;
+			}
+		}
+	}
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+}
+
+.page {
+	display: block;
+	margin: 0px auto;
+	padding: 60px;
+	width: var(--page-width);
+	@media (max-width: 767px) {
+		padding: 60px 30px 30px 30px;
+		width: 100%;
+	}
+}
+
+.aligned {
+	display: flex;
+
+	.aligned-left {
+		flex: 1;
+	}
+}
+
+.parenthetical {
+	color: #c94609 !important;
+	padding: 15px;
+	background-color: white;
+	border-radius: 10px;
+	box-shadow: 3px 4px 10px 1px #000;
+}
+
+.check-icon-fix {
+	svg {
+		transform: translateY(2px);
+	}
+}
+
+input[type="radio"] {
+	border-color: black !important;
+}
+
+.actions {
+	display: flex;
+	gap: 10px;
+}
+
+.uk-subnav {
+	background-color: white;
+	margin-left: 0px;
+
+	li {
+		&:first-child {
+			padding-left: 0px;
+		}
+	}
+}
