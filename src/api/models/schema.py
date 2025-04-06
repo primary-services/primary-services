@@ -2,11 +2,15 @@ import datetime
 
 # from enum import Enum
 from enum import Enum
+
 from typing import Optional, List, get_args
-from sqlalchemy.dialects.postgresql import ENUM
+from sqlalchemy import inspect, engine, literal_column, UniqueConstraint
+from sqlalchemy.dialects.postgresql import insert, ENUM
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.schema import ForeignKey
 from models.base import BaseModel
+
+
 
 class MunicipalityType(str, Enum):
     STATE = "state"
@@ -58,7 +62,7 @@ class OfficeTemplate(BaseModel):
 # 	- max_hours
 
 class Office(BaseModel):
-	id: Mapped[int] = mapped_column(primary_key=True)
+	id: Mapped[int] = mapped_column(primary_key=True, default=lambda c: "default")
 	municipality_id: Mapped[int] = mapped_column(ForeignKey('municipality.id'))
 	municipality: Mapped[Municipality] = relationship(back_populates="offices")
 	title: Mapped[str] = mapped_column(nullable=True)
@@ -68,8 +72,6 @@ class Office(BaseModel):
 	salary: Mapped[int] = mapped_column(nullable=True)
 	min_hours: Mapped[int] = mapped_column(nullable=True)
 	max_hours: Mapped[int] = mapped_column(nullable=True)
-
-
 
 # officials
 # 	- id
@@ -114,6 +116,8 @@ class Candidate(BaseModel):
 
 class Term(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
+	office_id: Mapped[int] = mapped_column(ForeignKey('office.id'))
+	office: Mapped[Office] = relationship()
 	election: Mapped["Election"] = relationship()
 	start: Mapped[datetime.date]
 	end: Mapped[datetime.date]
@@ -147,7 +151,8 @@ class Election(BaseModel):
 		ElectionType, 
 		name='electiontype'
 	))
-	election_date: Mapped[datetime.date]
+	polling_date: Mapped[datetime.date]
+	seat_count: Mapped[int]
 	
 	
 # requirements
@@ -167,7 +172,7 @@ class Requirement(BaseModel):
 	scopes: Mapped[List["RequirementScope"]] = relationship()
 	deadline_id: Mapped[int] = mapped_column(ForeignKey('deadline.id'))
 	deadline: Mapped["Deadline"] = relationship()
-	title: Mapped[str]
+	label: Mapped[str]
 	description: Mapped[str]
 
 # forms 
@@ -180,7 +185,7 @@ class Form(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
 	municipality_id: Mapped[int] = mapped_column(ForeignKey('municipality.id'))
 	municipality: Mapped[Municipality] = relationship()
-	title: Mapped[str]
+	label: Mapped[str]
 	description: Mapped[str]
 	url: Mapped[str]
 
@@ -195,7 +200,7 @@ class Deadline(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
 	municipality_id: Mapped[int] = mapped_column(ForeignKey('municipality.id'))
 	municipality: Mapped[Municipality] = relationship()
-	title: Mapped[str]
+	label: Mapped[str]
 	description: Mapped[str]
 	deadline: Mapped[datetime.date]
 
@@ -211,16 +216,25 @@ class RequirementScope(BaseModel):
     ))
 
 class ElectionRequirement(BaseModel):
-	id: Mapped[int] = mapped_column(primary_key=True)
-	election_id: Mapped[int] = mapped_column(ForeignKey("election.id"))
-	requirement_id: Mapped[int] = mapped_column(ForeignKey("requirement.id"))
+	election_id: Mapped[int] = mapped_column(ForeignKey("election.id"), primary_key=True)
+	requirement_id: Mapped[int] = mapped_column(ForeignKey("requirement.id"), primary_key=True)
+	
+	__table_args__ = (
+		UniqueConstraint("election_id", "requirement_id", name="election_requirement_idx"),
+	)
 
 class ElectionDeadline(BaseModel):
-	id: Mapped[int] = mapped_column(primary_key=True)
-	election_id: Mapped[int] = mapped_column(ForeignKey("election.id"))
-	deadline_id: Mapped[int] = mapped_column(ForeignKey("deadline.id"))
+	election_id: Mapped[int] = mapped_column(ForeignKey("election.id"), primary_key=True)
+	deadline_id: Mapped[int] = mapped_column(ForeignKey("deadline.id"), primary_key=True)
+	
+	__table_args__ = (
+		UniqueConstraint("election_id", "deadline_id", name="election_deadline_idx"),
+	)
 
 class ElectionForm(BaseModel):
-	id: Mapped[int] = mapped_column(primary_key=True)
-	election_id: Mapped[int] = mapped_column(ForeignKey("election.id"))
-	form_id: Mapped[int] = mapped_column(ForeignKey("form.id"))
+	election_id: Mapped[int] = mapped_column(ForeignKey("election.id"), primary_key=True)
+	form_id: Mapped[int] = mapped_column(ForeignKey("form.id"), primary_key=True)
+	
+	__table_args__ = (
+		UniqueConstraint("election_id", "form_id", name="election_form_idx"),
+	)

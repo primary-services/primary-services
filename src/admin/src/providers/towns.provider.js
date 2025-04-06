@@ -82,10 +82,12 @@ export const TownsProvider = ({ children }) => {
     getTown: (name) => {},
 
     createOffice: async (town, office) => {
+      console.log(office);
+
       office = {
-        id: null,
-        title: "Test",
-        description: "Testing Office",
+        id: 385,
+        title: "Testing",
+        description: "Testing Office Update",
         salary: "50000",
         commitment_min: "20",
         commitment_max: "25",
@@ -96,8 +98,10 @@ export const TownsProvider = ({ children }) => {
             end: "2026-01-01",
             incumbents: [],
             election: {
+              id: null, // TODO: ADD
               polling_date: "2025-01-01",
               seat_count: 1,
+              type: "GENERAL", // TODO: ADD
               candidates: [],
               deadlines: [
                 {

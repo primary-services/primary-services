@@ -91,4 +91,4 @@ Run Migrations
 
 ### Running locally
 
-`DBSecret=DevDBCredentials PYTHON_ENV=local flask --app flask_api.app run`
+`DBSecret=DevDBCredentials PYTHON_ENV=local flask --app flask_api.app --debug run`
