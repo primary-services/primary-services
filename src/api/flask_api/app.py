@@ -54,7 +54,6 @@ def get_towns():
 @app.post("/town")
 def create_town():
     town = request.json
-    print(town)
 
     created = Municipality.create(
         name=town["name"],
@@ -97,6 +96,46 @@ def create_town():
         )
 
     return jsonify({"success": True})
+
+@app.post("/office")
+def create_office():
+    office = request.json
+
+    created = Office.create(
+        municipality_id=office["municipality_id"],
+        title=office["title"],
+        description=office["description"],
+        elected=True,
+        salary=office["salary"],
+        min_hours=office["commitment_min"],
+        max_hours=office["commitment_max"]
+    )
+
+    return jsonify(created.to_dict())
+
+@app.post("/term")
+def create_term():
+    term = request.json
+    election = term["election"]
+
+    created = Office.create(
+        municipality_id=office["municipality_id"],
+        start=term["start"],
+        end=term["end"]
+    )
+
+    createdElection = Election.create(
+        municipality_id=term["municipality_id"],
+        office_id=term["office_id"],
+        term_id=created.id,
+        type=election["type"],
+        election_date=election["election_date"]
+    )
+
+    return jsonify({
+        "term": created.to_dict(), 
+        "election": createdElection.to_dict()
+    })
 
 @app.route('/')
 def index():

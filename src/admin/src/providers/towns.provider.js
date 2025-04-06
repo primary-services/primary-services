@@ -76,14 +76,139 @@ export const TownsProvider = ({ children }) => {
       const resp = await fetch("http://127.0.0.1:5000/towns");
       const list = await resp.json();
 
-      console.log(list);
-
       setTowns(list);
     },
 
     getTown: (name) => {},
 
-    updateTown: (town) => {},
+    createOffice: async (town, office) => {
+      office = {
+        id: null,
+        title: "Test",
+        description: "Testing Office",
+        salary: "50000",
+        commitment_min: "20",
+        commitment_max: "25",
+        terms: [
+          {
+            id: null,
+            start: "2025-01-01",
+            end: "2026-01-01",
+            incumbents: [],
+            election: {
+              polling_date: "2025-01-01",
+              seat_count: 1,
+              candidates: [],
+              deadlines: [
+                {
+                  id: null,
+                  label: "Term 1 Deadline",
+                  description: "Term 1 Deadline",
+                  deadline: "2025-01-01",
+                },
+              ],
+              requirements: [
+                {
+                  id: null,
+                  label: "Test Requirement",
+                  description: "Testing Requirements",
+                  form: {
+                    id: null,
+                    label: "Requirement Form",
+                    description: "Testing Requirement Form",
+                    url: "https://example.com",
+                  },
+                  deadline: {
+                    id: null,
+                    label: "Requirement Deadline",
+                    description: "Testing Requirement Deadline",
+                    deadline: "2025-01-01",
+                  },
+                },
+              ],
+              responsibilities: [],
+              forms: [
+                {
+                  id: null,
+                  label: "Term 1 Form",
+                  description: "Term 1 Testing Form",
+                  url: "https://example-form.com",
+                },
+              ],
+              notes: [],
+            },
+          },
+        ],
+      };
+
+      console.log(town);
+      console.log(office);
+
+      let officeResp = await fetch("http://127.0.0.1:5000/office", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...office, municipality_id: town.id }),
+      }).then((resp) => {
+        return resp.json();
+      });
+
+      console.log(officeResp);
+
+      let requirements = [];
+      let deadlines = [];
+      let forms = [];
+      let terms = [...office.terms];
+
+      terms.map((term) => {
+        let election = term.election;
+
+        requirements = [...(election.requirements || [])];
+        deadlines = [...(election.deadlines || [])];
+        forms = [...(election.forms || [])];
+      });
+
+      requirements.map((requirement) => {
+        if (!!requirement.deadline) {
+          deadlines.push(requirement.deadline);
+        }
+
+        if (!!requirement.form) {
+          forms.push(requirement.form);
+        }
+      });
+
+      console.log(office);
+      console.log(terms);
+      console.log(requirements);
+      console.log(deadlines);
+      console.log(forms);
+
+      // const resp = await fetch("http://127.0.0.1:5000/office", {
+      //   method: "POST",
+      //   headers: {
+      //     Accept: "application/json",
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(town),
+      // });
+
+      // return resp.json();
+    },
+
+    createRequirement: (requirement) => {
+      console.log(requirement);
+    },
+
+    createDeadline: (deadline) => {
+      console.log(deadline);
+    },
+
+    createForm: (form) => {
+      console.log(form);
+    },
 
     // createTown: async (town) => {
     //   const resp = await fetch("http://127.0.0.1:5000/town", {

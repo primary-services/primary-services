@@ -34,7 +34,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 	const validateTerm = () => {};
 
 	const save = () => {
-		console.log(office);
+		onSave(office);
 	};
 
 	const cancel = () => {
@@ -127,10 +127,10 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 			</section>
 
 			<section className="actions">
-				<div className="btn blocky" onClick={save}>
+				<div className="btn blocky clicky" onClick={save}>
 					Save
 				</div>
-				<div className="btn blocky" onClick={cancel}>
+				<div className="btn blocky clicky" onClick={cancel}>
 					Cancel
 				</div>
 			</section>

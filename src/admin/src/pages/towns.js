@@ -41,9 +41,15 @@ const Clerk = ({ official }) => {
 };
 
 export const Towns = () => {
-  const { towns, getTowns, getTown /*createTown*/ } = useContext(
-    AppContexts.TownsContext,
-  );
+  const {
+    towns,
+    getTowns,
+    getTown,
+    createOffice,
+    createRequirement,
+    createDeadline,
+    createForm /*createTown*/,
+  } = useContext(AppContexts.TownsContext);
 
   const [town, setTown] = useState(null);
   const [editing, setEditing] = useState(false);
@@ -100,7 +106,9 @@ export const Towns = () => {
   //   }
   // };
 
-  const saveOffice = () => {};
+  const saveOffice = (town, office) => {
+    createOffice(town, office);
+  };
 
   return (
     <section id="towns" className="page">
@@ -566,8 +574,8 @@ export const Towns = () => {
         <form>
           <OfficeForm
             office={selected.office || {}}
-            onSave={() => {
-              saveOffice();
+            onSave={(office) => {
+              saveOffice(town, office);
             }}
             onCancel={() => {
               setEditing(false);

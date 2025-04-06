@@ -8,6 +8,10 @@
 		color: var(--democrat-blue-light);
 	}
 
+	&.clicky {
+		cursor: pointer;
+	}
+
 	&.blocky {
 		background-color: var(--democrat-blue);
 		color: white;
