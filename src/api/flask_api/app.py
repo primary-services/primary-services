@@ -76,10 +76,6 @@ def create_office():
         "municipality_id": office.municipality_id
     }
 
-    _requirements = []
-    _deadlines = []
-    _forms = []
-
     for _term in _terms:
         _election = _term["election"]
     
