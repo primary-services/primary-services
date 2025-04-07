@@ -36,6 +36,7 @@ with app.app_context():
 @app.get("/towns")
 def get_towns():
     # Sorry, I can't figure out SQLAlchemy. It makes zero sense
+    # TODO: Move this query into a view
     towns = db.session.execute(
         text("""
             SELECT 
@@ -64,6 +65,14 @@ def get_towns():
 
     return jsonify([dict(r) for r in towns]), 200
     # return jsonify([town[0].to_dict() for town in towns]), 200
+
+@app.get("/town/<town_id>")
+def get_town(town_id):
+    town = db.session.execute(
+        text("SELECT * FROM municipality_complete_view WHERE id = :id"), {"id": int(town_id)}
+    ).mappings().first()   
+
+    return jsonify(dict(town)), 200
 
 @app.post("/office")
 def create_office():
@@ -138,30 +147,6 @@ def create_office():
     print(office)
 
     return jsonify(office.to_dict())
-
-@app.post("/term")
-def create_term():
-    term = request.json
-    election = term["election"]
-
-    created = Office.create(
-        municipality_id=office["municipality_id"],
-        start=term["start"],
-        end=term["end"]
-    )
-
-    createdElection = Election.create(
-        municipality_id=term["municipality_id"],
-        office_id=term["office_id"],
-        term_id=created.id,
-        type=election["type"],
-        election_date=election["election_date"]
-    )
-
-    return jsonify({
-        "term": created.to_dict(), 
-        "election": createdElection.to_dict()
-    })
 
 # Commenting this out, so we don't accidently create more towns
 @app.post("/town")
