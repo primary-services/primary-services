@@ -9,7 +9,7 @@ export const TermList = ({ items: terms, onDestory, onEdit }) => {
 						data-uk-icon="pencil"
 						className="icon left-aligned clickable"
 						onClick={() => {
-							onEdit(t);
+							onEdit(t, idx);
 						}}
 					></span>
 					<span
@@ -22,7 +22,7 @@ export const TermList = ({ items: terms, onDestory, onEdit }) => {
 				</div>
 				<div className="width-4-12">{moment(t.start).format("M/D/YY")}</div>
 				<div className="width-4-12">{moment(t.end).format("M/D/YY")}</div>
-				<div className="width-2-12">{t.election.seat_count}</div>
+				<div className="width-2-12">{t?.election?.seat_count}</div>
 			</div>
 		);
 	});

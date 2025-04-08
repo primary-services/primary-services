@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { AppContexts } from "../providers";
 // import { TownForm } from "../components/forms/town.js";
 import { OfficeForm } from "../components/forms/office.js";
+import { OfficeList } from "../components/lists/offices.js";
 import { Slideout } from "../components/slideout.js";
 
 const Clerk = ({ official }) => {
@@ -43,6 +44,7 @@ const Clerk = ({ official }) => {
 export const Towns = () => {
   const {
     towns,
+    town,
     getTowns,
     getTown,
     createOffice,
@@ -51,7 +53,6 @@ export const Towns = () => {
     createForm /*createTown*/,
   } = useContext(AppContexts.TownsContext);
 
-  const [town, setTown] = useState(null);
   const [editing, setEditing] = useState(false);
   const [selected, setSelected] = useState({
     office: null,
@@ -127,7 +128,7 @@ export const Towns = () => {
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
-                    setTown(t);
+                    getTown(t.id);
                   }}
                 >
                   {t.name}
@@ -169,6 +170,15 @@ export const Towns = () => {
                 setEditing({});
               }}
             ></span>
+            <OfficeList
+              items={(town?.offices || []).filter((o) => o.elected)}
+              onEdit={(o) => {
+                setEditing(o);
+              }}
+              onDestroy={(o) => {
+                console.log(o);
+              }}
+            />
           </div>
 
           {/*<ul className="grid-list offices uk-width-1-1">
@@ -571,17 +581,19 @@ export const Towns = () => {
         </section>*/}
       </div>
       <Slideout active={editing} setActive={setEditing}>
-        <form>
-          <OfficeForm
-            office={selected.office || {}}
-            onSave={(office) => {
-              saveOffice(town, office);
-            }}
-            onCancel={() => {
-              setEditing(false);
-            }}
-          />
-        </form>
+        {!!editing && (
+          <form>
+            <OfficeForm
+              editing={editing}
+              onSave={(office) => {
+                saveOffice(town, office);
+              }}
+              onCancel={() => {
+                setEditing(false);
+              }}
+            />
+          </form>
+        )}
       </Slideout>
     </section>
   );

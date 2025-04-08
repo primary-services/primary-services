@@ -7,6 +7,7 @@ export const SubForm = ({
 	template,
 	items,
 	onSave,
+	onEdit,
 	onValidate,
 }) => {
 	const [child, setChild] = useState(null);
@@ -24,8 +25,8 @@ export const SubForm = ({
 		setChild(null);
 	};
 
-	const editChild = (c) => {
-		// TODO: Edit this child
+	const changeChild = (child) => {
+		setChild(JSON.parse(JSON.stringify(child)));
 	};
 
 	const destoryChild = (childToDestory) => {
@@ -34,7 +35,21 @@ export const SubForm = ({
 
 	const saveChild = () => {
 		// TODO: Validate!
-		onSave([{ ...child }, ...items]);
+
+		if (child.id === null) {
+			onSave([{ ...child }, ...items]);
+		} else {
+			items.splice(
+				items.findIndex((c) => c.id === child.id),
+				1,
+				{ ...child },
+			);
+
+			console.log(items);
+
+			onSave([...items]);
+		}
+
 		setChild(null);
 	};
 
@@ -68,7 +83,7 @@ export const SubForm = ({
 
 			{!!child && <Form child={child} setChild={setChild} />}
 
-			<List items={items} onEdit={editChild} onDestory={destoryChild} />
+			<List items={items} onEdit={changeChild} onDestory={destoryChild} />
 		</section>
 	);
 };

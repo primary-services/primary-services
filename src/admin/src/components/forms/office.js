@@ -4,7 +4,7 @@ import { TermForm } from "./terms.js";
 import { TermList } from "../lists/terms.js";
 import { SubForm } from "./subform.js";
 
-export const OfficeForm = ({ selected, onSave, onCancel }) => {
+export const OfficeForm = ({ editing, onSave, onCancel }) => {
 	let [office, setOffice] = useState({
 		id: null,
 		title: "",
@@ -13,12 +13,16 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 		commitment_min: 0,
 		commitment_max: 0,
 		terms: [],
-		...selected,
+		...JSON.parse(JSON.stringify(editing)),
 	});
 
 	let [term, setTerm] = useState(null);
 
 	let [errors, setErrors] = useState({});
+
+	useEffect(() => {
+		console.log("Office", office);
+	}, [office]);
 
 	const update = (field, value) => {
 		setOffice({ ...office, [field]: value });
@@ -111,8 +115,10 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 						end: null,
 						incumbents: [],
 						election: {
+							id: null,
 							polling_date: null,
 							seat_count: 1,
+							type: "GENERAL",
 							candidates: [],
 							deadlines: [],
 							requirements: [],

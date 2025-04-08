@@ -122,7 +122,7 @@ export const TermForm = ({ child: term, setChild: setTerm }) => {
 					form={RequirementForm}
 					list={RequirementList}
 					label="Requirements"
-					items={term.election.requirements}
+					items={term.election?.requirements || []}
 					template={{
 						id: null,
 						label: "",
@@ -138,7 +138,7 @@ export const TermForm = ({ child: term, setChild: setTerm }) => {
 					form={DeadlineForm}
 					list={DeadlineList}
 					label="Additional Deadlines"
-					items={term.election.deadlines}
+					items={term.election?.deadlines || []}
 					template={{
 						id: null,
 						label: "",
@@ -153,7 +153,7 @@ export const TermForm = ({ child: term, setChild: setTerm }) => {
 					form={FormForm}
 					list={FormList}
 					label="Addition Forms"
-					items={term.election.forms}
+					items={term.election?.forms || []}
 					template={{
 						id: null,
 						label: "",
