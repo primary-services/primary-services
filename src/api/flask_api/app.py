@@ -35,44 +35,13 @@ with app.app_context():
     
 @app.get("/towns")
 def get_towns():
-    # Sorry, I can't figure out SQLAlchemy. It makes zero sense
-    # TODO: Move this query into a view
-    towns = db.session.execute(
-        text("""
-            SELECT 
-               m.*, o.list AS officials 
-            FROM 
-                municipality AS m
-            LEFT JOIN LATERAL (
-                SELECT 
-                    JSONB_AGG(off.*) AS list
-                FROM (
-                    SELECT 
-                        official.*,
-                        TO_JSONB(office.*) AS office
-                    FROM 
-                        official
-                    LEFT JOIN
-                        office ON office.id = official.office_id
-                    WHERE 
-                        official.municipality_id = m.id
-                    
-               ) AS off
-            ) AS o ON TRUE
-            WHERE m.type = 'TOWN'
-        """)
-    ).mappings().all()   
-
-    return jsonify([dict(r) for r in towns]), 200
-    # return jsonify([town[0].to_dict() for town in towns]), 200
+    towns = Municipality.query.all()   
+    return jsonify(towns), 200
 
 @app.get("/town/<town_id>")
 def get_town(town_id):
-    town = db.session.execute(
-        text("SELECT * FROM municipality_complete_view WHERE id = :id"), {"id": int(town_id)}
-    ).mappings().first()   
-
-    return jsonify(dict(town)), 200
+    town = Municipality.where(id=int(town_id))
+    return jsonify(town), 200
 
 @app.post("/office")
 def create_office():
