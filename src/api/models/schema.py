@@ -22,16 +22,14 @@ class MunicipalityType(str, Enum):
 # 	- id
 # 	- name
 # 	- type (town/city/county/state)
-
 class Municipality(BaseModel):
     id: Mapped[int] = mapped_column(primary_key=True)
     parent_id: Mapped[Optional[int]] = mapped_column(ForeignKey('municipality.id'))
     parent: Mapped["Municipality"] = relationship(remote_side=[id])
+
     requirements: Mapped[List["Requirement"]] = relationship(back_populates="municipality")
-    forms: Mapped[List["Form"]] = relationship(back_populates="municipality")
-    deadlines: Mapped[List["Deadline"]] = relationship(back_populates="municipality")
     offices: Mapped[List["Office"]] = relationship(back_populates="municipality")
-    officials: Mapped[List["Official"]] = relationship(back_populates="municipality")
+
     name: Mapped[str]
     website: Mapped[str] = mapped_column(nullable=True)
     type: Mapped[MunicipalityType] = mapped_column(ENUM(
@@ -43,7 +41,6 @@ class Municipality(BaseModel):
 # 	- id
 # 	- title
 # 	- description
-
 class OfficeTemplate(BaseModel):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str]
@@ -60,11 +57,14 @@ class OfficeTemplate(BaseModel):
 # 	- salary
 # 	- min_hours
 # 	- max_hours
-
 class Office(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True, default=lambda c: "default")
+
 	municipality_id: Mapped[int] = mapped_column(ForeignKey('municipality.id'))
 	municipality: Mapped[Municipality] = relationship(back_populates="offices")
+
+	officials: Mapped[List["Official"]] = relationship(back_populates="office")
+
 	title: Mapped[str] = mapped_column(nullable=True)
 	description: Mapped[str] = mapped_column(nullable=True)
 	elected: Mapped[bool] = mapped_column(server_default='TRUE')
@@ -79,15 +79,15 @@ class Office(BaseModel):
 # 	- office_id (FK)
 # 	- term_id (FK)
 # 	- name
-
 class Official(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
-	municipality_id: Mapped[int] = mapped_column(ForeignKey('municipality.id'), nullable=True)
-	municipality: Mapped[Municipality] = relationship(back_populates="officials")
+
 	office_id: Mapped[Optional[int]] = mapped_column(ForeignKey('office.id'), nullable=True)
 	office: Mapped[Office] = relationship()
+
 	term_id: Mapped[int] = mapped_column(ForeignKey('term.id'), nullable=True)
 	term: Mapped["Term"] = relationship()
+	
 	name: Mapped[str] = mapped_column(nullable=True)
 	phone: Mapped[str] = mapped_column(nullable=True)
 	email: Mapped[str] = mapped_column(nullable=True)
@@ -98,12 +98,10 @@ class Official(BaseModel):
 # 	- id 
 # 	- municipality_id (FK)
 # 	- election_id (FK)
-
 class Candidate(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
 	name: Mapped[str]
-	municipality_id: Mapped[int] = mapped_column(ForeignKey('municipality.id'))
-	municipality: Mapped[Municipality] = relationship()
+	
 	election_id: Mapped[int] = mapped_column(ForeignKey('election.id'))
 	election: Mapped["Election"] = relationship()
 
@@ -113,15 +111,12 @@ class Candidate(BaseModel):
 # 	- start,
 # 	- end,
 # 	- incumbents: [],
-
 class Term(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
-	office_id: Mapped[int] = mapped_column(ForeignKey('office.id'))
-	office: Mapped[Office] = relationship()
-	election: Mapped["Election"] = relationship()
+	election: Mapped["Election"] = relationship(back_populates="term")
 	start: Mapped[datetime.date]
 	end: Mapped[datetime.date]
-	incumbents: Mapped[List[Official]] = relationship()
+	incumbents: Mapped[List[Official]] = relationship(back_populates="term")
 
 
 # elections
@@ -141,12 +136,10 @@ class Election(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
 	term_id: Mapped[int] = mapped_column(ForeignKey("term.id"))
 	term: Mapped[Term] = relationship()
-	municipality_id: Mapped[int] = mapped_column(ForeignKey('municipality.id'))
-	municipality: Mapped[Municipality] = relationship()
+
 	office_id: Mapped[Optional[int]] = mapped_column(ForeignKey('office.id'))
 	office: Mapped[Office] = relationship()
-	# term_id: Mapped[int] = mapped_column(ForeignKey('term.id'))
-	# term: Mapped[Term] = relationship()
+
 	type: Mapped[ElectionType] = mapped_column(ENUM(
 		ElectionType, 
 		name='electiontype'
@@ -165,13 +158,18 @@ class Election(BaseModel):
 
 class Requirement(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
+
 	municipality_id: Mapped[int] = mapped_column(ForeignKey('municipality.id'))
 	municipality: Mapped[Municipality] = relationship()
+
 	form_id: Mapped[int] = mapped_column(ForeignKey('form.id'))
 	form: Mapped["Form"] = relationship()
-	scopes: Mapped[List["RequirementScope"]] = relationship()
+
 	deadline_id: Mapped[int] = mapped_column(ForeignKey('deadline.id'))
 	deadline: Mapped["Deadline"] = relationship()
+
+	scopes: Mapped[List["RequirementScope"]] = relationship()
+	
 	label: Mapped[str]
 	description: Mapped[str]
 
@@ -183,8 +181,7 @@ class Requirement(BaseModel):
 
 class Form(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
-	municipality_id: Mapped[int] = mapped_column(ForeignKey('municipality.id'))
-	municipality: Mapped[Municipality] = relationship()
+
 	label: Mapped[str]
 	description: Mapped[str]
 	url: Mapped[str]
@@ -198,12 +195,10 @@ class Form(BaseModel):
 
 class Deadline(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
-	municipality_id: Mapped[int] = mapped_column(ForeignKey('municipality.id'))
-	municipality: Mapped[Municipality] = relationship()
+
 	label: Mapped[str]
 	description: Mapped[str]
 	deadline: Mapped[datetime.date]
-
 
 class RequirementScope(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
