@@ -27,7 +27,7 @@
 
 ### Setup python venv
 
-1. Create the virtual environment in the `src` directory
+1. Create the virtual environment in the `src/api` directory
 
 ```
 cd src
