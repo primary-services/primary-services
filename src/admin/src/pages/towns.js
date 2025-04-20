@@ -42,6 +42,7 @@ const Clerk = ({ official }) => {
 
 export const Towns = () => {
   const {
+    loading,
     towns,
     getTowns,
     getTown,
@@ -62,7 +63,7 @@ export const Towns = () => {
   }, []);
 
   const getClerk = (t) => {
-    if (!t) {
+    if (!t || !t.officials) {
       return null;
     }
 
@@ -72,7 +73,7 @@ export const Towns = () => {
   };
 
   const getAssistantClerk = (t) => {
-    if (!t) {
+    if (!t || !t.officials) {
       return null;
     }
 
@@ -110,275 +111,320 @@ export const Towns = () => {
     createOffice(town, office);
   };
 
+  console.log(towns);
+
   return (
     <section id="towns" className="page">
       <div className="sidebar">
-        <ul className="uk-list">
-          {(towns || []).map((t) => {
-            return (
-              <li key={t.name}>
-                <span
-                  uk-icon="icon: check"
-                  uk-tooltip={
-                    !!t.completed ? `title: Completed` : `title: Mark Completed`
-                  }
-                ></span>
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setTown(t);
-                  }}
-                >
-                  {t.name}
-                </a>
-              </li>
-            );
-          })}
-        </ul>
+        {loading.getTowns ? (
+          <p>Loading...</p>
+        ) : (
+          <ul className="uk-list">
+            {towns.map((t) => {
+              return (
+                <li key={t.name}>
+                  <span
+                    uk-icon="icon: check"
+                    uk-tooltip={
+                      !!t.completed
+                        ? `title: Completed`
+                        : `title: Mark Completed`
+                    }
+                  ></span>
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setTown(t);
+                    }}
+                  >
+                    {t.name}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
 
       <div className="page-content">
-        {/*!town && <h2>Select a to the left to get started</h2>*/}
-        {/*!!town && <TownForm town={town} />*/}
+        {!town && <h2>Select a town to the left to get started</h2>}
+        {!!town && (
+          <>
+            <h2>
+              <a href={town?.website || "#"} target="_blank">
+                {town?.name || "Town Name"}
+              </a>
+            </h2>
 
-        <h2>
-          <a href={town?.website || "#"} target="_blank">
-            {town?.name || "Town Name"}
-          </a>
-        </h2>
+            <div className="uk-width-1-1 uk-flex">
+              <div className="uk-width-1-2">
+                {!!getClerk(town) && <Clerk official={getClerk(town)} />}
+              </div>
+              <div className="uk-width-1-2">
+                {!!getAssistantClerk(town) && (
+                  <Clerk official={getAssistantClerk(town)} />
+                )}
+              </div>
+            </div>
 
-        <div className="uk-width-1-1 uk-flex">
-          <div className="uk-width-1-2">
-            {!!getClerk(town) && <Clerk official={getClerk(town)} />}
-          </div>
-          <div className="uk-width-1-2">
-            {!!getAssistantClerk(town) && (
-              <Clerk official={getAssistantClerk(town)} />
-            )}
-          </div>
-        </div>
+            <section className="uk-width-1-1">
+              <div className="section-header">
+                <h2>Offices</h2>
+                <span
+                  className="icon right-aligned"
+                  data-uk-icon="plus-circle"
+                  onClick={() => {
+                    setEditing({});
+                  }}
+                ></span>
+              </div>
+              <ul className="grid-list offices uk-width-1-1">
+                <li className="grid-list-header">
+                  <div></div>
+                  <div>Office</div>
+                  <div>Elected</div>
+                  <div>Hours</div>
+                  <div>Salary</div>
+                  <div>Term Length</div>
+                  <div>Next Election</div>
+                  <div># Seats</div>
+                </li>
+                {town.offices.map((t) => (
+                  <li className="grid-list-item">
+                    <div>
+                      <span
+                        uk-icon="pencil"
+                        onClick={() => {
+                          setEditing(!editing);
+                        }}
+                      ></span>
+                    </div>
+                    <div>{t.title}</div>
+                    <div>
+                      {t.elected ? (
+                        <span
+                          key="confirm"
+                          className="icon affirm"
+                          data-uk-icon="check"
+                        ></span>
+                      ) : (
+                        <span
+                          key="cancel"
+                          className="icon cancel"
+                          data-uk-icon="close"
+                        ></span>
+                      )}
+                    </div>
+                    <div>
+                      {t.min_hours}-{t.max_hours}
+                    </div>
+                    <div>{t.salary ? "$" + `${t.salary}` : "-"}</div>
+                    <div>-</div>
+                    <div>-</div>
+                    <div>-</div>
+                  </li>
+                ))}
+                {/* <li className="grid-list-item">
+                  <div>
+                    <span
+                      uk-icon="pencil"
+                      onClick={() => {
+                        setEditing(!editing);
+                      }}
+                    ></span>
+                  </div>
+                  <div>Moderator</div>
+                  <div>1 Year</div>
+                  <div>Nov 2025</div>
+                  <div>1</div>
+                </li>
+                <li className="grid-list-item">
+                  <div>
+                    <span
+                      uk-icon="pencil"
+                      onClick={() => {
+                        setEditing(!editing);
+                      }}
+                    ></span>
+                  </div>
+                  <div>Tree Warden</div>
+                  <div>1 Year</div>
+                  <div>Nov 2025</div>
+                  <div>1</div>
+                </li>
+                <li className="grid-list-item">
+                  <div>
+                    <span
+                      uk-icon="pencil"
+                      onClick={() => {
+                        setEditing(!editing);
+                      }}
+                    ></span>
+                  </div>
+                  <div>Select Board</div>
+                  <div>3 Years</div>
+                  <div>Nov 2025</div>
+                  <div>3</div>
+                </li>
+                <li className="grid-list-item">
+                  <div>
+                    <span
+                      uk-icon="pencil"
+                      onClick={() => {
+                        setEditing(!editing);
+                      }}
+                    ></span>
+                  </div>
+                  <div>Board of Assessors</div>
+                  <div>3 Years</div>
+                  <div>Nov 2025</div>
+                  <div>3</div>
+                </li>
+                <li className="grid-list-item">
+                  <div>
+                    <span
+                      uk-icon="pencil"
+                      onClick={() => {
+                        setEditing(!editing);
+                      }}
+                    ></span>
+                  </div>
+                  <div>Board of Health</div>
+                  <div>3 Years</div>
+                  <div>Nov 2025</div>
+                  <div>3</div>
+                </li>
+                <li className="grid-list-item">
+                  <div>
+                    <span
+                      uk-icon="pencil"
+                      onClick={() => {
+                        setEditing(!editing);
+                      }}
+                    ></span>
+                  </div>
+                  <div>Constable</div>
+                  <div>3 Years</div>
+                  <div>Nov 2025</div>
+                  <div>1</div>
+                </li>
+                <li className="grid-list-item">
+                  <div>
+                    <span
+                      uk-icon="pencil"
+                      onClick={() => {
+                        setEditing(!editing);
+                      }}
+                    ></span>
+                  </div>
+                  <div>School Committee</div>
+                  <div>3 Years</div>
+                  <div>Nov 2025</div>
+                  <div>3</div>
+                </li>
+                <li className="grid-list-item">
+                  <div>
+                    <span
+                      uk-icon="pencil"
+                      onClick={() => {
+                        setEditing(!editing);
+                      }}
+                    ></span>
+                  </div>
+                  <div>Sewer Commission</div>
+                  <div>3 Years</div>
+                  <div>Nov 2025</div>
+                  <div>3</div>
+                </li>
+                <li className="grid-list-item">
+                  <div>
+                    <span
+                      uk-icon="pencil"
+                      onClick={() => {
+                        setEditing(!editing);
+                      }}
+                    ></span>
+                  </div>
+                  <div>Library Trustee</div>
+                  <div>5 Years</div>
+                  <div>Nov 2025</div>
+                  <div>5</div>
+                </li>
+                <li className="grid-list-item">
+                  <div>
+                    <span
+                      uk-icon="pencil"
+                      onClick={() => {
+                        setEditing(!editing);
+                      }}
+                    ></span>
+                  </div>
+                  <div>Planning Board</div>
+                  <div>5 Years</div>
+                  <div>Nov 2025</div>
+                  <div>5</div>
+                </li>
+                <li className="grid-list-item">
+                  <div>
+                    <span
+                      uk-icon="pencil"
+                      onClick={() => {
+                        setEditing(!editing);
+                      }}
+                    ></span>
+                  </div>
+                  <div>Park Commission</div>
+                  <div>1 Year</div>
+                  <div>Nov 2025</div>
+                  <div>2</div>
+                </li>
+                <li className="grid-list-item">
+                  <div>
+                    <span
+                      uk-icon="pencil"
+                      onClick={() => {
+                        setEditing(!editing);
+                      }}
+                    ></span>
+                  </div>
+                  <div>Park Commission</div>
+                  <div>2 Years</div>
+                  <div>Nov 2025</div>
+                  <div>2</div>
+                </li>
+                <li className="grid-list-item">
+                  <div>
+                    <span
+                      uk-icon="pencil"
+                      onClick={() => {
+                        setEditing(!editing);
+                      }}
+                    ></span>
+                  </div>
+                  <div>Park Commission</div>
+                  <div>3 Years</div>
+                  <div>Nov 2025</div>
+                  <div>2</div>
+                </li>
+                <li className="grid-list-item">
+                  <div>
+                    <span
+                      uk-icon="pencil"
+                      onClick={() => {
+                        setEditing(!editing);
+                      }}
+                    ></span>
+                  </div>
+                  <div>Finance Committee</div>
+                  <div>3 Years</div>
+                  <div>Nov 2025</div>
+                  <div>6</div>
+                </li> */}
+              </ul>
+            </section>
 
-        <section className="uk-width-1-1">
-          <div className="section-header">
-            <h2>Offices</h2>
-            <span
-              className="icon right-aligned"
-              data-uk-icon="plus-circle"
-              onClick={() => {
-                setEditing({});
-              }}
-            ></span>
-          </div>
-
-          {/*<ul className="grid-list offices uk-width-1-1">
-            <li className="grid-list-header">
-              <div></div>
-              <div>Elected Office</div>
-              <div>Term Length</div>
-              <div>Next Election</div>
-              <div># Seats</div>
-            </li>
-            <li className="grid-list-item">
-              <div>
-                <span
-                  uk-icon="pencil"
-                  onClick={() => {
-                    setEditing(!editing);
-                  }}
-                ></span>
-              </div>
-              <div>Moderator</div>
-              <div>1 Year</div>
-              <div>Nov 2025</div>
-              <div>1</div>
-            </li>
-            <li className="grid-list-item">
-              <div>
-                <span
-                  uk-icon="pencil"
-                  onClick={() => {
-                    setEditing(!editing);
-                  }}
-                ></span>
-              </div>
-              <div>Tree Warden</div>
-              <div>1 Year</div>
-              <div>Nov 2025</div>
-              <div>1</div>
-            </li>
-            <li className="grid-list-item">
-              <div>
-                <span
-                  uk-icon="pencil"
-                  onClick={() => {
-                    setEditing(!editing);
-                  }}
-                ></span>
-              </div>
-              <div>Select Board</div>
-              <div>3 Years</div>
-              <div>Nov 2025</div>
-              <div>3</div>
-            </li>
-            <li className="grid-list-item">
-              <div>
-                <span
-                  uk-icon="pencil"
-                  onClick={() => {
-                    setEditing(!editing);
-                  }}
-                ></span>
-              </div>
-              <div>Board of Assessors</div>
-              <div>3 Years</div>
-              <div>Nov 2025</div>
-              <div>3</div>
-            </li>
-            <li className="grid-list-item">
-              <div>
-                <span
-                  uk-icon="pencil"
-                  onClick={() => {
-                    setEditing(!editing);
-                  }}
-                ></span>
-              </div>
-              <div>Board of Health</div>
-              <div>3 Years</div>
-              <div>Nov 2025</div>
-              <div>3</div>
-            </li>
-            <li className="grid-list-item">
-              <div>
-                <span
-                  uk-icon="pencil"
-                  onClick={() => {
-                    setEditing(!editing);
-                  }}
-                ></span>
-              </div>
-              <div>Constable</div>
-              <div>3 Years</div>
-              <div>Nov 2025</div>
-              <div>1</div>
-            </li>
-            <li className="grid-list-item">
-              <div>
-                <span
-                  uk-icon="pencil"
-                  onClick={() => {
-                    setEditing(!editing);
-                  }}
-                ></span>
-              </div>
-              <div>School Committee</div>
-              <div>3 Years</div>
-              <div>Nov 2025</div>
-              <div>3</div>
-            </li>
-            <li className="grid-list-item">
-              <div>
-                <span
-                  uk-icon="pencil"
-                  onClick={() => {
-                    setEditing(!editing);
-                  }}
-                ></span>
-              </div>
-              <div>Sewer Commission</div>
-              <div>3 Years</div>
-              <div>Nov 2025</div>
-              <div>3</div>
-            </li>
-            <li className="grid-list-item">
-              <div>
-                <span
-                  uk-icon="pencil"
-                  onClick={() => {
-                    setEditing(!editing);
-                  }}
-                ></span>
-              </div>
-              <div>Library Trustee</div>
-              <div>5 Years</div>
-              <div>Nov 2025</div>
-              <div>5</div>
-            </li>
-            <li className="grid-list-item">
-              <div>
-                <span
-                  uk-icon="pencil"
-                  onClick={() => {
-                    setEditing(!editing);
-                  }}
-                ></span>
-              </div>
-              <div>Planning Board</div>
-              <div>5 Years</div>
-              <div>Nov 2025</div>
-              <div>5</div>
-            </li>
-            <li className="grid-list-item">
-              <div>
-                <span
-                  uk-icon="pencil"
-                  onClick={() => {
-                    setEditing(!editing);
-                  }}
-                ></span>
-              </div>
-              <div>Park Commission</div>
-              <div>1 Year</div>
-              <div>Nov 2025</div>
-              <div>2</div>
-            </li>
-            <li className="grid-list-item">
-              <div>
-                <span
-                  uk-icon="pencil"
-                  onClick={() => {
-                    setEditing(!editing);
-                  }}
-                ></span>
-              </div>
-              <div>Park Commission</div>
-              <div>2 Years</div>
-              <div>Nov 2025</div>
-              <div>2</div>
-            </li>
-            <li className="grid-list-item">
-              <div>
-                <span
-                  uk-icon="pencil"
-                  onClick={() => {
-                    setEditing(!editing);
-                  }}
-                ></span>
-              </div>
-              <div>Park Commission</div>
-              <div>3 Years</div>
-              <div>Nov 2025</div>
-              <div>2</div>
-            </li>
-            <li className="grid-list-item">
-              <div>
-                <span
-                  uk-icon="pencil"
-                  onClick={() => {
-                    setEditing(!editing);
-                  }}
-                ></span>
-              </div>
-              <div>Finance Committee</div>
-              <div>3 Years</div>
-              <div>Nov 2025</div>
-              <div>6</div>
-            </li>
-          </ul>*/}
-        </section>
-
-        {/*<section className="uk-flex">
+            {/*<section className="uk-flex">
           <section className="uk-width-1-2">
             <div className="section-header">
               <h2>Eligability Requirements</h2>
@@ -476,7 +522,7 @@ export const Towns = () => {
           </section>
         </section>*/}
 
-        {/*<section className="uk-flex">
+            {/*<section className="uk-flex">
           <section className="uk-width-1-2">
             <div className="section-header">
               <h2>Deadlines</h2>
@@ -569,6 +615,8 @@ export const Towns = () => {
             </ul>
           </section>
         </section>*/}
+          </>
+        )}
       </div>
       <Slideout active={editing} setActive={setEditing}>
         <form>
