@@ -16,6 +16,7 @@ from models import (
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from creds import CredentialsManager
+from dataclasses import asdict
 
 from sqlalchemy import select
 from sqlalchemy.sql import text
@@ -36,12 +37,13 @@ with app.app_context():
 @app.get("/towns")
 def get_towns():
     towns = Municipality.query.all()   
-    return jsonify(towns), 200
+    serialized_towns = [town.to_dict(nested=True) for town in towns]
+    return serialized_towns, 200
 
 @app.get("/town/<town_id>")
 def get_town(town_id):
-    town = Municipality.where(id=int(town_id))
-    return jsonify(town), 200
+    town = Municipality.where(id=int(town_id)).first()
+    return town.to_dict(nested=True), 200
 
 @app.post("/office")
 def create_office():
