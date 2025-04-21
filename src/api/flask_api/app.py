@@ -48,7 +48,7 @@ def get_town(town_id):
 @app.get("/town/<town_id>/offices")
 def get_town_offices(town_id):
     offices = Office.where(municipality_id=int(town_id)).all()
-    serialized = [office.to_dict(nested=True) for office in offices]
+    serialized = [office.to_dict(nested=True, hybrid_attributes=True) for office in offices]
     return serialized, 200
 
 @app.get("/town/<town_id>/requirements")

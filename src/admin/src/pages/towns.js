@@ -3,6 +3,15 @@ import { AppContexts } from "../providers";
 // import { TownForm } from "../components/forms/town.js";
 import { OfficeForm } from "../components/forms/office.js";
 import { Slideout } from "../components/slideout.js";
+import { RequirementForm } from "../components/forms/requirements.js";
+import {
+  useTownOffices,
+  useTownRequirements,
+  useTowns,
+  useCreateOffice,
+  useCreateRequirement,
+} from "../api-hooks.js";
+import { cleanDateString } from "../utils.js";
 
 const Clerk = ({ official }) => {
   if (!official) {
@@ -41,26 +50,11 @@ const Clerk = ({ official }) => {
 };
 
 export const Towns = () => {
-  const {
-    loading,
-    towns,
-    getTowns,
-    getTown,
-    createOffice,
-    createRequirement,
-    createDeadline,
-    createForm /*createTown*/,
-  } = useContext(AppContexts.TownsContext);
+  const { data: towns, isLoading: townsLoading } = useTowns();
 
   const [town, setTown] = useState(null);
   const [editing, setEditing] = useState(false);
-  const [selected, setSelected] = useState({
-    office: null,
-  });
-
-  useEffect(() => {
-    getTowns();
-  }, []);
+  const { data: offices } = useTownOffices(town?.id);
 
   const getClerk = (t) => {
     if (!t || !t.officials) {
@@ -81,6 +75,8 @@ export const Towns = () => {
       return o.office.title === "Assistant Clerk";
     });
   };
+
+  const { mutate: saveOffice } = useCreateOffice();
 
   // useEffect(() => {
   //   createTowns();
@@ -107,16 +103,10 @@ export const Towns = () => {
   //   }
   // };
 
-  const saveOffice = (town, office) => {
-    createOffice(town, office);
-  };
-
-  console.log(towns);
-
   return (
     <section id="towns" className="page">
       <div className="sidebar">
-        {loading.getTowns ? (
+        {townsLoading ? (
           <p>Loading...</p>
         ) : (
           <ul className="uk-list">
@@ -172,60 +162,61 @@ export const Towns = () => {
               <div className="section-header">
                 <h2>Offices</h2>
                 <span
-                  className="icon right-aligned"
+                  className="icon right-aligned clickable"
                   data-uk-icon="plus-circle"
                   onClick={() => {
                     setEditing({});
                   }}
                 ></span>
               </div>
-              <ul className="grid-list offices uk-width-1-1">
-                <li className="grid-list-header">
-                  <div></div>
-                  <div>Office</div>
-                  <div>Elected</div>
-                  <div>Hours</div>
-                  <div>Salary</div>
-                  <div>Term Length</div>
-                  <div>Next Election</div>
-                  <div># Seats</div>
-                </li>
-                {town.offices.map((t) => (
-                  <li className="grid-list-item">
-                    <div>
-                      <span
-                        uk-icon="pencil"
-                        onClick={() => {
-                          setEditing(!editing);
-                        }}
-                      ></span>
-                    </div>
-                    <div>{t.title}</div>
-                    <div>
-                      {t.elected ? (
-                        <span
-                          key="confirm"
-                          className="icon affirm"
-                          data-uk-icon="check"
-                        ></span>
-                      ) : (
-                        <span
-                          key="cancel"
-                          className="icon cancel"
-                          data-uk-icon="close"
-                        ></span>
-                      )}
-                    </div>
-                    <div>
-                      {t.min_hours}-{t.max_hours}
-                    </div>
-                    <div>{t.salary ? "$" + `${t.salary}` : "-"}</div>
-                    <div>-</div>
-                    <div>-</div>
-                    <div>-</div>
+              {!!offices && (
+                <ul className="grid-list offices uk-width-1-1">
+                  <li className="grid-list-header">
+                    <div></div>
+                    <div>Office</div>
+                    <div>Elected</div>
+                    <div>Hours</div>
+                    <div>Salary</div>
+                    <div>Term Length</div>
+                    <div>Next Election</div>
+                    <div># Seats</div>
                   </li>
-                ))}
-                {/* <li className="grid-list-item">
+                  {offices.map((o) => (
+                    <li className="grid-list-item">
+                      <div>
+                        <span
+                          uk-icon="pencil"
+                          onClick={() => {
+                            setEditing((prev) => (prev ? false : o));
+                          }}
+                        ></span>
+                      </div>
+                      <div>{o.title}</div>
+                      <div>
+                        {o.elected ? (
+                          <span
+                            key="confirm"
+                            className="icon affirm"
+                            data-uk-icon="check"
+                          ></span>
+                        ) : (
+                          <span
+                            key="cancel"
+                            className="icon cancel"
+                            data-uk-icon="close"
+                          ></span>
+                        )}
+                      </div>
+                      <div>
+                        {o.min_hours}-{o.max_hours}
+                      </div>
+                      <div>{o.salary ? "$" + `${o.salary}` : "-"}</div>
+                      <div>{o.term_length ?? "-"}</div>
+                      <div>{cleanDateString(o.next_election_date) ?? "-"}</div>
+                      <div>{o.seat_count ?? "-"}</div>
+                    </li>
+                  ))}
+                  {/* <li className="grid-list-item">
                   <div>
                     <span
                       uk-icon="pencil"
@@ -421,7 +412,8 @@ export const Towns = () => {
                   <div>Nov 2025</div>
                   <div>6</div>
                 </li> */}
-              </ul>
+                </ul>
+              )}
             </section>
 
             {/*<section className="uk-flex">
@@ -621,7 +613,7 @@ export const Towns = () => {
       <Slideout active={editing} setActive={setEditing}>
         <form>
           <OfficeForm
-            office={selected.office || {}}
+            office={editing || {}}
             onSave={(office) => {
               saveOffice(town, office);
             }}
