@@ -37,13 +37,25 @@ with app.app_context():
 @app.get("/towns")
 def get_towns():
     towns = Municipality.query.all()   
-    serialized_towns = [town.to_dict(nested=True) for town in towns]
-    return serialized_towns, 200
+    serialized = [town.to_dict(nested=True) for town in towns]
+    return serialized, 200
 
 @app.get("/town/<town_id>")
 def get_town(town_id):
     town = Municipality.where(id=int(town_id)).first()
     return town.to_dict(nested=True), 200
+
+@app.get("/town/<town_id>/offices")
+def get_town_offices(town_id):
+    offices = Office.where(municipality_id=int(town_id)).all()
+    serialized = [office.to_dict(nested=True) for office in offices]
+    return serialized, 200
+
+@app.get("/town/<town_id>/requirements")
+def get_town_requirements(town_id):
+    rs = Requirement.where(municipality_id=int(town_id)).all()
+    serialized = [r.to_dict(nested=True) for r in rs]
+    return serialized, 200
 
 @app.post("/office")
 def create_office():
@@ -118,6 +130,32 @@ def create_office():
     print(office)
 
     return jsonify(office.to_dict())
+
+@app.post("/requirement")
+def create_requirement():
+    _requirement = request.json
+    requirement_fks = {
+        "requirement_id": _requirement["id"],
+        "municipality_id": _requirement["municipality_id"]
+    }
+
+    form = None
+    deadline = None
+    req_fks = {}
+
+    if "form" in _requirement and _requirement["form"] != None:
+        form = Form.upsert(Form, {**requirement_fks, **_requirement["form"]})[0]
+        req_fks["form_id"] = form.id 
+        
+    if "deadline" in _requirement and _requirement["deadline"] != None:
+        deadline = Deadline.upsert(Deadline, {**requirement_fks, **_requirement["deadline"]})[0]
+        req_fks["deadline_id"] = deadline.id
+
+    requirement = Requirement.upsert(Requirement, {**requirement_fks, **req_fks, **_requirement})[0]
+
+    db.session.commit()    
+
+    return jsonify(requirement.to_dict())
 
 # Commenting this out, so we don't accidently create more towns
 @app.post("/town")
