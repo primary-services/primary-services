@@ -26,8 +26,9 @@ class Municipality(BaseModel):
     id: Mapped[int] = mapped_column(primary_key=True)
     parent_id: Mapped[Optional[int]] = mapped_column(ForeignKey('municipality.id'))
     parent: Mapped["Municipality"] = relationship(remote_side=[id])
-
-    requirements: Mapped[List["Requirement"]] = relationship(back_populates="municipality")
+    requirements: Mapped[List["Requirement"]] = relationship(primaryjoin="and_(RequirementParents.parent_type='municipality',foreign(RequirementParents.parent_id)==Municipality.id)")
+    deadlines: Mapped[List["Deadline"]] = relationship(primaryjoin="and_(DeadlineParents.parent_type='municipality',foreign(DeadlineParents.parent_id)==Municipality.id)")
+    forms: Mapped[List["Form"]] = relationship(primaryjoin="and_(FormParents.parent_type='municipality',foreign(FormParents.parent_id)==Municipality.id)")
     offices: Mapped[List["Office"]] = relationship(back_populates="municipality")
 
     name: Mapped[str]
@@ -210,26 +211,65 @@ class RequirementScope(BaseModel):
     	create_type=False
     ))
 
-class ElectionRequirement(BaseModel):
-	election_id: Mapped[int] = mapped_column(ForeignKey("election.id"), primary_key=True)
-	requirement_id: Mapped[int] = mapped_column(ForeignKey("requirement.id"), primary_key=True)
-	
-	__table_args__ = (
-		UniqueConstraint("election_id", "requirement_id", name="election_requirement_idx"),
-	)
 
-class ElectionDeadline(BaseModel):
-	election_id: Mapped[int] = mapped_column(ForeignKey("election.id"), primary_key=True)
-	deadline_id: Mapped[int] = mapped_column(ForeignKey("deadline.id"), primary_key=True)
-	
-	__table_args__ = (
-		UniqueConstraint("election_id", "deadline_id", name="election_deadline_idx"),
-	)
+class RequirementTypes(str, Enum):
+    MUNICIPALITY = "municipality"
+    ELECTION = "election"
+    
+class RequirementParents(BaseModel):
+	id: Mapped[int] = mapped_column(primary_key=True)
+	parent_id: Mapped[int] = mapped_column(nullable=False)
+	parent_type: Mapped[RequirementTypes] = mapped_column(ENUM(
+		RequirementTypes, 
+		name='requirementtype'
+	))
 
-class ElectionForm(BaseModel):
-	election_id: Mapped[int] = mapped_column(ForeignKey("election.id"), primary_key=True)
-	form_id: Mapped[int] = mapped_column(ForeignKey("form.id"), primary_key=True)
+class DeadlineTypes(str, Enum):
+    MUNICIPALITY = "municipality"
+    ELECTION = "election"
+    REQUIREMENT = "requirement"
+    
+class DeadlineParents(BaseModel):
+	id: Mapped[int] = mapped_column(primary_key=True)
+	parent_id: Mapped[int] = mapped_column(nullable=False)
+	parent_type: Mapped[DeadlineTypes] = mapped_column(ENUM(
+		DeadlineTypes, 
+		name='deadlinetype'
+	))
+
+class FormTypes(str, Enum):
+    MUNICIPALITY = "municipality"
+    ELECTION = "election"
+    REQUIREMENT = "requirement"
+    
+class FormParents(BaseModel):
+	id: Mapped[int] = mapped_column(primary_key=True)
+	parent_id: Mapped[int] = mapped_column(nullable=False)
+	parent_type: Mapped[FormTypes] = mapped_column(ENUM(
+		FormTypes, 
+		name='deadlinetype'
+	))
+
+# class ElectionRequirement(BaseModel):
+# 	election_id: Mapped[int] = mapped_column(ForeignKey("election.id"), primary_key=True)
+# 	requirement_id: Mapped[int] = mapped_column(ForeignKey("requirement.id"), primary_key=True)
 	
-	__table_args__ = (
-		UniqueConstraint("election_id", "form_id", name="election_form_idx"),
-	)
+# 	__table_args__ = (
+# 		UniqueConstraint("election_id", "requirement_id", name="election_requirement_idx"),
+# 	)
+
+# class ElectionDeadline(BaseModel):
+# 	election_id: Mapped[int] = mapped_column(ForeignKey("election.id"), primary_key=True)
+# 	deadline_id: Mapped[int] = mapped_column(ForeignKey("deadline.id"), primary_key=True)
+	
+# 	__table_args__ = (
+# 		UniqueConstraint("election_id", "deadline_id", name="election_deadline_idx"),
+# 	)
+
+# class ElectionForm(BaseModel):
+# 	election_id: Mapped[int] = mapped_column(ForeignKey("election.id"), primary_key=True)
+# 	form_id: Mapped[int] = mapped_column(ForeignKey("form.id"), primary_key=True)
+	
+# 	__table_args__ = (
+# 		UniqueConstraint("election_id", "form_id", name="election_form_idx"),
+# 	)
