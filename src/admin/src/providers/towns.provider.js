@@ -7,6 +7,7 @@ export const TownsContext = createContext();
 export const TownsProvider = ({ children }) => {
   const [loading, setLoading] = useState({});
   const [towns, setTowns] = useState([]);
+  const [town, setTown] = useState(null);
 
   // This is all just test data
   const [deadlines, setDeadlines] = useState([
@@ -65,6 +66,7 @@ export const TownsProvider = ({ children }) => {
     // Properties
     loading,
     towns,
+    town,
 
     deadlines,
     requirements,
@@ -81,71 +83,77 @@ export const TownsProvider = ({ children }) => {
       setLoading((prev) => ({ ...prev, getTowns: false }));
     },
 
-    getTown: (name) => {},
+    getTown: async (id) => {
+      const town = await fetch(`http://127.0.0.1:5000/town/${id}`).then(
+        (resp) => resp.json(),
+      );
+
+      setTown(town);
+    },
 
     createOffice: async (town, office) => {
-      console.log(office);
+      // console.log(office);
 
-      office = {
-        id: 385,
-        title: "Testing",
-        description: "Testing Office Update",
-        salary: "50000",
-        commitment_min: "20",
-        commitment_max: "25",
-        terms: [
-          {
-            id: null,
-            start: "2025-01-01",
-            end: "2026-01-01",
-            incumbents: [],
-            election: {
-              id: null, // TODO: ADD
-              polling_date: "2025-01-01",
-              seat_count: 1,
-              type: "GENERAL", // TODO: ADD
-              candidates: [],
-              deadlines: [
-                {
-                  id: null,
-                  label: "Term 1 Deadline",
-                  description: "Term 1 Deadline",
-                  deadline: "2025-01-01",
-                },
-              ],
-              requirements: [
-                {
-                  id: null,
-                  label: "Test Requirement",
-                  description: "Testing Requirements",
-                  form: {
-                    id: null,
-                    label: "Requirement Form",
-                    description: "Testing Requirement Form",
-                    url: "https://example.com",
-                  },
-                  deadline: {
-                    id: null,
-                    label: "Requirement Deadline",
-                    description: "Testing Requirement Deadline",
-                    deadline: "2025-01-01",
-                  },
-                },
-              ],
-              responsibilities: [],
-              forms: [
-                {
-                  id: null,
-                  label: "Term 1 Form",
-                  description: "Term 1 Testing Form",
-                  url: "https://example-form.com",
-                },
-              ],
-              notes: [],
-            },
-          },
-        ],
-      };
+      // office = {
+      //   id: 385,
+      //   title: "Testing",
+      //   description: "Testing Office Update",
+      //   salary: "50000",
+      //   commitment_min: "20",
+      //   commitment_max: "25",
+      //   terms: [
+      //     {
+      //       id: null,
+      //       start: "2025-01-01",
+      //       end: "2026-01-01",
+      //       incumbents: [],
+      //       election: {
+      //         id: null, // TODO: ADD
+      //         polling_date: "2025-01-01",
+      //         seat_count: 1,
+      //         type: "GENERAL", // TODO: ADD
+      //         candidates: [],
+      //         deadlines: [
+      //           {
+      //             id: null,
+      //             label: "Term 1 Deadline",
+      //             description: "Term 1 Deadline",
+      //             deadline: "2025-01-01",
+      //           },
+      //         ],
+      //         requirements: [
+      //           {
+      //             id: null,
+      //             label: "Test Requirement",
+      //             description: "Testing Requirements",
+      //             form: {
+      //               id: null,
+      //               label: "Requirement Form",
+      //               description: "Testing Requirement Form",
+      //               url: "https://example.com",
+      //             },
+      //             deadline: {
+      //               id: null,
+      //               label: "Requirement Deadline",
+      //               description: "Testing Requirement Deadline",
+      //               deadline: "2025-01-01",
+      //             },
+      //           },
+      //         ],
+      //         responsibilities: [],
+      //         forms: [
+      //           {
+      //             id: null,
+      //             label: "Term 1 Form",
+      //             description: "Term 1 Testing Form",
+      //             url: "https://example-form.com",
+      //           },
+      //         ],
+      //         notes: [],
+      //       },
+      //     },
+      //   ],
+      // };
 
       console.log(town);
       console.log(office);

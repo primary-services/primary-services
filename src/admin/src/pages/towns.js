@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { AppContexts } from "../providers";
 // import { TownForm } from "../components/forms/town.js";
 import { OfficeForm } from "../components/forms/office.js";
+import { OfficeList } from "../components/lists/offices.js";
 import { Slideout } from "../components/slideout.js";
 
 const Clerk = ({ official }) => {
@@ -44,6 +45,7 @@ export const Towns = () => {
   const {
     loading,
     towns,
+    town,
     getTowns,
     getTown,
     createOffice,
@@ -52,7 +54,6 @@ export const Towns = () => {
     createForm /*createTown*/,
   } = useContext(AppContexts.TownsContext);
 
-  const [town, setTown] = useState(null);
   const [editing, setEditing] = useState(false);
   const [selected, setSelected] = useState({
     office: null,
@@ -110,8 +111,6 @@ export const Towns = () => {
   const saveOffice = (town, office) => {
     createOffice(town, office);
   };
-
-  console.log(towns);
 
   return (
     <section id="towns" className="page">
