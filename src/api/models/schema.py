@@ -166,6 +166,28 @@ class Election(BaseModel):
 	))
 	polling_date: Mapped[datetime.date]
 	seat_count: Mapped[int]
+
+	requirements: Mapped[List["Requirement"]] = relationship(
+    	secondary='requirement_parent',
+    	primaryjoin="and_(RequirementParent.parent_type=='election',foreign(RequirementParent.parent_id)==Election.id)",
+    	secondaryjoin="foreign(Requirement.id)==RequirementParent.requirement_id",
+    )
+
+	deadlines: Mapped[List["Deadline"]] = relationship(
+    	secondary='deadline_parent',
+    	primaryjoin="and_(DeadlineParent.parent_type=='election',foreign(DeadlineParent.parent_id)==Election.id)",
+    	secondaryjoin="foreign(Deadline.id)==DeadlineParent.deadline_id",
+	)
+
+	forms: Mapped[List["Form"]] = relationship(
+    	secondary='form_parent',
+    	primaryjoin="and_(FormParent.parent_type=='election',foreign(FormParent.parent_id)==Election.id)",
+    	secondaryjoin="foreign(Form.id)==FormParent.form_id",
+	)
+
+	__mapper_args__ = {
+        "polymorphic_identity": "election",
+    }
 	
 	
 # requirements
@@ -252,7 +274,6 @@ class RequirementParent(BaseModel):
 class DeadlineTypes(str, Enum):
     MUNICIPALITY = "municipality"
     ELECTION = "election"
-    REQUIREMENT = "requirement"
     
 class DeadlineParent(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
@@ -271,7 +292,6 @@ class DeadlineParent(BaseModel):
 class FormTypes(str, Enum):
     MUNICIPALITY = "municipality"
     ELECTION = "election"
-    REQUIREMENT = "requirement"
     
 class FormParent(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
@@ -279,7 +299,7 @@ class FormParent(BaseModel):
 	parent_id: Mapped[int] = mapped_column(nullable=False)
 	parent_type: Mapped[FormTypes] = mapped_column(ENUM(
 		FormTypes, 
-		name='deadlinetype'
+		name='formtype'
 	))
 
 	__mapper_args__ = {
