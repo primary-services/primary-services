@@ -26,9 +26,6 @@ class Municipality(BaseModel):
     id: Mapped[int] = mapped_column(primary_key=True)
     parent_id: Mapped[Optional[int]] = mapped_column(ForeignKey('municipality.id'))
     parent: Mapped["Municipality"] = relationship(remote_side=[id])
-    requirements: Mapped[List["Requirement"]] = relationship(primaryjoin="and_(RequirementParents.parent_type='municipality',foreign(RequirementParents.parent_id)==Municipality.id)")
-    deadlines: Mapped[List["Deadline"]] = relationship(primaryjoin="and_(DeadlineParents.parent_type='municipality',foreign(DeadlineParents.parent_id)==Municipality.id)")
-    forms: Mapped[List["Form"]] = relationship(primaryjoin="and_(FormParents.parent_type='municipality',foreign(FormParents.parent_id)==Municipality.id)")
     offices: Mapped[List["Office"]] = relationship(back_populates="municipality")
 
     name: Mapped[str]
@@ -37,6 +34,28 @@ class Municipality(BaseModel):
     	MunicipalityType, 
     	name='municipalitytype', 
     ))
+
+    requirements: Mapped[List["Requirement"]] = relationship(
+    	secondary='requirement_parent',
+    	primaryjoin="and_(RequirementParent.parent_type=='municipality',foreign(RequirementParent.parent_id)==Municipality.id)",
+    	secondaryjoin="foreign(Requirement.id)==RequirementParent.requirement_id",
+    )
+
+    deadlines: Mapped[List["Deadline"]] = relationship(
+    	secondary='deadline_parent',
+    	primaryjoin="and_(DeadlineParent.parent_type=='municipality',foreign(DeadlineParent.parent_id)==Municipality.id)",
+    	secondaryjoin="foreign(Deadline.id)==DeadlineParent.deadline_id",
+    )
+
+    forms: Mapped[List["Form"]] = relationship(
+    	secondary='form_parent',
+    	primaryjoin="and_(FormParent.parent_type=='municipality',foreign(FormParent.parent_id)==Municipality.id)",
+    	secondaryjoin="foreign(Form.id)==FormParent.form_id",
+    )
+    
+    __mapper_args__ = {
+        "polymorphic_identity": "municipality",
+    }
 
 # office_templates
 # 	- id
@@ -216,39 +235,57 @@ class RequirementTypes(str, Enum):
     MUNICIPALITY = "municipality"
     ELECTION = "election"
     
-class RequirementParents(BaseModel):
+class RequirementParent(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
+	requirement_id: Mapped[int] = mapped_column(ForeignKey('requirement.id'))
 	parent_id: Mapped[int] = mapped_column(nullable=False)
 	parent_type: Mapped[RequirementTypes] = mapped_column(ENUM(
 		RequirementTypes, 
 		name='requirementtype'
 	))
 
+	__mapper_args__ = {
+        "polymorphic_identity": "requirement",
+        "polymorphic_on": "parent_type",
+    }
+
 class DeadlineTypes(str, Enum):
     MUNICIPALITY = "municipality"
     ELECTION = "election"
     REQUIREMENT = "requirement"
     
-class DeadlineParents(BaseModel):
+class DeadlineParent(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
+	deadline_id: Mapped[int] = mapped_column(ForeignKey("deadline.id"))
 	parent_id: Mapped[int] = mapped_column(nullable=False)
 	parent_type: Mapped[DeadlineTypes] = mapped_column(ENUM(
 		DeadlineTypes, 
 		name='deadlinetype'
 	))
 
+	__mapper_args__ = {
+        "polymorphic_identity": "deadline",
+        "polymorphic_on": "parent_type",
+    }
+
 class FormTypes(str, Enum):
     MUNICIPALITY = "municipality"
     ELECTION = "election"
     REQUIREMENT = "requirement"
     
-class FormParents(BaseModel):
+class FormParent(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
+	form_id: Mapped[int] = mapped_column(ForeignKey("form.id"))
 	parent_id: Mapped[int] = mapped_column(nullable=False)
 	parent_type: Mapped[FormTypes] = mapped_column(ENUM(
 		FormTypes, 
 		name='deadlinetype'
 	))
+
+	__mapper_args__ = {
+        "polymorphic_identity": "form",
+        "polymorphic_on": "parent_type",
+    }
 
 # class ElectionRequirement(BaseModel):
 # 	election_id: Mapped[int] = mapped_column(ForeignKey("election.id"), primary_key=True)

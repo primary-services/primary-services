@@ -13,9 +13,9 @@ from models import (
     Requirement,
     # ElectionRequirement
     
-    RequirementParents,
-    DeadlineParents,
-    FormTypes
+    RequirementParent,
+    DeadlineParent,
+    FormParent
 )
 from flask import Flask, jsonify, request
 from flask_cors import CORS
