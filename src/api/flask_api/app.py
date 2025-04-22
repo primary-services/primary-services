@@ -7,11 +7,15 @@ from models import (
     Term, 
     Election, 
     Deadline, 
-    ElectionDeadline,
+    # ElectionDeadline,
     Form,
-    ElectionForm,
+    # ElectionForm,
     Requirement,
-    ElectionRequirement
+    # ElectionRequirement
+    
+    RequirementParent,
+    DeadlineParent,
+    FormParent
 )
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -37,7 +41,12 @@ with app.app_context():
 @app.get("/towns")
 def get_towns():
     towns = Municipality.query.all()   
-    serialized_towns = [town.to_dict(nested=True) for town in towns]
+    try: 
+        serialized_towns = [town.to_dict(nested=True) for town in towns]
+    except:
+        print("Error Serializing Towns")
+        return {"error:", "Error serializing town"}, 500
+
     return serialized_towns, 200
 
 @app.get("/town/<town_id>")
@@ -47,77 +56,79 @@ def get_town(town_id):
 
 @app.post("/office")
 def create_office():
-    _office = request.json
-    _terms = _office["terms"]
+    pass
 
-    office = Office.upsert(Office, _office)[0]
-    office_fks = {
-        "office_id": office.id,
-        "municipality_id": office.municipality_id
-    }
+    # _office = request.json
+    # _terms = _office["terms"]
 
-    for _term in _terms:
-        _election = _term["election"]
+    # office = Office.upsert(Office, _office)[0]
+    # office_fks = {
+    #     "office_id": office.id,
+    #     "municipality_id": office.municipality_id
+    # }
+
+    # for _term in _terms:
+    #     _election = _term["election"]
     
-        term = Term.upsert(Term, {**office_fks,**_term})[0]
-        term_fks = {
-            "term_id": term.id
-        }
+    #     term = Term.upsert(Term, {**office_fks,**_term})[0]
+    #     term_fks = {
+    #         "term_id": term.id
+    #     }
 
-        election = Election.upsert(Election, {**office_fks, **term_fks, **_election})[0]
-        election_fks = {
-            "election_id": election.id
-        }
+    #     election = Election.upsert(Election, {**office_fks, **term_fks, **_election})[0]
+    #     election_fks = {
+    #         "election_id": election.id
+    #     }
 
-        for _deadline in _election["deadlines"]:
-            deadline = Deadline.upsert(Deadline, {**office_fks, **_deadline})[0]
-            rel = Deadline.upsert_m2m(ElectionDeadline, "election_deadline_idx", {
-                "election_id": election.id,
-                "deadline_id": deadline.id
-            })
+    #     for _deadline in _election["deadlines"]:
+    #         deadline = Deadline.upsert(Deadline, {**office_fks, **_deadline})[0]
+    #         rel = Deadline.upsert_m2m(ElectionDeadline, "election_deadline_idx", {
+    #             "election_id": election.id,
+    #             "deadline_id": deadline.id
+    #         })
 
-        for _form in _election["forms"]:
-            form = Form.upsert(Form, {**office_fks, **_form})[0]
-            rel = Form.upsert_m2m(ElectionForm, "election_form_idx", {
-                "election_id": election.id,
-                "form_id": form.id
-            })
+    #     for _form in _election["forms"]:
+    #         form = Form.upsert(Form, {**office_fks, **_form})[0]
+    #         rel = Form.upsert_m2m(ElectionForm, "election_form_idx", {
+    #             "election_id": election.id,
+    #             "form_id": form.id
+    #         })
 
 
-        for _requirement in _election["requirements"]:
-            form = None
-            deadline = None
-            req_fks = {}
+    #     for _requirement in _election["requirements"]:
+    #         form = None
+    #         deadline = None
+    #         req_fks = {}
 
-            if "form" in _requirement and _requirement["form"] != None:
-                form = Form.upsert(Form, {**office_fks, **_requirement["form"]})[0]
-                req_fks["form_id"] = form.id 
-                rel = Form.upsert_m2m(ElectionForm, "election_form_idx", {
-                    "election_id": election.id,
-                    "form_id": form.id
-                })
+    #         if "form" in _requirement and _requirement["form"] != None:
+    #             form = Form.upsert(Form, {**office_fks, **_requirement["form"]})[0]
+    #             req_fks["form_id"] = form.id 
+    #             rel = Form.upsert_m2m(ElectionForm, "election_form_idx", {
+    #                 "election_id": election.id,
+    #                 "form_id": form.id
+    #             })
                 
-            if "deadline" in _requirement and _requirement["deadline"] != None:
-                deadline = Deadline.upsert(Deadline, {**office_fks, **_requirement["deadline"]})[0]
-                req_fks["deadline_id"] = deadline.id
-                rel = Form.upsert_m2m(ElectionDeadline, "election_deadline_idx", {
-                    "election_id": election.id,
-                    "deadline_id": deadline.id
-                }) 
+    #         if "deadline" in _requirement and _requirement["deadline"] != None:
+    #             deadline = Deadline.upsert(Deadline, {**office_fks, **_requirement["deadline"]})[0]
+    #             req_fks["deadline_id"] = deadline.id
+    #             rel = Form.upsert_m2m(ElectionDeadline, "election_deadline_idx", {
+    #                 "election_id": election.id,
+    #                 "deadline_id": deadline.id
+    #             }) 
 
-            requirement = Requirement.upsert(Requirement, {**office_fks, **req_fks, **_requirement})[0]
-            rel = Requirement.upsert_m2m(ElectionRequirement, "election_requirement_idx", {
-                "election_id": election.id,
-                "requirement_id": requirement.id
-            }) 
+    #         requirement = Requirement.upsert(Requirement, {**office_fks, **req_fks, **_requirement})[0]
+    #         rel = Requirement.upsert_m2m(ElectionRequirement, "election_requirement_idx", {
+    #             "election_id": election.id,
+    #             "requirement_id": requirement.id
+    #         }) 
 
-    db.session.commit()
+    # db.session.commit()
 
     # TODO: Get and return the fully saved office
     
-    print(office)
+    # print(office)
 
-    return jsonify(office.to_dict())
+    # return jsonify(office.to_dict())
 
 # Commenting this out, so we don't accidently create more towns
 @app.post("/town")
