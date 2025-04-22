@@ -21,8 +21,8 @@ export const OfficeForm = ({ editing, onSave, onCancel }) => {
 	let [errors, setErrors] = useState({});
 
 	useEffect(() => {
-		console.log("Office", office);
-	}, [office]);
+		console.log("Office", editing);
+	}, [editing]);
 
 	const update = (field, value) => {
 		setOffice({ ...office, [field]: value });
