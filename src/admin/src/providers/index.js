@@ -1,8 +1,14 @@
 import { TownsProvider, TownsContext } from "./towns.provider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 let provider = (provider, props = {}) => [provider, props];
 
-let providers = [provider(TownsProvider)];
+let providers = [
+  provider(TownsProvider),
+  provider(QueryClientProvider, { client: queryClient }),
+];
 
 const AppContexts = {
   TownsContext,

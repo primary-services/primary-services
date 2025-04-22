@@ -5,7 +5,7 @@ import { createContext, useState } from "react";
 
 export const TownsContext = createContext();
 export const TownsProvider = ({ children }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState({});
   const [towns, setTowns] = useState([]);
 
   // This is all just test data
@@ -73,10 +73,12 @@ export const TownsProvider = ({ children }) => {
 
     // Methods
     getTowns: async () => {
+      setLoading((prev) => ({ ...prev, getTowns: true }));
       const resp = await fetch("http://127.0.0.1:5000/towns");
       const list = await resp.json();
 
       setTowns(list);
+      setLoading((prev) => ({ ...prev, getTowns: false }));
     },
 
     getTown: (name) => {},
@@ -148,6 +150,7 @@ export const TownsProvider = ({ children }) => {
       console.log(town);
       console.log(office);
 
+      setLoading((prev) => ({ ...prev, createOffice: true }));
       let officeResp = await fetch("http://127.0.0.1:5000/office", {
         method: "POST",
         headers: {
@@ -158,6 +161,7 @@ export const TownsProvider = ({ children }) => {
       }).then((resp) => {
         return resp.json();
       });
+      setLoading((prev) => ({ ...prev, createOffice: false }));
 
       console.log(officeResp);
 
