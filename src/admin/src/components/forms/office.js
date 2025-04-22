@@ -10,11 +10,17 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 		title: "",
 		description: "",
 		salary: 0,
-		commitment_min: 0,
-		commitment_max: 0,
+		elected: true,
+		min_hours: 0,
+		max_hours: 0,
 		terms: [],
-		...selected,
 	});
+
+	useEffect(() => {
+		if (selected){
+			setOffice(prev => ({...prev, ...selected}))
+		}
+	}, [selected])
 
 	let [term, setTerm] = useState(null);
 
@@ -80,9 +86,9 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 						<label>Min Hours</label>
 						<input
 							type="number"
-							value={office.commitment_min}
+							value={office.min_hours}
 							onInput={(e) => {
-								update("commitment_min", e.target.value);
+								update("min_hours", e.target.value);
 							}}
 						/>
 					</div>
@@ -90,16 +96,16 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 						<label>Max Hours</label>
 						<input
 							type="number"
-							value={office.commitment_max}
+							value={office.max_hours}
 							onInput={(e) => {
-								update("commitment_max", e.target.value);
+								update("max_hours", e.target.value);
 							}}
 						/>
 					</div>
 				</div>
 			</section>
 
-			<section className="terms">
+			{office.elected && <section className="terms">
 				<SubForm
 					form={TermForm}
 					list={TermList}
@@ -124,7 +130,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 					onSave={saveTerms}
 					onValidate={validateTerm}
 				/>
-			</section>
+			</section>}
 
 			<section className="actions">
 				<div className="btn blocky clicky" onClick={save}>

@@ -57,6 +57,17 @@ def get_town_requirements(town_id):
     serialized = [r.to_dict(nested=True) for r in rs]
     return serialized, 200
 
+@app.get("/office/<office_id>")
+def get_office(office_id):
+    office = Office.where(id=int(office_id)).first()
+    return office.to_dict(nested=True, hybrid_attributes=True), 200
+
+@app.get("/office/<office_id>/terms")
+def get_office_terms(office_id):
+    terms = Term.where(election___office_id=int(office_id)).all()
+    serialized = [t.to_dict(nested=True) for t in terms]
+    return serialized, 200
+
 @app.post("/office")
 def create_office():
     _office = request.json

@@ -613,7 +613,7 @@ export const Towns = () => {
       <Slideout active={editing} setActive={setEditing}>
         <form>
           <OfficeForm
-            office={editing || {}}
+            selected={editing}
             onSave={(office) => {
               saveOffice(town, office);
             }}
