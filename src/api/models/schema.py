@@ -246,9 +246,9 @@ class Election(BaseModel):
     }
 	
 class ElectionTerm(BaseModel):
-	id: Mapped[int] mapped_column(primary_key=True)
+	id: Mapped[int] = mapped_column(primary_key=True)
 	election_id: Mapped[int] = mapped_column(ForeignKey('election.id'))
-	term_id: Mapped[int] = mapped_column(ForeignKey("term_id"))
+	term_id: Mapped[int] = mapped_column(ForeignKey("term.id"))
 
 
 # requirements
