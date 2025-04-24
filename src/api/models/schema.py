@@ -185,7 +185,9 @@ class Seat(BaseModel):
 class Term(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
 	seat_id: Mapped[int] = mapped_column(ForeignKey('seat.id'))
-	seat: 
+	seat: Mapped[Seat] = relationship()
+	
+	elections: Mapped[List["Election"]] = relationship("Election", secondary='election_term', back_populates='terms')
 	# election: Mapped["Election"] = relationship(back_populates="term")
 	start: Mapped[datetime.date]
 	end: Mapped[datetime.date]
@@ -206,18 +208,20 @@ class ElectionType(str, Enum):
 
 class Election(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
-	term_id: Mapped[int] = mapped_column(ForeignKey("term.id"))
-	term: Mapped[Term] = relationship()
+	terms: Mapped[List["Term"]] = relationship("Term", secondary='election_term', back_populates='elections')
+	
+	# term_id: Mapped[int] = mapped_column(ForeignKey("term.id"))
+	# term: Mapped[Term] = relationship()
 
-	office_id: Mapped[Optional[int]] = mapped_column(ForeignKey('office.id'))
-	office: Mapped[Office] = relationship()
+	# office_id: Mapped[Optional[int]] = mapped_column(ForeignKey('office.id'))
+	# office: Mapped[Office] = relationship()
 
 	type: Mapped[ElectionType] = mapped_column(ENUM(
 		ElectionType, 
 		name='electiontype'
 	))
 	polling_date: Mapped[datetime.date]
-	seat_count: Mapped[int]
+	# seat_count: Mapped[int]
 
 	requirements: Mapped[List["Requirement"]] = relationship(
     	secondary='requirement_parent',
@@ -241,7 +245,12 @@ class Election(BaseModel):
         "polymorphic_identity": "election",
     }
 	
-	
+class ElectionTerm(BaseModel):
+	id: Mapped[int] mapped_column(primary_key=True)
+	election_id: Mapped[int] = mapped_column(ForeignKey('election.id'))
+	term_id: Mapped[int] = mapped_column(ForeignKey("term_id"))
+
+
 # requirements
 # 	- id 
 # 	- form_id (FK)
