@@ -423,7 +423,7 @@ export const Towns = () => {
         <form>
           {!!editing && (
             <OfficeForm
-              editing={editing || {}}
+              selected={editing || {}}
               onSave={(office) => {
                 saveOffice(town, office);
               }}
