@@ -1,13 +1,17 @@
 import datetime
+from functools import cached_property
+from dateutil.relativedelta import relativedelta
 
 # from enum import Enum
 from enum import Enum
 
 from typing import Optional, List, get_args
+from sqlalchemy.sql._elements_constructors import desc
 from sqlalchemy import inspect, engine, literal_column, UniqueConstraint
 from sqlalchemy.dialects.postgresql import insert, ENUM
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.schema import ForeignKey
+from sqlalchemy.ext.hybrid import hybrid_property
 from models.base import BaseModel
 
 
@@ -85,6 +89,8 @@ class Office(BaseModel):
 
 	officials: Mapped[List["Official"]] = relationship(back_populates="office")
 
+	elections: Mapped[List["Election"]] = relationship(back_populates="office", lazy='dynamic')
+
 	title: Mapped[str] = mapped_column(nullable=True)
 	description: Mapped[str] = mapped_column(nullable=True)
 	elected: Mapped[bool] = mapped_column(server_default='TRUE')
@@ -92,6 +98,39 @@ class Office(BaseModel):
 	salary: Mapped[int] = mapped_column(nullable=True)
 	min_hours: Mapped[int] = mapped_column(nullable=True)
 	max_hours: Mapped[int] = mapped_column(nullable=True)
+
+	@cached_property
+	def next_election(self):
+		return self.elections.order_by(desc(Election.polling_date)).first()
+	
+	@hybrid_property
+	def next_election_date(self):
+		if not self.next_election:
+			return None
+		return self.next_election.polling_date
+	
+	@hybrid_property
+	def seat_count(self):
+		if not self.next_election:
+			return None
+		return self.next_election.seat_count
+
+	@hybrid_property
+	def term_length(self):
+		if not self.next_election:
+			return None
+		
+		output = ""
+		difference = relativedelta(self.next_election.term.end, self.next_election.term.start)
+		if difference.years:
+			output += f"{difference.years} years "
+		if difference.months:
+			output += f"{difference.months} months "
+		if difference.days:
+			output += f"{difference.days} days"
+		return output
+
+
 
 # officials
 # 	- id

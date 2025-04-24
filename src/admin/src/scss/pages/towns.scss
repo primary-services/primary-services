@@ -113,6 +113,34 @@
 		&.offices {
 			.grid-list-item,
 			.grid-list-header {
+				grid-template-columns: 30px 1.5fr 0.8fr 0.8fr 0.8fr 1.2fr 1.4fr 0.7fr;
+			}
+		}
+
+		&.deadlines {
+			.grid-list-item,
+			.grid-list-header {
+				grid-template-columns: 30px auto 100px;
+			}
+		}
+
+		&.forms {
+			.grid-list-item,
+			.grid-list-header {
+				grid-template-columns: 30px auto 100px;
+			}
+		}
+
+		&.requirements {
+			.grid-list-item,
+			.grid-list-header {
+				grid-template-columns: 30px auto 100px 100px;
+			}
+		}
+
+		&.responsibilties {
+			.grid-list-item,
+			.grid-list-header {
 				grid-template-columns: 70px 2fr 0.8fr 0.8fr 1.2fr 1.2fr 1.2fr 0.8fr;
 			}
 		}
