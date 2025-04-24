@@ -164,6 +164,18 @@ class Candidate(BaseModel):
 	election_id: Mapped[int] = mapped_column(ForeignKey('election.id'))
 	election: Mapped["Election"] = relationship()
 
+# seats
+#   - id,
+# 	- municipality_id (FK)
+#   - name
+class Seat(BaseModel):
+	id: Mapped[int] = mapped_column(primary_key=True)
+	office_id: Mapped[int] = mapped_column(ForeignKey('office.id'))
+	office: Mapped[Office] = relationship()
+
+	name: Mapped[str] = mapped_column(nullable=True) 
+	terms: Mapped[List["Term"]] = relationship()
+	elections: Mapped[List["Election"]] = relationship()
 
 # terms
 # 	- id,
@@ -172,10 +184,12 @@ class Candidate(BaseModel):
 # 	- incumbents: [],
 class Term(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
-	election: Mapped["Election"] = relationship(back_populates="term")
+	seat_id: Mapped[int] = mapped_column(ForeignKey('seat.id'))
+	seat: 
+	# election: Mapped["Election"] = relationship(back_populates="term")
 	start: Mapped[datetime.date]
 	end: Mapped[datetime.date]
-	incumbents: Mapped[List[Official]] = relationship(back_populates="term")
+	# incumbents: Mapped[List[Official]] = relationship(back_populates="term")
 
 
 # elections
@@ -185,7 +199,6 @@ class Term(BaseModel):
 # 	- term_id (FK)
 # 	- type (primary/general/special)
 # 	- election_date
-
 class ElectionType(str, Enum):
     PRIMARY = "primary"
     GENERAL = "general"
