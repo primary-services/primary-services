@@ -166,7 +166,7 @@ export const Towns = () => {
                   className="icon right-aligned clickable"
                   data-uk-icon="plus-circle"
                   onClick={() => {
-                    setSelected({ ...selected, office: {} });
+                    setEditing({});
                   }}
                 ></span>
               </div>
@@ -419,21 +419,16 @@ export const Towns = () => {
           </>
         )}
       </div>
-      <Slideout
-        active={!!selected.office}
-        setActive={(o) => {
-          setSelected({ ...selected, office: o });
-        }}
-      >
+      <Slideout active={editing} setActive={setEditing}>
         <form>
-          {!!selected.office && (
+          {!!editing && (
             <OfficeForm
-              editing={selected.office || {}}
+              editing={editing || {}}
               onSave={(office) => {
-                saveOffice(town, selected.office);
+                saveOffice(town, office);
               }}
               onCancel={() => {
-                setSelected({ ...selected, office: null });
+                setEditing(false);
               }}
             />
           )}

@@ -4,7 +4,7 @@ import { TermForm } from "./terms.js";
 import { TermList } from "../lists/terms.js";
 import { SubForm } from "./subform.js";
 
-export const OfficeForm = ({ editing, onSave, onCancel }) => {
+export const OfficeForm = ({ selected, onSave, onCancel }) => {
 	let [office, setOffice] = useState({
 		id: null,
 		title: "",
@@ -17,10 +17,10 @@ export const OfficeForm = ({ editing, onSave, onCancel }) => {
 	});
 
 	useEffect(() => {
-		if (selected){
-			setOffice(prev => ({...prev, ...selected}))
+		if (selected) {
+			setOffice((prev) => ({ ...prev, ...selected }));
 		}
-	}, [selected])
+	}, [selected]);
 
 	let [term, setTerm] = useState(null);
 
@@ -105,34 +105,36 @@ export const OfficeForm = ({ editing, onSave, onCancel }) => {
 				</div>
 			</section>
 
-			{office.elected && <section className="terms">
-				<SubForm
-					form={TermForm}
-					list={TermList}
-					label="Terms"
-					items={office.terms}
-					template={{
-						id: null,
-						start: null,
-						end: null,
-						incumbents: [],
-						election: {
+			{office.elected && (
+				<section className="terms">
+					<SubForm
+						form={TermForm}
+						list={TermList}
+						label="Terms"
+						items={office.terms}
+						template={{
 							id: null,
-							polling_date: null,
-							seat_count: 1,
-							type: "GENERAL",
-							candidates: [],
-							deadlines: [],
-							requirements: [],
-							responsibilities: [],
-							forms: [],
-							notes: [],
-						},
-					}}
-					onSave={saveTerms}
-					onValidate={validateTerm}
-				/>
-			</section>}
+							start: null,
+							end: null,
+							incumbents: [],
+							election: {
+								id: null,
+								polling_date: null,
+								seat_count: 1,
+								type: "GENERAL",
+								candidates: [],
+								deadlines: [],
+								requirements: [],
+								responsibilities: [],
+								forms: [],
+								notes: [],
+							},
+						}}
+						onSave={saveTerms}
+						onValidate={validateTerm}
+					/>
+				</section>
+			)}
 
 			<section className="actions">
 				<div className="btn blocky clicky" onClick={save}>
