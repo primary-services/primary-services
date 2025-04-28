@@ -42,6 +42,76 @@ def get_towns():
 
     return serialized_towns, 200
 
+@app.get("/municipality/<municipality_id>")
+def get_municipality(municipality_id):
+    municipality = db.session.execute(
+        text("""
+            SELECT 
+                election.*,
+                requirements.agg AS requirements
+            FROM 
+                election
+            LEFT JOIN 
+                election_term ON election_term.election_id = election.id
+            LEFT JOIN 
+                term ON election_term.term_id = term.id
+            LEFT JOIN
+                seat ON term.seat_id = seat.id
+            LEFT JOIN LATERAL (
+                SELECT 
+                    JSONB_AGG(rc.*) AS agg 
+                FROM (
+                    SELECT 
+                        r.*,
+                        TO_JSONB(d.*),
+                        TO_JSONB(f.*)
+                    FROM 
+                        requirement AS r
+                    LEFT JOIN 
+                        deadline AS d ON d.id = r.deadline_id 
+                    LEFT JOIN 
+                        form AS f ON f.id = r.form_id
+                ) AS rc
+                LEFT JOIN 
+                    requirement_parent 
+                ON 
+                    requirement_parent.requirement_id = rc.id  
+                WHERE
+                    requirement_parent.parent_id = election.id AND requirement_parent.parent_type = 'ELECTION'
+            ) AS requirements ON TRUE
+            LEFT JOIN LATERAL (
+                SELECT 
+                    JSONB_AGG(deadline.*) AS agg
+                FROM    
+                    deadline
+                LEFT JOIN 
+                    deadline_parent 
+                ON 
+                    deadline_parent.deadline_id = deadline.id  
+                WHERE
+                    deadline_parent.parent_id = election.id AND deadline_parent.parent_type = 'ELECTION'
+            ) AS deadlines ON TRUE
+            LEFT JOIN LATERAL (
+                SELECT 
+                    JSONB_AGG(form.*) AS agg
+                FROM    
+                    form
+                LEFT JOIN 
+                    form_parent 
+                ON 
+                    form_parent.form_id = form.id  
+                WHERE
+                    form_parent.parent_id = election.id AND form_parent.parent_type = 'ELECTION'
+            ) AS forms ON TRUE
+            WHERE 
+                seat.office_id IN (
+                    SELECT id FROM office WHERE municipality_id = :id
+                )
+        """), {"id": int(municipality_id)}
+    ).mappings().first()   
+
+    return jsonify(dict(municipality)), 200
+
 @app.get("/town/<town_id>")
 def get_town(town_id):
     town = Municipality.where(id=int(town_id)).first()
