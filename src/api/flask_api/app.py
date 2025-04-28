@@ -7,11 +7,8 @@ from models import (
     Term, 
     Election, 
     Deadline, 
-    ElectionDeadline,
     Form,
-    ElectionForm,
     Requirement,
-    ElectionRequirement
 )
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -37,8 +34,13 @@ with app.app_context():
 @app.get("/towns")
 def get_towns():
     towns = Municipality.query.all()   
-    serialized = [town.to_dict(nested=True) for town in towns]
-    return serialized, 200
+    try: 
+        serialized_towns = [town.to_dict(nested=True) for town in towns]
+    except:
+        print("Error Serializing Towns")
+        return {"error:", "Error serializing town"}, 500
+
+    return serialized_towns, 200
 
 @app.get("/town/<town_id>")
 def get_town(town_id):
@@ -48,6 +50,7 @@ def get_town(town_id):
 @app.get("/town/<town_id>/offices")
 def get_town_offices(town_id):
     offices = Office.where(municipality_id=int(town_id)).all()
+    
     serialized = [office.to_dict(nested=True, hybrid_attributes=True) for office in offices]
     return serialized, 200
 

@@ -12,6 +12,8 @@ from sqlalchemy.dialects.postgresql import insert, ENUM
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.schema import ForeignKey
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.ext.associationproxy import AssociationProxy
+from sqlalchemy.ext.associationproxy import association_proxy
 from models.base import BaseModel
 
 
@@ -88,9 +90,8 @@ class Office(BaseModel):
 	municipality: Mapped[Municipality] = relationship(back_populates="offices")
 
 	officials: Mapped[List["Official"]] = relationship(back_populates="office")
-
-	elections: Mapped[List["Election"]] = relationship(back_populates="office", lazy='dynamic')
-
+	seats: Mapped[List["Seat"]] = relationship(back_populates="office", lazy="dynamic")
+	
 	title: Mapped[str] = mapped_column(nullable=True)
 	description: Mapped[str] = mapped_column(nullable=True)
 	elected: Mapped[bool] = mapped_column(server_default='TRUE')
@@ -99,36 +100,38 @@ class Office(BaseModel):
 	min_hours: Mapped[int] = mapped_column(nullable=True)
 	max_hours: Mapped[int] = mapped_column(nullable=True)
 
+	# elections: AssociationProxy["Election"] = association_proxy("seats", "elections", creator=lambda elections: elections[0])
+
 	@cached_property
 	def next_election(self):
-		return self.elections.order_by(desc(Election.polling_date)).first()
+		return self.elections.first()
 	
-	@hybrid_property
-	def next_election_date(self):
-		if not self.next_election:
-			return None
-		return self.next_election.polling_date
+	# @hybrid_property
+	# def next_election_date(self):
+	# 	if not self.next_election:
+	# 		return None
+	# 	return self.next_election.polling_date
 	
-	@hybrid_property
-	def seat_count(self):
-		if not self.next_election:
-			return None
-		return self.next_election.seat_count
+	# @hybrid_property
+	# def seat_count(self):
+	# 	if not self.next_election:
+	# 		return None
+	# 	return self.next_election.seat_count
 
-	@hybrid_property
-	def term_length(self):
-		if not self.next_election:
-			return None
+	# @hybrid_property
+	# def term_length(self):
+	# 	if not self.next_election:
+	# 		return None
 		
-		output = ""
-		difference = relativedelta(self.next_election.term.end, self.next_election.term.start)
-		if difference.years:
-			output += f"{difference.years} years "
-		if difference.months:
-			output += f"{difference.months} months "
-		if difference.days:
-			output += f"{difference.days} days"
-		return output
+	# 	output = ""
+	# 	difference = relativedelta(self.next_election.term.end, self.next_election.term.start)
+	# 	if difference.years:
+	# 		output += f"{difference.years} years "
+	# 	if difference.months:
+	# 		output += f"{difference.months} months "
+	# 	if difference.days:
+	# 		output += f"{difference.days} days"
+	# 	return output
 
 
 
@@ -175,7 +178,11 @@ class Seat(BaseModel):
 
 	name: Mapped[str] = mapped_column(nullable=True) 
 	terms: Mapped[List["Term"]] = relationship()
-	elections: Mapped[List["Election"]] = relationship()
+
+	# elections: AssociationProxy[List["Election"]] = association_proxy("terms", "elections")
+
+	
+
 
 # terms
 # 	- id,
@@ -188,7 +195,7 @@ class Term(BaseModel):
 	seat: Mapped[Seat] = relationship()
 	
 	elections: Mapped[List["Election"]] = relationship("Election", secondary='election_term', back_populates='terms')
-	# election: Mapped["Election"] = relationship(back_populates="term")
+	
 	start: Mapped[datetime.date]
 	end: Mapped[datetime.date]
 	# incumbents: Mapped[List[Official]] = relationship(back_populates="term")
@@ -208,7 +215,6 @@ class ElectionType(str, Enum):
 
 class Election(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
-	terms: Mapped[List["Term"]] = relationship("Term", secondary='election_term', back_populates='elections')
 	
 	# term_id: Mapped[int] = mapped_column(ForeignKey("term.id"))
 	# term: Mapped[Term] = relationship()
@@ -223,6 +229,8 @@ class Election(BaseModel):
 	polling_date: Mapped[datetime.date]
 	# seat_count: Mapped[int]
 
+	terms: Mapped[List["Term"]] = relationship("Term", secondary='election_term', back_populates='elections')
+	
 	requirements: Mapped[List["Requirement"]] = relationship(
     	secondary='requirement_parent',
     	primaryjoin="and_(RequirementParent.parent_type=='election',foreign(RequirementParent.parent_id)==Election.id)",
