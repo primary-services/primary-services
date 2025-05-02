@@ -6,6 +6,10 @@ import {
   getTownOffices,
   getTownRequirements,
   getTowns,
+  ////// Seat Schema //////
+  getMunicipality,
+  getMunicipalityOffices,
+  getMunicipalityElections,
 } from "./api";
 
 export const useTowns = () =>
@@ -73,3 +77,47 @@ export const useCreateRequirement = () =>
       invalidateTownRequirements(office.municipality_id);
     },
   });
+
+////////////// Seat Schema ///////////////
+
+export const useMunicipality = (municipality_id) =>
+  useQuery({
+    queryKey: ["municipalities", municipality_id],
+    queryFn: () => getMunicipality(municipality_id),
+    enabled: !!municipality_id,
+  });
+
+export const useMunicipalityOffices = (municipality_id) =>
+  useQuery({
+    queryKey: ["municipalities", municipality_id, "offices"],
+    queryFn: () => getMunicipalityOffices(municipality_id),
+    enabled: !!municipality_id,
+  });
+
+export const useMunicipalityElections = (municipality_id) =>
+  useQuery({
+    queryKey: ["municipalities", municipality_id, "elections"],
+    queryFn: () => getMunicipalityElections(municipality_id),
+    enabled: !!municipality_id,
+  });
+
+export const invalidateMunicipality = (municipality_id) => {
+  const queryClient = new QueryClient();
+  return queryClient.invalidateQueries({
+    queryKey: ["municipalities", municipality_id],
+  });
+};
+
+export const invalidateMunicipalityOffices = (municipality_id) => {
+  const queryClient = new QueryClient();
+  return queryClient.invalidateQueries({
+    queryKey: ["municipalities", municipality_id, "offices"],
+  });
+};
+
+export const invalidateMunicipalityElections = (municipality_id) => {
+  const queryClient = new QueryClient();
+  return queryClient.invalidateQueries({
+    queryKey: ["municipalities", municipality_id, "elections"],
+  });
+};

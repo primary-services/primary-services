@@ -3,17 +3,17 @@ export const getTowns = () =>
 
 export const getTown = (town_id) =>
   fetch(`http://127.0.0.1:5000/town/${town_id}`).then((response) =>
-    response.json()
+    response.json(),
   );
 
 export const getTownOffices = (town_id) =>
   fetch(`http://127.0.0.1:5000/town/${town_id}/offices`).then((response) =>
-    response.json()
+    response.json(),
   );
 
 export const getTownRequirements = (town_id) =>
   fetch(`http://127.0.0.1:5000/town/${town_id}/requirements`).then((response) =>
-    response.json()
+    response.json(),
   );
 
 export const createOffice = (town, office) =>
@@ -39,3 +39,20 @@ export const createRequirement = (town, requirement) =>
   }).then((resp) => {
     return resp.json();
   });
+
+//////////// Seat Separation /////////////
+
+export const getMunicipality = (municipality_id) =>
+  fetch(`http://127.0.0.1:5000/municipality/${municipality_id}`).then(
+    (response) => response.json(),
+  );
+
+export const getMunicipalityOffices = (municipality_id) =>
+  fetch(`http://127.0.0.1:5000/municipality/${municipality_id}/offices`).then(
+    (response) => response.json(),
+  );
+
+export const getMunicipalityElections = (municipality_id) =>
+  fetch(`http://127.0.0.1:5000/municipality/${municipality_id}/elections`).then(
+    (response) => response.json(),
+  );
