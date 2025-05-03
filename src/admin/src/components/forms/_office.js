@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
-import { SeatForm } from "./seats.js";
-import { SeatList } from "../lists/seats.js";
+import { TermForm } from "./terms.js";
+import { TermList } from "../lists/terms.js";
 import { SubForm } from "./subform.js";
 
 export const OfficeForm = ({ selected, onSave, onCancel }) => {
@@ -13,30 +13,31 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 		elected: true,
 		min_hours: 0,
 		max_hours: 0,
-		seats: [],
+		terms: [],
 	});
 
 	useEffect(() => {
-		if (selected) {
-			setOffice((prev) => ({ ...prev, ...selected }));
+		if (selected){
+			setOffice(prev => ({...prev, ...selected}))
 		}
-	}, [selected]);
+	}, [selected])
 
-	let [seat, setSeat] = useState(null);
+	let [term, setTerm] = useState(null);
+
 	let [errors, setErrors] = useState({});
 
 	const update = (field, value) => {
 		setOffice({ ...office, [field]: value });
 	};
 
-	const saveSeat = (items) => {
+	const saveTerms = (items) => {
 		setOffice({
 			...office,
 			terms: items,
 		});
 	};
 
-	const validateSeat = () => {};
+	const validateTerm = () => {};
 
 	const save = () => {
 		onSave(office);
@@ -104,23 +105,32 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 				</div>
 			</section>
 
-			{office.elected && (
-				<section className="seats">
-					<SubForm
-						form={SeatForm}
-						list={SeatList}
-						label="Seats"
-						items={office.seats}
-						template={{
-							id: null,
-							name: "",
-							terms: [],
-						}}
-						onSave={saveSeat}
-						onValidate={validateSeat}
-					/>
-				</section>
-			)}
+			{office.elected && <section className="terms">
+				<SubForm
+					form={TermForm}
+					list={TermList}
+					label="Terms"
+					items={office.terms}
+					template={{
+						id: null,
+						start: null,
+						end: null,
+						incumbents: [],
+						election: {
+							polling_date: null,
+							seat_count: 1,
+							candidates: [],
+							deadlines: [],
+							requirements: [],
+							responsibilities: [],
+							forms: [],
+							notes: [],
+						},
+					}}
+					onSave={saveTerms}
+					onValidate={validateTerm}
+				/>
+			</section>}
 
 			<section className="actions">
 				<div className="btn blocky clicky" onClick={save}>

@@ -16,14 +16,26 @@ export const getTownRequirements = (town_id) =>
     response.json(),
   );
 
-export const createOffice = (town, office) =>
+export const createOffice = (municipality, office) =>
   fetch("http://127.0.0.1:5000/office", {
     method: "POST",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ ...office, municipality_id: town.id }),
+    body: JSON.stringify({ ...office, municipality_id: municipality.id }),
+  }).then((resp) => {
+    return resp.json();
+  });
+
+export const createElection = (municipality, election) =>
+  fetch("http://127.0.0.1:5000/election", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ ...election, municipality_id: municipality.id }),
   }).then((resp) => {
     return resp.json();
   });

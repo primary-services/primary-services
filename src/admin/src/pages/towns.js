@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { AppContexts } from "../providers";
 // import { TownForm } from "../components/forms/town.js";
 import { OfficeForm } from "../components/forms/office.js";
+import { ElectionForm } from "../components/forms/election.js";
 import { Slideout } from "../components/slideout.js";
 import { RequirementForm } from "../components/forms/requirements.js";
 import {
@@ -9,7 +10,11 @@ import {
   useTownRequirements,
   useTowns,
   useCreateOffice,
+  useCreateElection,
   useCreateRequirement,
+  useMunicipality,
+  useMunicipalityOffices,
+  useMunicipalityElections,
 } from "../api-hooks.js";
 import { cleanDateString } from "../utils.js";
 
@@ -53,8 +58,11 @@ export const Towns = () => {
   const { data: towns, isLoading: townsLoading } = useTowns();
 
   const [town, setTown] = useState(null);
-  const [editing, setEditing] = useState(false);
-  const { data: offices } = useTownOffices(town?.id);
+  const [office, setOffice] = useState(false);
+  const [election, setElection] = useState(false);
+  // const { data: offices } = useTownOffices(town?.id);
+  const { data: offices } = useMunicipalityOffices(town?.id);
+  const { data: elections } = useMunicipalityElections(town?.id);
 
   const getClerk = (t) => {
     if (!t || !t.officials) {
@@ -77,6 +85,11 @@ export const Towns = () => {
   };
 
   const { mutate: saveOffice } = useCreateOffice();
+  const { mutate: saveElection } = useCreateElection();
+
+  const removeElection = (e) => {
+    console.log(e);
+  };
 
   // useEffect(() => {
   //   createTowns();
@@ -165,7 +178,7 @@ export const Towns = () => {
                   className="icon right-aligned clickable"
                   data-uk-icon="plus-circle"
                   onClick={() => {
-                    setEditing({});
+                    setOffice({});
                   }}
                 ></span>
               </div>
@@ -187,7 +200,7 @@ export const Towns = () => {
                         <span
                           uk-icon="pencil"
                           onClick={() => {
-                            setEditing((prev) => (prev ? false : o));
+                            setOffice((prev) => (prev ? false : o));
                           }}
                         ></span>
                       </div>
@@ -216,203 +229,50 @@ export const Towns = () => {
                       <div>{o.seat_count ?? "-"}</div>
                     </li>
                   ))}
-                  {/* <li className="grid-list-item">
-                  <div>
-                    <span
-                      uk-icon="pencil"
-                      onClick={() => {
-                        setEditing(!editing);
-                      }}
-                    ></span>
-                  </div>
-                  <div>Moderator</div>
-                  <div>1 Year</div>
-                  <div>Nov 2025</div>
-                  <div>1</div>
-                </li>
-                <li className="grid-list-item">
-                  <div>
-                    <span
-                      uk-icon="pencil"
-                      onClick={() => {
-                        setEditing(!editing);
-                      }}
-                    ></span>
-                  </div>
-                  <div>Tree Warden</div>
-                  <div>1 Year</div>
-                  <div>Nov 2025</div>
-                  <div>1</div>
-                </li>
-                <li className="grid-list-item">
-                  <div>
-                    <span
-                      uk-icon="pencil"
-                      onClick={() => {
-                        setEditing(!editing);
-                      }}
-                    ></span>
-                  </div>
-                  <div>Select Board</div>
-                  <div>3 Years</div>
-                  <div>Nov 2025</div>
-                  <div>3</div>
-                </li>
-                <li className="grid-list-item">
-                  <div>
-                    <span
-                      uk-icon="pencil"
-                      onClick={() => {
-                        setEditing(!editing);
-                      }}
-                    ></span>
-                  </div>
-                  <div>Board of Assessors</div>
-                  <div>3 Years</div>
-                  <div>Nov 2025</div>
-                  <div>3</div>
-                </li>
-                <li className="grid-list-item">
-                  <div>
-                    <span
-                      uk-icon="pencil"
-                      onClick={() => {
-                        setEditing(!editing);
-                      }}
-                    ></span>
-                  </div>
-                  <div>Board of Health</div>
-                  <div>3 Years</div>
-                  <div>Nov 2025</div>
-                  <div>3</div>
-                </li>
-                <li className="grid-list-item">
-                  <div>
-                    <span
-                      uk-icon="pencil"
-                      onClick={() => {
-                        setEditing(!editing);
-                      }}
-                    ></span>
-                  </div>
-                  <div>Constable</div>
-                  <div>3 Years</div>
-                  <div>Nov 2025</div>
-                  <div>1</div>
-                </li>
-                <li className="grid-list-item">
-                  <div>
-                    <span
-                      uk-icon="pencil"
-                      onClick={() => {
-                        setEditing(!editing);
-                      }}
-                    ></span>
-                  </div>
-                  <div>School Committee</div>
-                  <div>3 Years</div>
-                  <div>Nov 2025</div>
-                  <div>3</div>
-                </li>
-                <li className="grid-list-item">
-                  <div>
-                    <span
-                      uk-icon="pencil"
-                      onClick={() => {
-                        setEditing(!editing);
-                      }}
-                    ></span>
-                  </div>
-                  <div>Sewer Commission</div>
-                  <div>3 Years</div>
-                  <div>Nov 2025</div>
-                  <div>3</div>
-                </li>
-                <li className="grid-list-item">
-                  <div>
-                    <span
-                      uk-icon="pencil"
-                      onClick={() => {
-                        setEditing(!editing);
-                      }}
-                    ></span>
-                  </div>
-                  <div>Library Trustee</div>
-                  <div>5 Years</div>
-                  <div>Nov 2025</div>
-                  <div>5</div>
-                </li>
-                <li className="grid-list-item">
-                  <div>
-                    <span
-                      uk-icon="pencil"
-                      onClick={() => {
-                        setEditing(!editing);
-                      }}
-                    ></span>
-                  </div>
-                  <div>Planning Board</div>
-                  <div>5 Years</div>
-                  <div>Nov 2025</div>
-                  <div>5</div>
-                </li>
-                <li className="grid-list-item">
-                  <div>
-                    <span
-                      uk-icon="pencil"
-                      onClick={() => {
-                        setEditing(!editing);
-                      }}
-                    ></span>
-                  </div>
-                  <div>Park Commission</div>
-                  <div>1 Year</div>
-                  <div>Nov 2025</div>
-                  <div>2</div>
-                </li>
-                <li className="grid-list-item">
-                  <div>
-                    <span
-                      uk-icon="pencil"
-                      onClick={() => {
-                        setEditing(!editing);
-                      }}
-                    ></span>
-                  </div>
-                  <div>Park Commission</div>
-                  <div>2 Years</div>
-                  <div>Nov 2025</div>
-                  <div>2</div>
-                </li>
-                <li className="grid-list-item">
-                  <div>
-                    <span
-                      uk-icon="pencil"
-                      onClick={() => {
-                        setEditing(!editing);
-                      }}
-                    ></span>
-                  </div>
-                  <div>Park Commission</div>
-                  <div>3 Years</div>
-                  <div>Nov 2025</div>
-                  <div>2</div>
-                </li>
-                <li className="grid-list-item">
-                  <div>
-                    <span
-                      uk-icon="pencil"
-                      onClick={() => {
-                        setEditing(!editing);
-                      }}
-                    ></span>
-                  </div>
-                  <div>Finance Committee</div>
-                  <div>3 Years</div>
-                  <div>Nov 2025</div>
-                  <div>6</div>
-                </li> */}
                 </ul>
+              )}
+            </section>
+
+            <section className="uk-width-1-1">
+              <div className="section-header">
+                <h2>Elections</h2>
+                <span
+                  className="icon right-aligned clickable"
+                  data-uk-icon="plus-circle"
+                  onClick={() => {
+                    setElection({});
+                  }}
+                ></span>
+              </div>
+              {!!elections && (
+                <div>
+                  <div className="grid header">
+                    <div className="width-1-12"></div>
+                    <div className="width-5-12">Name</div>
+                    <div className="width-3-12">Type</div>
+                    <div className="width-3-12">Date</div>
+                  </div>
+
+                  {elections.map((e) => (
+                    <div className="grid row">
+                      <div className="width-1-12">
+                        <span
+                          uk-icon="pencil"
+                          onClick={() => {
+                            setElection((prev) => (prev ? false : e));
+                          }}
+                        ></span>
+                      </div>
+                      <div className="width-5-12">
+                        {e?.seats?.names.join(", ")}
+                      </div>
+                      <div className="width-3-12">{e.type ?? "-"}</div>
+                      <div className="width-3-12">
+                        {cleanDateString(e.polling_date) ?? "-"}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               )}
             </section>
 
@@ -610,15 +470,30 @@ export const Towns = () => {
           </>
         )}
       </div>
-      <Slideout active={editing} setActive={setEditing}>
+      <Slideout active={office} setActive={setOffice}>
         <form>
           <OfficeForm
-            selected={editing}
-            onSave={(office) => {
-              saveOffice(town, office);
+            municipality={town}
+            selected={office}
+            onSave={(o) => {
+              saveOffice(town, o);
             }}
             onCancel={() => {
-              setEditing(false);
+              setOffice(false);
+            }}
+          />
+        </form>
+      </Slideout>
+      <Slideout active={election} setActive={setElection}>
+        <form>
+          <ElectionForm
+            municipality={town}
+            selected={election}
+            onSave={(e) => {
+              saveElection(town, e);
+            }}
+            onCancel={() => {
+              setElection(false);
             }}
           />
         </form>

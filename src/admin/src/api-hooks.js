@@ -1,12 +1,15 @@
 import { QueryClient, useQuery, useMutation } from "@tanstack/react-query";
 import {
+  /////// Create Routes ///////
   createOffice,
+  createElection,
   createRequirement,
+  /////// Town Routes ////////
   getTown,
   getTownOffices,
   getTownRequirements,
   getTowns,
-  ////// Seat Schema //////
+  /////// Seat Schema ///////
   getMunicipality,
   getMunicipalityOffices,
   getMunicipalityElections,
@@ -60,12 +63,23 @@ export const invalidateTownRequirements = (town_id) => {
   });
 };
 
+//////////// Create/Update Hooks ///////////////
+
 export const useCreateOffice = () =>
   useMutation({
     mutationKey: ["office"],
     mutationFn: (town, office) => createOffice(town, office),
     onSuccess: (office) => {
-      invalidateTownOffices(office.municipality_id);
+      invalidateMunicipalityOffices(office.municipality_id);
+    },
+  });
+
+export const useCreateElection = () =>
+  useMutation({
+    mutationKey: ["election"],
+    mutationFn: (town, election) => createElection(town, election),
+    onSuccess: (election) => {
+      invalidateMunicipalityElections(election.municipality_id);
     },
   });
 

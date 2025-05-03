@@ -72,82 +72,90 @@ def get_municipality_offices(municipality_id):
         """), {"id": int(municipality_id)}
     ).mappings().all()   
 
-    return jsonify(list(offices)), 200
+    return jsonify([dict(office) for office in offices]), 200
 
 
 @app.get("/municipality/<municipality_id>/elections")
 def get_municipality_elections(municipality_id):
     elections = db.session.execute(
         text("""
-            SELECT 
-                JSONB_AGG(elections_complete) AS agg
-            FROM (
+SELECT 
+                election.*,
+                requirements.agg AS requirements,
+                deadlines.agg AS deadlines,
+                forms.agg AS forms,
+                JSON_BUILD_OBJECT( 
+                    'ids', JSONB_AGG(seat.id),
+                    'names', JSONB_AGG(seat.name),
+                    'terms', JSONB_AGG(term.*)
+                ) AS seats
+            FROM 
+                election
+            LEFT JOIN 
+                election_term ON election_term.election_id = election.id
+            LEFT JOIN 
+                term ON election_term.term_id = term.id
+            LEFT JOIN
+                seat ON term.seat_id = seat.id
+            LEFT JOIN LATERAL (
                 SELECT 
-                    election.*,
-                    requirements.agg AS requirements
-                FROM 
-                    election
+                    JSONB_AGG(rc.*) AS agg 
+                FROM (
+                    SELECT 
+                        r.*,
+                        TO_JSONB(d.*) AS deadline,
+                        TO_JSONB(f.*) As form
+                    FROM 
+                        requirement AS r
+                    LEFT JOIN 
+                        deadline AS d ON d.id = r.deadline_id 
+                    LEFT JOIN 
+                        form AS f ON f.id = r.form_id
+                ) AS rc
                 LEFT JOIN 
-                    election_term ON election_term.election_id = election.id
+                    requirement_parent 
+                ON 
+                    requirement_parent.requirement_id = rc.id  
+                WHERE
+                    requirement_parent.parent_id = election.id AND requirement_parent.parent_type = 'ELECTION'
+            ) AS requirements ON TRUE
+            LEFT JOIN LATERAL (
+                SELECT 
+                    JSONB_AGG(deadline.*) AS agg
+                FROM    
+                    deadline
                 LEFT JOIN 
-                    term ON election_term.term_id = term.id
-                LEFT JOIN
-                    seat ON term.seat_id = seat.id
-                LEFT JOIN LATERAL (
-                    SELECT 
-                        JSONB_AGG(rc.*) AS agg 
-                    FROM (
-                        SELECT 
-                            r.*,
-                            TO_JSONB(d.*) AS deadline,
-                            TO_JSONB(f.*) As form
-                        FROM 
-                            requirement AS r
-                        LEFT JOIN 
-                            deadline AS d ON d.id = r.deadline_id 
-                        LEFT JOIN 
-                            form AS f ON f.id = r.form_id
-                    ) AS rc
-                    LEFT JOIN 
-                        requirement_parent 
-                    ON 
-                        requirement_parent.requirement_id = rc.id  
-                    WHERE
-                        requirement_parent.parent_id = election.id AND requirement_parent.parent_type = 'ELECTION'
-                ) AS requirements ON TRUE
-                LEFT JOIN LATERAL (
-                    SELECT 
-                        JSONB_AGG(deadline.*) AS agg
-                    FROM    
-                        deadline
-                    LEFT JOIN 
-                        deadline_parent 
-                    ON 
-                        deadline_parent.deadline_id = deadline.id  
-                    WHERE
-                        deadline_parent.parent_id = election.id AND deadline_parent.parent_type = 'ELECTION'
-                ) AS deadlines ON TRUE
-                LEFT JOIN LATERAL (
-                    SELECT 
-                        JSONB_AGG(form.*) AS agg
-                    FROM    
-                        form
-                    LEFT JOIN 
-                        form_parent 
-                    ON 
-                        form_parent.form_id = form.id  
-                    WHERE
-                        form_parent.parent_id = election.id AND form_parent.parent_type = 'ELECTION'
-                ) AS forms ON TRUE
-                WHERE 
-                    seat.office_id IN (
-                        SELECT id FROM office WHERE municipality_id = :id
-                    )
-            ) AS elections_complete
+                    deadline_parent 
+                ON 
+                    deadline_parent.deadline_id = deadline.id  
+                WHERE
+                    deadline_parent.parent_id = election.id AND deadline_parent.parent_type = 'ELECTION'
+            ) AS deadlines ON TRUE
+            LEFT JOIN LATERAL (
+                SELECT 
+                    JSONB_AGG(form.*) AS agg
+                FROM    
+                    form
+                LEFT JOIN 
+                    form_parent 
+                ON 
+                    form_parent.form_id = form.id  
+                WHERE
+                    form_parent.parent_id = election.id AND form_parent.parent_type = 'ELECTION'
+            ) AS forms ON TRUE
+            WHERE 
+                seat.office_id IN (
+                    SELECT id FROM office WHERE municipality_id = :id
+                )
+            GROUP BY
+                election.id,
+                requirements.agg,
+                deadlines.agg,
+                forms.agg
         """), {"id": int(municipality_id)}
-    ).mappings().first()   
+    ).mappings().all()   
 
-    return jsonify(dict(elections)), 200
+    return jsonify([dict(election) for election in elections]), 200
 
 
 
