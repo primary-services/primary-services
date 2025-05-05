@@ -108,7 +108,6 @@ export const ElectionForm = ({ municipality, selected, onSave, onCancel }) => {
 		// Stub
 	};
 
-	console.log(election);
 	return (
 		<section id="election-form">
 			<div className="election">

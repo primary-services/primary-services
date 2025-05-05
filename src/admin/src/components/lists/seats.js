@@ -24,9 +24,9 @@ export const SeatList = ({ items: seats, onDestory }) => {
 						}}
 					></span>
 				</div>
-				<div className="width-7-12">{s.name}</div>
-				<div className="width-4-12">{nextTerm(s).start}</div>
-				<div className="width-4-12">{nextTerm(s).end}</div>
+				<div className="width-5-12">{s.name}</div>
+				<div className="width-3-12">{nextTerm(s).start}</div>
+				<div className="width-3-12">{nextTerm(s).end}</div>
 			</div>
 		);
 	});

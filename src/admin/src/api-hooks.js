@@ -68,7 +68,7 @@ export const invalidateTownRequirements = (town_id) => {
 export const useCreateOffice = () =>
   useMutation({
     mutationKey: ["office"],
-    mutationFn: (town, office) => createOffice(town, office),
+    mutationFn: (args) => createOffice(args),
     onSuccess: (office) => {
       invalidateMunicipalityOffices(office.municipality_id);
     },
@@ -77,7 +77,7 @@ export const useCreateOffice = () =>
 export const useCreateElection = () =>
   useMutation({
     mutationKey: ["election"],
-    mutationFn: (town, election) => createElection(town, election),
+    mutationFn: (args) => createElection(args),
     onSuccess: (election) => {
       invalidateMunicipalityElections(election.municipality_id);
     },
@@ -86,7 +86,7 @@ export const useCreateElection = () =>
 export const useCreateRequirement = () =>
   useMutation({
     mutationKey: ["requirement"],
-    mutationFn: (town, requirement) => createRequirement(town, requirement),
+    mutationFn: (args) => createRequirement(args),
     onSuccess: (office) => {
       invalidateTownRequirements(office.municipality_id);
     },

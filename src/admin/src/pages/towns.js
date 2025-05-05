@@ -476,7 +476,8 @@ export const Towns = () => {
             municipality={town}
             selected={office}
             onSave={(o) => {
-              saveOffice(town, o);
+              console.log("Towns:", o);
+              saveOffice({ municipality_id: town.id, office: o });
             }}
             onCancel={() => {
               setOffice(false);

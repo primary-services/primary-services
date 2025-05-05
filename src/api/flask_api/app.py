@@ -1,5 +1,6 @@
 from models import (
     db, 
+    BaseModel,
     Municipality,
     MunicipalityType, 
     Official, 
@@ -17,7 +18,6 @@ from dataclasses import asdict
 
 from sqlalchemy import select
 from sqlalchemy.sql import text
-
 
 # create the app
 app = Flask(__name__)
@@ -270,6 +270,26 @@ def get_municipality(municipality_id):
     ).mappings().first()   
 
     return jsonify(dict(municipality)), 200
+
+@app.post("/municipality/<municipality_id>/office")
+def create_municiple_office(municipality_id):
+    data = request.json
+    
+    office = BaseModel.parse(Office, data)
+    office.municipality_id = municipality_id
+
+    db.session.add(office)
+    db.session.commit()  
+
+    return {"success": True}, 200
+
+    # _terms = _office["terms"]
+
+    # office = Office.upsert(Office, _office)[0]
+    # office_fks = {
+    #     "office_id": office.id,
+    #     "municipality_id": office.municipality_id
+    # }
 
 @app.get("/town/<town_id>")
 def get_town(town_id):

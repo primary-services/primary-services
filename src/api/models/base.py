@@ -14,6 +14,38 @@ db = SQLAlchemy(model_class=SQLAlchemyBase)
 class BaseModel(db.Model, AllFeaturesMixin):
     __abstract__ = True
     
+    # TODO: Instead of making an instance with the populated fields, 
+    # create an empty instance, replace it with an existing item if it 
+    # exists, then populate the instance with the data fields. 
+    # Do the same with associations and then upserting should work? 
+    def parse(model, data):
+      insp = inspect(model)
+      
+      # ID is always required for this function
+      id_field = {
+        "id": data["id"] or literal_column("DEFAULT"),
+      }
+
+      # Add all the fields in the JSON, if they exist in the model
+      fields = {}
+      for c in model.__table__.columns.keys():
+        if (c == 'id'):
+          fields[c] = data["id"] or literal_column("DEFAULT")
+          continue
+
+        if (c in data):
+          fields[c] = data[c]
+      
+      instance = model(**fields)
+      for relation in insp.relationships:
+        key = relation.key
+        if (key in data):
+          if type(data[key]) is list:
+            for childData in data[key]:
+              child = BaseModel.parse(relation.mapper.class_, childData)
+              getattr(instance, key).append(child)
+
+      return instance
 
     def upsert(model, data):
       """Inserts or updates a model from a dict.

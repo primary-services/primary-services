@@ -32,13 +32,14 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 	const saveSeat = (items) => {
 		setOffice({
 			...office,
-			terms: items,
+			seats: items,
 		});
 	};
 
 	const validateSeat = () => {};
 
 	const save = () => {
+		console.log("Office Form:", office);
 		onSave(office);
 	};
 
