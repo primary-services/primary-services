@@ -90,7 +90,7 @@ class Office(BaseModel):
 	municipality: Mapped[Municipality] = relationship(back_populates="offices")
 
 	officials: Mapped[List["Official"]] = relationship(back_populates="office")
-	seats: Mapped[List["Seat"]] = relationship(back_populates="office", lazy="dynamic")
+	seats: Mapped[List["Seat"]] = relationship(back_populates="office", lazy="dynamic", cascade="all, delete-orphan")
 	
 	title: Mapped[str] = mapped_column(nullable=True)
 	description: Mapped[str] = mapped_column(nullable=True)
@@ -177,7 +177,7 @@ class Seat(BaseModel):
 	office: Mapped[Office] = relationship()
 
 	name: Mapped[str] = mapped_column(nullable=True) 
-	terms: Mapped[List["Term"]] = relationship()
+	terms: Mapped[List["Term"]] = relationship(cascade="all, delete-orphan")
 
 	# elections: AssociationProxy[List["Election"]] = association_proxy("terms", "elections")
 

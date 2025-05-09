@@ -9,6 +9,7 @@ from models import (
     Election, 
     Deadline, 
     Form,
+    Seat,
     Requirement,
 )
 from flask import Flask, jsonify, request
@@ -283,13 +284,6 @@ def create_municiple_office(municipality_id):
 
     return {"success": True}, 200
 
-    # _terms = _office["terms"]
-
-    # office = Office.upsert(Office, _office)[0]
-    # office_fks = {
-    #     "office_id": office.id,
-    #     "municipality_id": office.municipality_id
-    # }
 
 @app.get("/town/<town_id>")
 def get_town(town_id):

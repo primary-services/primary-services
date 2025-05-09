@@ -14,38 +14,60 @@ db = SQLAlchemy(model_class=SQLAlchemyBase)
 class BaseModel(db.Model, AllFeaturesMixin):
     __abstract__ = True
     
-    # TODO: Instead of making an instance with the populated fields, 
-    # create an empty instance, replace it with an existing item if it 
-    # exists, then populate the instance with the data fields. 
-    # Do the same with associations and then upserting should work? 
     def parse(model, data):
       insp = inspect(model)
-      
+      instance = BaseModel.getInstance(insp, model, data)  
       # ID is always required for this function
-      id_field = {
-        "id": data["id"] or literal_column("DEFAULT"),
-      }
+      # id_field = {
+      #   "id": data["id"] or literal_column("DEFAULT"),
+      # }
 
+      
       # Add all the fields in the JSON, if they exist in the model
       fields = {}
       for c in model.__table__.columns.keys():
         if (c == 'id'):
-          fields[c] = data["id"] or literal_column("DEFAULT")
+          setattr(instance, c, data["id"] or literal_column("DEFAULT"))
+          # fields[c] = data["id"] or literal_column("DEFAULT")
           continue
 
         if (c in data):
-          fields[c] = data[c]
+          setattr(instance, c, data[c])
+          # fields[c] = data[c]
       
-      instance = model(**fields)
       for relation in insp.relationships:
         key = relation.key
         if (key in data):
           if type(data[key]) is list:
-            for childData in data[key]:
+            existing = getattr(instance, key);
+            for current in existing:
+              getattr(instance, key).remove(current)
+
+            for childData in data[key]:              
               child = BaseModel.parse(relation.mapper.class_, childData)
               getattr(instance, key).append(child)
+          else:
+            child = BaseModel.parse(relation.mapper.class_, childData)
+            setattr(instance, key, child)
 
       return instance
+
+    def getKeys(insp, model):
+      return [key.name for key in insp.primary_key]
+
+    def getInstance(insp, model, data):
+      keys = BaseModel.getKeys(insp, model)
+      filters = {}
+      for key in keys:
+        filters[key] = data[key]
+
+      instance = model.where(**filters).first()
+      if instance is not None:
+        return instance
+      else:
+        return model()
+
+
 
     def upsert(model, data):
       """Inserts or updates a model from a dict.
