@@ -11,3 +11,4 @@ src/api/psycopg2_binary.libs
 src/api/psycopg2
 src/api/psycopg2_binary-2.9.10.dist-info
 src/admin/node_modules/*
+src/layer/python/lib/python3.13/site-packages

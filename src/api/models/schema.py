@@ -12,6 +12,8 @@ from sqlalchemy.dialects.postgresql import insert, ENUM
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.schema import ForeignKey
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.ext.associationproxy import AssociationProxy
+from sqlalchemy.ext.associationproxy import association_proxy
 from models.base import BaseModel
 
 
@@ -30,8 +32,6 @@ class Municipality(BaseModel):
     id: Mapped[int] = mapped_column(primary_key=True)
     parent_id: Mapped[Optional[int]] = mapped_column(ForeignKey('municipality.id'))
     parent: Mapped["Municipality"] = relationship(remote_side=[id])
-
-    requirements: Mapped[List["Requirement"]] = relationship(back_populates="municipality")
     offices: Mapped[List["Office"]] = relationship(back_populates="municipality")
 
     name: Mapped[str]
@@ -40,6 +40,28 @@ class Municipality(BaseModel):
     	MunicipalityType, 
     	name='municipalitytype', 
     ))
+
+    requirements: Mapped[List["Requirement"]] = relationship(
+    	secondary='requirement_parent',
+    	primaryjoin="and_(RequirementParent.parent_type=='municipality',foreign(RequirementParent.parent_id)==Municipality.id)",
+    	secondaryjoin="foreign(Requirement.id)==RequirementParent.requirement_id",
+    )
+
+    deadlines: Mapped[List["Deadline"]] = relationship(
+    	secondary='deadline_parent',
+    	primaryjoin="and_(DeadlineParent.parent_type=='municipality',foreign(DeadlineParent.parent_id)==Municipality.id)",
+    	secondaryjoin="foreign(Deadline.id)==DeadlineParent.deadline_id",
+    )
+
+    forms: Mapped[List["Form"]] = relationship(
+    	secondary='form_parent',
+    	primaryjoin="and_(FormParent.parent_type=='municipality',foreign(FormParent.parent_id)==Municipality.id)",
+    	secondaryjoin="foreign(Form.id)==FormParent.form_id",
+    )
+    
+    __mapper_args__ = {
+        "polymorphic_identity": "municipality",
+    }
 
 # office_templates
 # 	- id
@@ -68,9 +90,8 @@ class Office(BaseModel):
 	municipality: Mapped[Municipality] = relationship(back_populates="offices")
 
 	officials: Mapped[List["Official"]] = relationship(back_populates="office")
-
-	elections: Mapped[List["Election"]] = relationship(back_populates="office", lazy='dynamic')
-
+	seats: Mapped[List["Seat"]] = relationship(back_populates="office", lazy="dynamic", cascade="all, delete-orphan")
+	
 	title: Mapped[str] = mapped_column(nullable=True)
 	description: Mapped[str] = mapped_column(nullable=True)
 	elected: Mapped[bool] = mapped_column(server_default='TRUE')
@@ -79,36 +100,38 @@ class Office(BaseModel):
 	min_hours: Mapped[int] = mapped_column(nullable=True)
 	max_hours: Mapped[int] = mapped_column(nullable=True)
 
+	# elections: AssociationProxy["Election"] = association_proxy("seats", "elections", creator=lambda elections: elections[0])
+
 	@cached_property
 	def next_election(self):
-		return self.elections.order_by(desc(Election.polling_date)).first()
+		return self.elections.first()
 	
-	@hybrid_property
-	def next_election_date(self):
-		if not self.next_election:
-			return None
-		return self.next_election.polling_date
+	# @hybrid_property
+	# def next_election_date(self):
+	# 	if not self.next_election:
+	# 		return None
+	# 	return self.next_election.polling_date
 	
-	@hybrid_property
-	def seat_count(self):
-		if not self.next_election:
-			return None
-		return self.next_election.seat_count
+	# @hybrid_property
+	# def seat_count(self):
+	# 	if not self.next_election:
+	# 		return None
+	# 	return self.next_election.seat_count
 
-	@hybrid_property
-	def term_length(self):
-		if not self.next_election:
-			return None
+	# @hybrid_property
+	# def term_length(self):
+	# 	if not self.next_election:
+	# 		return None
 		
-		output = ""
-		difference = relativedelta(self.next_election.term.end, self.next_election.term.start)
-		if difference.years:
-			output += f"{difference.years} years "
-		if difference.months:
-			output += f"{difference.months} months "
-		if difference.days:
-			output += f"{difference.days} days"
-		return output
+	# 	output = ""
+	# 	difference = relativedelta(self.next_election.term.end, self.next_election.term.start)
+	# 	if difference.years:
+	# 		output += f"{difference.years} years "
+	# 	if difference.months:
+	# 		output += f"{difference.months} months "
+	# 	if difference.days:
+	# 		output += f"{difference.days} days"
+	# 	return output
 
 
 
@@ -144,6 +167,22 @@ class Candidate(BaseModel):
 	election_id: Mapped[int] = mapped_column(ForeignKey('election.id'))
 	election: Mapped["Election"] = relationship()
 
+# seats
+#   - id,
+# 	- municipality_id (FK)
+#   - name
+class Seat(BaseModel):
+	id: Mapped[int] = mapped_column(primary_key=True)
+	office_id: Mapped[int] = mapped_column(ForeignKey('office.id'))
+	office: Mapped[Office] = relationship()
+
+	name: Mapped[str] = mapped_column(nullable=True) 
+	terms: Mapped[List["Term"]] = relationship(cascade="all, delete-orphan")
+
+	# elections: AssociationProxy[List["Election"]] = association_proxy("terms", "elections")
+
+	
+
 
 # terms
 # 	- id,
@@ -152,10 +191,14 @@ class Candidate(BaseModel):
 # 	- incumbents: [],
 class Term(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
-	election: Mapped["Election"] = relationship(back_populates="term")
+	seat_id: Mapped[int] = mapped_column(ForeignKey('seat.id'))
+	seat: Mapped[Seat] = relationship()
+	
+	elections: Mapped[List["Election"]] = relationship("Election", secondary='election_term', back_populates='terms')
+	
 	start: Mapped[datetime.date]
 	end: Mapped[datetime.date]
-	incumbents: Mapped[List[Official]] = relationship(back_populates="term")
+	# incumbents: Mapped[List[Official]] = relationship(back_populates="term")
 
 
 # elections
@@ -165,7 +208,6 @@ class Term(BaseModel):
 # 	- term_id (FK)
 # 	- type (primary/general/special)
 # 	- election_date
-
 class ElectionType(str, Enum):
     PRIMARY = "primary"
     GENERAL = "general"
@@ -173,20 +215,50 @@ class ElectionType(str, Enum):
 
 class Election(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
-	term_id: Mapped[int] = mapped_column(ForeignKey("term.id"))
-	term: Mapped[Term] = relationship()
+	
+	# term_id: Mapped[int] = mapped_column(ForeignKey("term.id"))
+	# term: Mapped[Term] = relationship()
 
-	office_id: Mapped[Optional[int]] = mapped_column(ForeignKey('office.id'))
-	office: Mapped[Office] = relationship()
+	# office_id: Mapped[Optional[int]] = mapped_column(ForeignKey('office.id'))
+	# office: Mapped[Office] = relationship()
 
 	type: Mapped[ElectionType] = mapped_column(ENUM(
 		ElectionType, 
 		name='electiontype'
 	))
 	polling_date: Mapped[datetime.date]
-	seat_count: Mapped[int]
+	# seat_count: Mapped[int]
+
+	terms: Mapped[List["Term"]] = relationship("Term", secondary='election_term', back_populates='elections')
 	
+	requirements: Mapped[List["Requirement"]] = relationship(
+    	secondary='requirement_parent',
+    	primaryjoin="and_(RequirementParent.parent_type=='election',foreign(RequirementParent.parent_id)==Election.id)",
+    	secondaryjoin="foreign(Requirement.id)==RequirementParent.requirement_id",
+    )
+
+	deadlines: Mapped[List["Deadline"]] = relationship(
+    	secondary='deadline_parent',
+    	primaryjoin="and_(DeadlineParent.parent_type=='election',foreign(DeadlineParent.parent_id)==Election.id)",
+    	secondaryjoin="foreign(Deadline.id)==DeadlineParent.deadline_id",
+	)
+
+	forms: Mapped[List["Form"]] = relationship(
+    	secondary='form_parent',
+    	primaryjoin="and_(FormParent.parent_type=='election',foreign(FormParent.parent_id)==Election.id)",
+    	secondaryjoin="foreign(Form.id)==FormParent.form_id",
+	)
+
+	__mapper_args__ = {
+        "polymorphic_identity": "election",
+    }
 	
+class ElectionTerm(BaseModel):
+	id: Mapped[int] = mapped_column(primary_key=True)
+	election_id: Mapped[int] = mapped_column(ForeignKey('election.id'))
+	term_id: Mapped[int] = mapped_column(ForeignKey("term.id"))
+
+
 # requirements
 # 	- id 
 # 	- form_id (FK)
@@ -249,26 +321,81 @@ class RequirementScope(BaseModel):
     	create_type=False
     ))
 
-class ElectionRequirement(BaseModel):
-	election_id: Mapped[int] = mapped_column(ForeignKey("election.id"), primary_key=True)
-	requirement_id: Mapped[int] = mapped_column(ForeignKey("requirement.id"), primary_key=True)
-	
-	__table_args__ = (
-		UniqueConstraint("election_id", "requirement_id", name="election_requirement_idx"),
-	)
 
-class ElectionDeadline(BaseModel):
-	election_id: Mapped[int] = mapped_column(ForeignKey("election.id"), primary_key=True)
-	deadline_id: Mapped[int] = mapped_column(ForeignKey("deadline.id"), primary_key=True)
-	
-	__table_args__ = (
-		UniqueConstraint("election_id", "deadline_id", name="election_deadline_idx"),
-	)
+class RequirementTypes(str, Enum):
+    MUNICIPALITY = "municipality"
+    ELECTION = "election"
+    
+class RequirementParent(BaseModel):
+	id: Mapped[int] = mapped_column(primary_key=True)
+	requirement_id: Mapped[int] = mapped_column(ForeignKey('requirement.id'))
+	parent_id: Mapped[int] = mapped_column(nullable=False)
+	parent_type: Mapped[RequirementTypes] = mapped_column(ENUM(
+		RequirementTypes, 
+		name='requirementtype'
+	))
 
-class ElectionForm(BaseModel):
-	election_id: Mapped[int] = mapped_column(ForeignKey("election.id"), primary_key=True)
-	form_id: Mapped[int] = mapped_column(ForeignKey("form.id"), primary_key=True)
+	__mapper_args__ = {
+        "polymorphic_identity": "requirement",
+        "polymorphic_on": "parent_type",
+    }
+
+class DeadlineTypes(str, Enum):
+    MUNICIPALITY = "municipality"
+    ELECTION = "election"
+    
+class DeadlineParent(BaseModel):
+	id: Mapped[int] = mapped_column(primary_key=True)
+	deadline_id: Mapped[int] = mapped_column(ForeignKey("deadline.id"))
+	parent_id: Mapped[int] = mapped_column(nullable=False)
+	parent_type: Mapped[DeadlineTypes] = mapped_column(ENUM(
+		DeadlineTypes, 
+		name='deadlinetype'
+	))
+
+	__mapper_args__ = {
+        "polymorphic_identity": "deadline",
+        "polymorphic_on": "parent_type",
+    }
+
+class FormTypes(str, Enum):
+    MUNICIPALITY = "municipality"
+    ELECTION = "election"
+    
+class FormParent(BaseModel):
+	id: Mapped[int] = mapped_column(primary_key=True)
+	form_id: Mapped[int] = mapped_column(ForeignKey("form.id"))
+	parent_id: Mapped[int] = mapped_column(nullable=False)
+	parent_type: Mapped[FormTypes] = mapped_column(ENUM(
+		FormTypes, 
+		name='formtype'
+	))
+
+	__mapper_args__ = {
+        "polymorphic_identity": "form",
+        "polymorphic_on": "parent_type",
+    }
+
+# class ElectionRequirement(BaseModel):
+# 	election_id: Mapped[int] = mapped_column(ForeignKey("election.id"), primary_key=True)
+# 	requirement_id: Mapped[int] = mapped_column(ForeignKey("requirement.id"), primary_key=True)
 	
-	__table_args__ = (
-		UniqueConstraint("election_id", "form_id", name="election_form_idx"),
-	)
+# 	__table_args__ = (
+# 		UniqueConstraint("election_id", "requirement_id", name="election_requirement_idx"),
+# 	)
+
+# class ElectionDeadline(BaseModel):
+# 	election_id: Mapped[int] = mapped_column(ForeignKey("election.id"), primary_key=True)
+# 	deadline_id: Mapped[int] = mapped_column(ForeignKey("deadline.id"), primary_key=True)
+	
+# 	__table_args__ = (
+# 		UniqueConstraint("election_id", "deadline_id", name="election_deadline_idx"),
+# 	)
+
+# class ElectionForm(BaseModel):
+# 	election_id: Mapped[int] = mapped_column(ForeignKey("election.id"), primary_key=True)
+# 	form_id: Mapped[int] = mapped_column(ForeignKey("form.id"), primary_key=True)
+	
+# 	__table_args__ = (
+# 		UniqueConstraint("election_id", "form_id", name="election_form_idx"),
+# 	)

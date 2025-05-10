@@ -37,6 +37,15 @@
 		margin: 0px !important;
 	}
 
+	&.header {
+		font-weight: bold;
+	}
+
+	&.row {
+		border-bottom: solid 1px;
+		line-height: 35px;
+	}
+
 	@for $i from 1 through 12 {
 		.width-#{$i}-12 {
 			grid-column: span #{$i};
