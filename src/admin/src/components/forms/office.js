@@ -4,25 +4,27 @@ import { TermForm } from "./terms.js";
 import { TermList } from "../lists/terms.js";
 import { SubForm } from "./subform.js";
 
-export const OfficeForm = ({ editing, onSave, onCancel }) => {
+export const OfficeForm = ({ selected, onSave, onCancel }) => {
 	let [office, setOffice] = useState({
 		id: null,
 		title: "",
 		description: "",
 		salary: 0,
-		commitment_min: 0,
-		commitment_max: 0,
+		elected: true,
+		min_hours: 0,
+		max_hours: 0,
 		terms: [],
-		...JSON.parse(JSON.stringify(editing)),
 	});
+
+	useEffect(() => {
+		if (selected) {
+			setOffice((prev) => ({ ...prev, ...selected }));
+		}
+	}, [selected]);
 
 	let [term, setTerm] = useState(null);
 
 	let [errors, setErrors] = useState({});
-
-	useEffect(() => {
-		console.log("Office", office);
-	}, [office]);
 
 	const update = (field, value) => {
 		setOffice({ ...office, [field]: value });
@@ -84,9 +86,9 @@ export const OfficeForm = ({ editing, onSave, onCancel }) => {
 						<label>Min Hours</label>
 						<input
 							type="number"
-							value={office.commitment_min}
+							value={office.min_hours}
 							onInput={(e) => {
-								update("commitment_min", e.target.value);
+								update("min_hours", e.target.value);
 							}}
 						/>
 					</div>
@@ -94,43 +96,45 @@ export const OfficeForm = ({ editing, onSave, onCancel }) => {
 						<label>Max Hours</label>
 						<input
 							type="number"
-							value={office.commitment_max}
+							value={office.max_hours}
 							onInput={(e) => {
-								update("commitment_max", e.target.value);
+								update("max_hours", e.target.value);
 							}}
 						/>
 					</div>
 				</div>
 			</section>
 
-			<section className="terms">
-				<SubForm
-					form={TermForm}
-					list={TermList}
-					label="Terms"
-					items={office.terms}
-					template={{
-						id: null,
-						start: null,
-						end: null,
-						incumbents: [],
-						election: {
+			{office.elected && (
+				<section className="terms">
+					<SubForm
+						form={TermForm}
+						list={TermList}
+						label="Terms"
+						items={office.terms}
+						template={{
 							id: null,
-							polling_date: null,
-							seat_count: 1,
-							type: "GENERAL",
-							candidates: [],
-							deadlines: [],
-							requirements: [],
-							responsibilities: [],
-							forms: [],
-							notes: [],
-						},
-					}}
-					onSave={saveTerms}
-					onValidate={validateTerm}
-				/>
-			</section>
+							start: null,
+							end: null,
+							incumbents: [],
+							election: {
+								id: null,
+								polling_date: null,
+								seat_count: 1,
+								type: "GENERAL",
+								candidates: [],
+								deadlines: [],
+								requirements: [],
+								responsibilities: [],
+								forms: [],
+								notes: [],
+							},
+						}}
+						onSave={saveTerms}
+						onValidate={validateTerm}
+					/>
+				</section>
+			)}
 
 			<section className="actions">
 				<div className="btn blocky clicky" onClick={save}>
