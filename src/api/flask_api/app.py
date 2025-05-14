@@ -17,7 +17,7 @@ from flask_cors import CORS
 from creds import CredentialsManager
 from dataclasses import asdict
 
-from sqlalchemy import select
+from sqlalchemy import inspect, select
 from sqlalchemy.sql import text
 
 # create the app
@@ -281,6 +281,34 @@ def create_municiple_office(municipality_id):
 
     db.session.add(office)
     db.session.commit()  
+
+    return {"success": True}, 200
+
+@app.post("/municipality/<municipality_id>/election")
+def create_municiple_election(municipality_id):
+    # insp = inspect(Election)
+    # instance = Election.where(id=1).first()
+    # for relation in insp.relationships:
+    #     print("Child Class:", relation.mapper.class_)
+    #     key = relation.key
+        
+    #     existing = getattr(instance, key);
+    #     for current in existing:
+    #         getattr(instance, key).remove(current)
+
+    #     reqClass = relation.mapper.class_
+    #     req = reqClass.where(id=1).first()
+    #     print("Requirement:", req)
+
+
+
+    data = request.json
+    
+    election = BaseModel.parse(Election, data)
+    election.municipality_id = municipality_id
+
+    # db.session.add(election)
+    # db.session.commit()  
 
     return {"success": True}, 200
 

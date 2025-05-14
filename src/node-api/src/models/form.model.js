@@ -1,0 +1,82 @@
+// const Sequelize = require('sequelize');
+// module.exports = function(sequelize, DataTypes) {
+//   return sequelize.define('form', {
+//     id: {
+//       autoIncrement: true,
+//       type: DataTypes.INTEGER,
+//       allowNull: false,
+//       primaryKey: true
+//     },
+//     description: {
+//       type: DataTypes.STRING,
+//       allowNull: false
+//     },
+//     url: {
+//       type: DataTypes.STRING,
+//       allowNull: false
+//     },
+//     label: {
+//       type: DataTypes.STRING,
+//       allowNull: false
+//     }
+//   }, {
+//     sequelize,
+//     tableName: 'form',
+//     schema: 'public',
+//     timestamps: false,
+//     indexes: [
+//       {
+//         name: "form_pkey",
+//         unique: true,
+//         fields: [
+//           { name: "id" },
+//         ]
+//       },
+//     ]
+//   });
+// };
+
+import { Sequelize, DataTypes } from "sequelize";
+import Model from "../lib/base-model.js";
+
+class Form extends Model {
+	static init(sequelize) {
+		super.init(
+			{
+				id: {
+					autoIncrement: true,
+					type: DataTypes.INTEGER,
+					allowNull: false,
+					primaryKey: true,
+				},
+				description: {
+					type: DataTypes.STRING,
+					allowNull: false,
+				},
+				url: {
+					type: DataTypes.STRING,
+					allowNull: false,
+				},
+				label: {
+					type: DataTypes.STRING,
+					allowNull: false,
+				},
+			},
+			{
+				sequelize,
+				tableName: "form",
+				schema: "public",
+				timestamps: false,
+				indexes: [
+					{
+						name: "form_pkey",
+						unique: true,
+						fields: [{ name: "id" }],
+					},
+				],
+			},
+		);
+	}
+}
+
+export default Form;

@@ -39,7 +39,6 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 	const validateSeat = () => {};
 
 	const save = () => {
-		console.log("Office Form:", office);
 		onSave(office);
 	};
 

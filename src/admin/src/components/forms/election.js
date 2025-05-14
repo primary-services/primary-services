@@ -14,7 +14,7 @@ import { RequirementList } from "../lists/requirements.js";
 
 import { useMunicipalityOffices } from "../../api-hooks.js";
 
-export const ElectionForm = ({ municipality, selected, onSave, onCancel }) => {
+export const ElectionForm = ({ selected, municipality, onSave, onCancel }) => {
 	const { data: offices } = useMunicipalityOffices(municipality?.id);
 
 	const [election, setElection] = useState({
@@ -24,7 +24,6 @@ export const ElectionForm = ({ municipality, selected, onSave, onCancel }) => {
 		requirements: [],
 		forms: [],
 		terms: [],
-		...JSON.parse(JSON.stringify(selected)),
 	});
 
 	useEffect(() => {
@@ -63,7 +62,13 @@ export const ElectionForm = ({ municipality, selected, onSave, onCancel }) => {
 	};
 
 	const updateTerms = (options) => {
-		let values = [...options].map((o) => +o.value);
+		let values = [...options].map((o) => {
+			let seat = office.seats.find((s) => {
+				return s.terms.find((t) => +t.id === +o.value);
+			});
+
+			return seat.terms.find((t) => +t.id === +o.value);
+		});
 
 		setElection({
 			...election,
@@ -106,6 +111,15 @@ export const ElectionForm = ({ municipality, selected, onSave, onCancel }) => {
 
 	const validateRequirement = (d) => {
 		// Stub
+	};
+
+	const save = () => {
+		console.log("Election:", election);
+		onSave(election);
+	};
+
+	const cancel = () => {
+		onCancel();
 	};
 
 	return (
@@ -196,6 +210,15 @@ export const ElectionForm = ({ municipality, selected, onSave, onCancel }) => {
 					onValidate={validateForm}
 				/>
 			</div>
+
+			<section className="actions">
+				<div className="btn blocky clicky" onClick={save}>
+					Save
+				</div>
+				<div className="btn blocky clicky" onClick={cancel}>
+					Cancel
+				</div>
+			</section>
 		</section>
 	);
 };

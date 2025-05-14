@@ -16,8 +16,6 @@ from sqlalchemy.ext.associationproxy import AssociationProxy
 from sqlalchemy.ext.associationproxy import association_proxy
 from models.base import BaseModel
 
-
-
 class MunicipalityType(str, Enum):
     STATE = "state"
     COUNTY = "county"
@@ -216,37 +214,33 @@ class ElectionType(str, Enum):
 class Election(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
 	
-	# term_id: Mapped[int] = mapped_column(ForeignKey("term.id"))
-	# term: Mapped[Term] = relationship()
-
-	# office_id: Mapped[Optional[int]] = mapped_column(ForeignKey('office.id'))
-	# office: Mapped[Office] = relationship()
-
 	type: Mapped[ElectionType] = mapped_column(ENUM(
 		ElectionType, 
 		name='electiontype'
 	))
 	polling_date: Mapped[datetime.date]
-	# seat_count: Mapped[int]
 
 	terms: Mapped[List["Term"]] = relationship("Term", secondary='election_term', back_populates='elections')
 	
 	requirements: Mapped[List["Requirement"]] = relationship(
     	secondary='requirement_parent',
-    	primaryjoin="and_(RequirementParent.parent_type=='election',foreign(RequirementParent.parent_id)==Election.id)",
+    	primaryjoin="and_(foreign(RequirementParent.parent_type)=='election',foreign(RequirementParent.parent_id)==Election.id)",
     	secondaryjoin="foreign(Requirement.id)==RequirementParent.requirement_id",
+    	cascade="all"
     )
 
 	deadlines: Mapped[List["Deadline"]] = relationship(
     	secondary='deadline_parent',
     	primaryjoin="and_(DeadlineParent.parent_type=='election',foreign(DeadlineParent.parent_id)==Election.id)",
     	secondaryjoin="foreign(Deadline.id)==DeadlineParent.deadline_id",
+    	cascade="all"
 	)
 
 	forms: Mapped[List["Form"]] = relationship(
     	secondary='form_parent',
     	primaryjoin="and_(FormParent.parent_type=='election',foreign(FormParent.parent_id)==Election.id)",
     	secondaryjoin="foreign(Form.id)==FormParent.form_id",
+    	cascade="all"
 	)
 
 	__mapper_args__ = {
@@ -311,6 +305,8 @@ class Deadline(BaseModel):
 	description: Mapped[str]
 	deadline: Mapped[datetime.date]
 
+	# elections: Mapped[List["Election"]] = relationship("Election", secondary='deadline_parent', back_populates='deadlines')
+
 class RequirementScope(BaseModel):
 	id: Mapped[int] = mapped_column(primary_key=True)
 	requirement_id: Mapped[int] = mapped_column(ForeignKey('requirement.id'))
@@ -336,7 +332,6 @@ class RequirementParent(BaseModel):
 	))
 
 	__mapper_args__ = {
-        "polymorphic_identity": "requirement",
         "polymorphic_on": "parent_type",
     }
 
@@ -354,7 +349,6 @@ class DeadlineParent(BaseModel):
 	))
 
 	__mapper_args__ = {
-        "polymorphic_identity": "deadline",
         "polymorphic_on": "parent_type",
     }
 
@@ -372,7 +366,6 @@ class FormParent(BaseModel):
 	))
 
 	__mapper_args__ = {
-        "polymorphic_identity": "form",
         "polymorphic_on": "parent_type",
     }
 

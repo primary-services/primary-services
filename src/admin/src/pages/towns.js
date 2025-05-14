@@ -491,7 +491,7 @@ export const Towns = () => {
             municipality={town}
             selected={election}
             onSave={(e) => {
-              saveElection(town, e);
+              saveElection({ municipality_id: town.id, election: e });
             }}
             onCancel={() => {
               setElection(false);

@@ -17,11 +17,6 @@ class BaseModel(db.Model, AllFeaturesMixin):
     def parse(model, data):
       insp = inspect(model)
       instance = BaseModel.getInstance(insp, model, data)  
-      # ID is always required for this function
-      # id_field = {
-      #   "id": data["id"] or literal_column("DEFAULT"),
-      # }
-
       
       # Add all the fields in the JSON, if they exist in the model
       fields = {}
@@ -39,16 +34,17 @@ class BaseModel(db.Model, AllFeaturesMixin):
         key = relation.key
         if (key in data):
           if type(data[key]) is list:
-            existing = getattr(instance, key);
-            for current in existing:
-              getattr(instance, key).remove(current)
-
+            children = []
             for childData in data[key]:              
               child = BaseModel.parse(relation.mapper.class_, childData)
-              getattr(instance, key).append(child)
-          else:
-            child = BaseModel.parse(relation.mapper.class_, childData)
+              children.append(child)
+
+            setattr(instance, key, children)
+          if type(data[key]) is dict:
+            child = BaseModel.parse(relation.mapper.class_, data[key])
             setattr(instance, key, child)
+          if type(data[key]) is None:
+            setattr(instance, key, None)
 
       return instance
 
@@ -61,7 +57,10 @@ class BaseModel(db.Model, AllFeaturesMixin):
       for key in keys:
         filters[key] = data[key]
 
+      print("Model:", model)
+      print("Filters:", filters)
       instance = model.where(**filters).first()
+      print("Instance:", instance)
       if instance is not None:
         return instance
       else:
