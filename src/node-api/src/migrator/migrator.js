@@ -344,6 +344,9 @@ class Migrator {
 			let foreignKeys = {};
 			mAssociations.map((association) => {
 				let ass = model.associations[association];
+
+				// console.log(model, Object.getOwnPropertyNames(ass));
+
 				let { tableName, foreignKey, onDelete, onUpdate, indexes, scopes } =
 					ass.options;
 
@@ -486,7 +489,10 @@ class Migrator {
 		for (let key in mFKs) {
 			let mFK = mFKs[key];
 			let dbFK = Object.entries(dbFKs).find((e) => {
-				return e[1].self_columns.includes(key) && e[1].table_from === table;
+				return (
+					this.compareArrays(e[1].self_columns, [key]) &&
+					e[1].table_from === table
+				);
 			})[1];
 
 			if (!dbFK) {
