@@ -55,18 +55,17 @@ class FormParent extends Model {
 				},
 				form_id: {
 					type: DataTypes.INTEGER,
+					unique: "form_parent_unique_idx",
 					allowNull: false,
-					references: {
-						model: "form",
-						key: "id",
-					},
 				},
 				parent_id: {
 					type: DataTypes.INTEGER,
+					unique: "form_parent_unique_idx",
 					allowNull: false,
 				},
 				parent_type: {
 					type: DataTypes.ENUM("MUNICIPALITY", "ELECTION"),
+					unique: "form_parent_unique_idx",
 					allowNull: false,
 				},
 			},

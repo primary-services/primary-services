@@ -55,18 +55,17 @@ class DeadlineParent extends Model {
 				},
 				deadline_id: {
 					type: DataTypes.INTEGER,
+					unique: "deadline_parent_unique_idx",
 					allowNull: false,
-					references: {
-						model: "deadline",
-						key: "id",
-					},
 				},
 				parent_id: {
 					type: DataTypes.INTEGER,
+					unique: "deadline_parent_unique_idx",
 					allowNull: false,
 				},
 				parent_type: {
 					type: DataTypes.ENUM("MUNICIPALITY", "ELECTION"),
+					unique: "deadline_parent_unique_idx",
 					allowNull: false,
 				},
 			},

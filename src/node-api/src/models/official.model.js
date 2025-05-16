@@ -30,18 +30,6 @@ class Official extends Model {
         office_id: {
           type: DataTypes.INTEGER,
           allowNull: true,
-          // references: {
-          //   model: "office",
-          //   key: "id",
-          // },
-        },
-        term_id: {
-          type: DataTypes.INTEGER,
-          allowNull: true,
-          // references: {
-          //   model: "term",
-          //   key: "id",
-          // },
         },
       },
       {
@@ -63,6 +51,8 @@ class Official extends Model {
   static associate(models) {
     this.belongsTo(models.Office, {
       foreignKey: "office_id",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
   }
 }

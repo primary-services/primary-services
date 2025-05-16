@@ -132,18 +132,21 @@ class Office extends Model {
 		this.hasMany(models.Official, {
 			foreignKey: "office_id",
 			as: "officials",
-			onDelete: "CASCADE",
+			onRemove: "DELETE", // Custom action for upsertAll
 		});
 
 		this.hasMany(models.Seat, {
 			foreignKey: "office_id",
 			as: "seats",
-			onDelete: "CASCADE",
+			hooks: true,
+			onRemove: "DELETE", // Custom action for upsertAll
 		});
 
 		this.belongsTo(models.Municipality, {
 			foreignKey: "municipality_id",
 			as: "municipality",
+			onDelete: "NO ACTION",
+			onUpdate: "NO ACTION",
 		});
 	}
 }

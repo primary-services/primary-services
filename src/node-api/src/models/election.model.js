@@ -73,24 +73,50 @@ class Election extends Model {
 	}
 
 	static associate(models) {
-		// TODO: this is super annoying
-
 		this.belongsToMany(models.Term, {
 			through: models.ElectionTerm,
 			foreignKey: "election_id",
+			as: "terms",
 		});
 
-		// this.belongsToMany(models.Seat, {
-		// 	through: models.Term,
-		// });
+		this.belongsToMany(models.Requirement, {
+			through: {
+				model: models.RequirementParent,
+				unique: false,
+				scope: {
+					parent_type: "ELECTION",
+				},
+			},
+			foreignKey: "parent_id",
+			constraints: false,
+			as: "requirements",
+		});
 
-		// this.belongsToMany(models.Office, {
-		// 	through: models.Seat,
-		// });
+		this.belongsToMany(models.Form, {
+			through: {
+				model: models.FormParent,
+				unique: false,
+				scope: {
+					parent_type: "ELECTION",
+				},
+			},
+			foreignKey: "parent_id",
+			constraints: false,
+			as: "forms",
+		});
 
-		// this.belongsTo(Municipality, {
-		// 	foreignKey: "municipality_id",
-		// });
+		this.belongsToMany(models.Deadline, {
+			through: {
+				model: models.DeadlineParent,
+				unique: false,
+				scope: {
+					parent_type: "ELECTION",
+				},
+			},
+			foreignKey: "parent_id",
+			constraints: false,
+			as: "deadlines",
+		});
 	}
 }
 

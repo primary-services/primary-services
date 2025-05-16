@@ -4,22 +4,12 @@ function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase().concat(string.slice(1));
 }
 
-// Object.assign(Sequelize.Model, {
-//   upsert: (data) => {
-//     const attributes = this.constructor.tableAttributes;
-//     const associations = this.constructor.associations;
-
-//     console.log(this.constructor());
-//     console.log(associations);
-//   },
-// });
-
 Sequelize.Model.prototype.upsertAll = function async(data) {
   const singleTypes = ["HasOne", "BelongsTo"];
   const multipleTypes = ["HasMany", "BelongsToMany"];
 
-  const parse = async (model, data, parent) => {
-    let instance = await getInstance(model, data);
+  const parse = async (transaction, model, data, parent) => {
+    let instance = await getInstance(transaction, model, data);
     let attributes = model.tableAttributes;
     let associations = model.associations;
 
@@ -31,59 +21,54 @@ Sequelize.Model.prototype.upsertAll = function async(data) {
     }
 
     if (!parent) {
-      await instance.save();
+      await instance.save({ transaction });
     } else {
-      let shouldCreate = await isNew(parent, instance);
+      let shouldCreate = await isNew(transaction, parent, instance);
       if (shouldCreate) {
-        instance = await add(parent, instance);
+        instance = await add(transaction, parent, instance);
       } else {
-        await instance.save();
+        await instance.save({ transaction });
       }
     }
 
     for (let x in associations) {
       if (!data[x]) {
+        console.log("Skipping:", x);
         continue;
       }
 
+      console.log("Getting:", x);
       let relType = associations[x].associationType;
 
       if (multipleTypes.includes(relType)) {
-        // let deletes = [];
-        // let updates = [];
-        // let creates = [];
+        let deletes = [];
 
-        let existing = await getExisting(instance, associations[x]);
+        let existing = await getExisting(
+          transaction,
+          instance,
+          associations[x],
+        );
         for (let i = 0; i < existing.length; i++) {
           let current = existing[i];
           if (isDeleted(associations[x].target, current, data[x])) {
-            await removeItem(instance, current, associations[x]);
-            // deletes.push(e);
+            await removeItem(transaction, instance, current, associations[x]);
           }
         }
 
         for (let i = 0; i < data[x].length; i++) {
-          let child = await parse(associations[x].target, data[x][i], instance);
-          // if (exists(existing, child, associations[x])) {
-          //   updates.push(child);
-          //   // await child.save();
-          // } else {
-          //   creates.push(child);
-          //   // await addItem(instance, child, associations[x]);
-          // }
+          await parse(
+            transaction,
+            associations[x].target,
+            data[x][i],
+            instance,
+          );
         }
-
-        // console.log(x);
-        // console.log("DELETES:", deletes);
-        // console.log("UPDATES:", updates);
-        // console.log("CREATES:", creates);
       } else {
-        console.log(associations[x].accessors);
-        // if (!!data[x]) {
-        //   let child = parse(associations[x].target, data[x])
-        // } else {
-
-        // }
+        if (!!data[x]) {
+          await parse(transaction, associations[x].target, data[x], instance);
+        } else {
+          // Should remove this
+        }
       }
     }
 
@@ -96,20 +81,20 @@ Sequelize.Model.prototype.upsertAll = function async(data) {
     });
   };
 
-  const getInstance = async (model, data) => {
+  const getInstance = async (transaction, model, data) => {
     let keys = getPrimaryKeys(model);
     let filters = keys.reduce((a, c) => {
       a[c] = data[c];
       return a;
     }, {});
 
-    let instance = await model.findOne({ where: filters });
+    let instance = await model.findOne({ where: filters }, { transaction });
     return !!instance ? instance : new model();
   };
 
-  const getExisting = (instance, association) => {
+  const getExisting = (transaction, instance, association) => {
     let method = association.accessors.get;
-    return instance[method]();
+    return instance[method]({ transaction });
   };
 
   const exists = (existing, child, association) => {
@@ -123,21 +108,27 @@ Sequelize.Model.prototype.upsertAll = function async(data) {
     return !!doesExist;
   };
 
-  const isNew = async (parent, child) => {
+  const isNew = async (transaction, parent, child) => {
     let associations = parent.constructor.associations;
     let match = Object.keys(associations).find((key) => {
       return associations[key].target === child.constructor;
     });
     let association = associations[match];
     let method = association.accessors.get;
-    let existing = await parent[method]();
+    let existing = await parent[method]({ transaction });
 
     let keys = getPrimaryKeys(association.target);
-    let exists = existing.find((obj) => {
-      return keys.every((key) => {
-        return obj[key] === child[key];
+
+    let exists = false;
+    if (Array.isArray(existing)) {
+      exists = existing.find((obj) => {
+        return keys.every((key) => {
+          return obj[key] === child[key];
+        });
       });
-    });
+    } else {
+      exists = !!existing;
+    }
 
     return !exists;
   };
@@ -153,32 +144,49 @@ Sequelize.Model.prototype.upsertAll = function async(data) {
     return !existing;
   };
 
-  const removeItem = (instance, child, association) => {
-    let method = association.accessors.remove;
-    if (!!method) {
-      return instance[method](child);
+  const removeItem = (transaction, instance, child, association) => {
+    // TODO: pretty sure this could be replaced with a check if
+    // the other side of the association is a BelongsTo, since
+    // however I'm not sure that's always going to be the case
+    if (association.options.onRemove === "DELETE") {
+      return child.destroy({ transaction });
+    } else {
+      let method = association.accessors.remove;
+      if (!!method) {
+        return instance[method](child, { transaction });
+      }
     }
   };
 
-  const createItem = (instance, child, association) => {
-    let method = association.accessors.create;
+  const createItem = (transaction, instance, child, association) => {
+    console.log("Is New Record:", child.isNewRecord);
 
-    if (!!method) {
-      return instance[method](child.get({ plain: true }));
+    if (child.isNewRecord) {
+      let method = association.accessors.create;
+      if (!!method) {
+        return instance[method](child.get({ plain: true, transaction }));
+      }
+    } else {
+      let method = association.accessors.add;
+      if (!!method) {
+        return instance[method](child, { transaction });
+      }
     }
   };
 
-  const add = (parent, child) => {
+  const add = (transaction, parent, child) => {
     let associations = parent.constructor.associations;
     let match = Object.keys(associations).find((key) => {
       return associations[key].target === child.constructor;
     });
     let association = associations[match];
     // TODO: split between add and create?
-    return createItem(parent, child, association);
+    return createItem(transaction, parent, child, association);
   };
 
-  parse(this.constructor, data);
+  return this.constructor.sequelize.transaction(async (t) => {
+    return parse(t, this.constructor, data);
+  });
 };
 
 export default Sequelize.Model;

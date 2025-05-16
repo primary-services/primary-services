@@ -1,5 +1,6 @@
-You can ignore this, it's my own little project that I shouldn't be wasting time on
-but I love auto-migrations so... working on it. 
+You can ignore this, but it's actually pretty handy. It checks the models against the 
+database and generates a list of create/updates/deletes representing the difference
+between the database and the models. It's a work in progress
 
 What is does so far
 
@@ -12,12 +13,10 @@ What is does so far
 	- changes to default values
 
 - what's planned
-	- constraint checks
-		- added/removed/updated
-		- actually generating the file
+	
+	- actually generating the file
 
 
 To use
-	- Add `"type": "module"` to the package.json file (can't figure out how to get rid of this)
-	- in the node-api root run `node ./src/migrator/migrator.js`
+	- in the node-api root run `npm run migrations`
 	- The output will be the changes to add to a migration file

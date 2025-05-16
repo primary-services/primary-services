@@ -5,6 +5,10 @@ import Office from "../models/office.model.js";
 import Seat from "../models/seat.model.js";
 import Term from "../models/term.model.js";
 
+import Requirement from "../models/requirement.model.js";
+import Deadline from "../models/deadline.model.js";
+import Form from "../models/form.model.js";
+
 import {
   BadRequestError,
   UnauthorizedError,
@@ -50,7 +54,19 @@ let municipalityController = {
   elections: async (req, res, next) => {
     try {
       const elections = await Election.findAll({
-        include: { model: Term },
+        include: [
+          { model: Term, as: "terms" },
+          {
+            model: Requirement,
+            as: "requirements",
+            include: [
+              { model: Deadline, as: "deadline" },
+              { model: Form, as: "form" },
+            ],
+          },
+          { model: Deadline, as: "deadlines" },
+          { model: Form, as: "forms" },
+        ],
       });
 
       return res.status(200).json(elections);

@@ -5,9 +5,9 @@
   "repository": "https://github.com/gadfaria/express-sequelize-boilerplate.git",
   "author": "gadfaria <gadfaria@gmail.com>",
   "license": "MIT",
-  "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "migration": "nodemon ./src/migrator/migrator.js --exitcrash"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.310.0",

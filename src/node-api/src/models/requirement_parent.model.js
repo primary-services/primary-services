@@ -56,6 +56,7 @@ class RequirementParent extends Model {
 				requirement_id: {
 					type: DataTypes.INTEGER,
 					allowNull: false,
+					unique: "requirement_parent_unique_idx",
 					references: {
 						model: "requirement",
 						key: "id",
@@ -63,10 +64,13 @@ class RequirementParent extends Model {
 				},
 				parent_id: {
 					type: DataTypes.INTEGER,
+					unique: "requirement_parent_unique_idx",
 					allowNull: false,
+					references: null,
 				},
 				parent_type: {
 					type: DataTypes.ENUM("MUNICIPALITY", "ELECTION"),
+					unique: "requirement_parent_unique_idx",
 					allowNull: false,
 				},
 			},
@@ -85,6 +89,12 @@ class RequirementParent extends Model {
 			},
 		);
 	}
+
+	// static associate(models) {
+	// 	this.belongsTo(models.Requirement, {
+	// 		foreignKey: "requirement_id",
+	// 	});
+	// }
 }
 
 export default RequirementParent;

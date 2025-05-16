@@ -79,6 +79,30 @@ class Deadline extends Model {
 			},
 		);
 	}
+
+	static associate(models) {
+		this.belongsToMany(models.Municipality, {
+			through: {
+				model: models.DeadlineParent,
+				unique: false,
+			},
+			foreignKey: "deadline_id",
+			constraints: false,
+		});
+
+		this.belongsToMany(models.Election, {
+			through: {
+				model: models.DeadlineParent,
+				unique: false,
+			},
+			foreignKey: "deadline_id",
+			constraints: false,
+		});
+
+		this.hasOne(models.Requirement, {
+			foreignKey: "deadline_id",
+		});
+	}
 }
 
 export default Deadline;

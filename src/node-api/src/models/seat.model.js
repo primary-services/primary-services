@@ -78,12 +78,13 @@ class Seat extends Model {
 		this.belongsTo(models.Office, {
 			foreignKey: "office_id",
 			as: "office",
+			onDelete: "CASCADE",
+			onUpdate: "CASCADE",
 		});
 
 		this.hasMany(models.Term, {
 			foreignKey: "seat_id",
 			as: "terms",
-			onDelete: "CASCADE",
 		});
 	}
 }

@@ -1,5 +1,4 @@
-import Office from "../models/office.model.js";
-import Seat from "../models/seat.model.js";
+import Election from "../models/election.model.js";
 
 import {
   BadRequestError,
@@ -12,9 +11,9 @@ let officeController = {
     try {
       let data = req.body;
 
-      let office = Office.prototype.upsertAll(data);
+      let election = Election.prototype.upsertAll(data);
 
-      return res.status(200).json(office);
+      return res.status(200).json(election);
     } catch (error) {
       next(error);
     }

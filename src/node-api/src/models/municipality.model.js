@@ -65,14 +65,6 @@ class Municipality extends Model {
           type: DataTypes.ENUM("STATE", "COUNTY", "TOWN", "DISTRICT"),
           allowNull: false,
         },
-        parent_id: {
-          type: DataTypes.INTEGER,
-          allowNull: true,
-          references: {
-            model: "municipality",
-            key: "id",
-          },
-        },
         website: {
           type: DataTypes.STRING,
           allowNull: true,
@@ -97,6 +89,44 @@ class Municipality extends Model {
     // TODO: this is super annoying
     this.hasMany(models.Office, {
       foreignKey: "municipality_id",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    });
+
+    this.belongsToMany(models.Requirement, {
+      through: {
+        model: models.RequirementParent,
+        unique: false,
+        scope: {
+          parent_type: "MUNICIPALITY",
+        },
+      },
+      foreignKey: "parent_id",
+      constraints: false,
+    });
+
+    this.belongsToMany(models.Form, {
+      through: {
+        model: models.FormParent,
+        unique: false,
+        scope: {
+          parent_type: "MUNICIPALITY",
+        },
+      },
+      foreignKey: "parent_id",
+      constraints: false,
+    });
+
+    this.belongsToMany(models.Deadline, {
+      through: {
+        model: models.DeadlineParent,
+        unique: false,
+        scope: {
+          parent_type: "MUNICIPALITY",
+        },
+      },
+      foreignKey: "parent_id",
+      constraints: false,
     });
   }
 }

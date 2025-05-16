@@ -12,6 +12,10 @@ class Migrator {
 	constructor() {
 		this.connection = null;
 		this.tables = {};
+
+		this.creates = [];
+		this.updates = [];
+		this.deletes = [];
 	}
 
 	async run() {
@@ -21,8 +25,7 @@ class Migrator {
 		await this.getConstraintInfo();
 		// TODO: compare tables
 		await this.compareColumns();
-
-		return;
+		await this.compareConstraints();
 	}
 
 	async init() {
@@ -65,6 +68,11 @@ class Migrator {
 
 		return Promise.all(
 			response[0].map(async (tableInfo) => {
+				if (tableInfo.show_tables === "SequelizeMeta") {
+					// Ignore the migrations table
+					return;
+				}
+
 				// There's got to be a safer way to do this, but I honestly doubt that any
 				// of our table names will ever be an SQL Injection risk
 				let query = `SELECT 'public.${tableInfo.show_tables}'::regclass::oid;`;
@@ -104,24 +112,44 @@ class Migrator {
 		let constraints = await this.connection.query(`
 			SELECT 
 				conrelid::regclass AS table_from,
-			    conname,
-			    pg_get_constraintdef(c.oid),
-			    c.conrelid AS table_oid,
-			    c.conindid AS relation_contstraint_oid,
-			    c.confrelid AS relation_table_oid,
-			    c.confupdtype AS relation_update_action,
-			    c.confdeltype AS relation_delete_action,
-			    c.confmatchtype AS relation_match_type,
-			    c.*
+		    conname,
+		    pg_get_constraintdef(c.oid),
+		    c.conrelid AS table_oid,
+		    c.conindid AS relation_contstraint_oid,
+		    rc.cols AS relation_columns,
+				a.cols AS self_columns,
+		    c.confrelid AS relation_table_oid,
+		    c.confupdtype AS relation_update_action,
+		    c.confdeltype AS relation_delete_action,
+		    c.confmatchtype AS relation_match_type,
+		    c.*
 			FROM   pg_constraint c
 			JOIN   pg_namespace n ON n.oid = c.connamespace
-			WHERE  contype IN ('f', 'p ')
-			AND    n.nspname = 'public' -- your schema here
+			LEFT JOIN LATERAL (
+				SELECT JSONB_AGG(column_name) AS cols
+				FROM information_schema.constraint_column_usage 
+				WHERE constraint_name = conname
+			) AS rc ON TRUE
+			INNER JOIN LATERAL (
+				SELECT JSONB_AGG(pg_attribute.attname) AS cols
+				FROM pg_attribute
+				WHERE 
+					pg_attribute.attrelid = c.conrelid
+				AND 
+					pg_attribute.attnum IN (
+						SELECT * FROM unnest(c.conkey)
+					) 
+			) AS a ON TRUE
+			WHERE  n.nspname = 'public' -- your schema here
 			ORDER  BY conrelid::regclass::text, contype DESC;
 		`);
 
 		constraints[0].map((contraint) => {
 			let { table_from, conname } = contraint;
+			if (table_from === '"SequelizeMeta"') {
+				return;
+			}
+
 			this.tables[table_from].contraints[conname] = contraint;
 		});
 	}
@@ -199,13 +227,17 @@ class Migrator {
 
 			// If there's any remaining DB columns they should be dropped
 			dbColumns.map((col) => {
-				deletes.push(col);
+				deletes.push({
+					type: "column",
+					table: model.tableName,
+					old: col,
+				});
 			});
 		});
 
-		console.log("Creates:", creates);
-		console.log("Updates:", updates);
-		console.log("Deletes:", deletes);
+		this.creates = [...this.creates, ...creates];
+		this.updates = [...this.updates, ...updates];
+		this.deletes = [...this.deletes, ...deletes];
 	}
 
 	compareDataTypes(table, column, mAttrs, dbAttrs) {
@@ -289,12 +321,230 @@ class Migrator {
 
 		return updates;
 	}
+
+	compareConstraints() {
+		Object.keys(this.connection.models).map((key) => {
+			let model = this.connection.models[key];
+			let mAssociations = Object.keys(model.associations);
+
+			// Gather all the necessary foreign key opitions. Indexes
+			// and unique constraints have accessors
+			let foreignKeys = {};
+			mAssociations.map((association) => {
+				let ass = model.associations[association];
+				let { tableName, foreignKey, onDelete, onUpdate, indexes, scopes } =
+					ass.options;
+
+				let ignoredAsses = ["HasMany", "HasOne", "BelongsToMany"];
+
+				if (!ignoredAsses.includes(ass.associationType)) {
+					foreignKeys[foreignKey] = {
+						table: tableName,
+						field: foreignKey,
+						target: {
+							table: ass.target.tableName,
+							field: ass.targetKeyField,
+						},
+						onDelete: onDelete,
+						onUpdate: onUpdate,
+					};
+				}
+			});
+
+			// Var for raw db constraints list
+			let dbConstraints = this.tables[model.tableName].contraints;
+			let dbKeys = Object.keys(dbConstraints);
+
+			// Compare the indexes, keep track of the dbKeys used
+			dbKeys = this.compareIndexes(
+				model.tableName,
+				model._indexes,
+				dbConstraints,
+				dbKeys,
+			);
+
+			dbKeys = this.compareUniques(
+				model.tableName,
+				model.uniqueKeys,
+				dbConstraints,
+				dbKeys,
+			);
+
+			dbKeys = this.compareFKs(
+				model.tableName,
+				foreignKeys,
+				dbConstraints,
+				dbKeys,
+			);
+
+			dbKeys.map((dbKey) => {
+				this.deletes.push({
+					type: "constraint",
+					old: dbConstraints[dbKey],
+				});
+			});
+
+			// console.log("Indexes:", model._indexes);
+			// console.log("Unique Keys:", model.uniqueKeys);
+			// console.log(foreignKeys);
+		});
+	}
+
+	compareIndexes(table, mIdxs, dbIdxs, dbKeys) {
+		let creates = [];
+		let updates = [];
+
+		mIdxs.map((mIdx) => {
+			let dbIdx = dbIdxs[mIdx.name];
+
+			if (!dbIdx) {
+				creates.push({
+					type: "index",
+					table: table,
+					definition: mIdx,
+				});
+
+				return;
+			}
+
+			if (dbIdx.contype === "p") {
+				// console.log(mIdx.name, dbKeys.indexOf(mIdx.name));
+				dbKeys.splice(dbKeys.indexOf(mIdx.name), 1);
+				return;
+			}
+
+			// Honestly don't know what else to compare here
+			console.log("This is a different index?", mIdx);
+		});
+
+		this.creates = [...this.creates, ...creates];
+		this.updates = [...this.updates, ...updates];
+
+		return dbKeys;
+	}
+
+	compareUniques(table, mUniques, dbUniques, dbKeys) {
+		let creates = [];
+		let updates = [];
+
+		for (let key in mUniques) {
+			let mUnique = mUniques[key];
+			let dbUnique = dbUniques[key];
+
+			if (!dbUnique) {
+				creates.push({
+					type: "unique",
+					table: table,
+					definition: mUnique,
+					old: dbUnique,
+				});
+
+				continue;
+			}
+
+			if (dbUnique.contype === "u") {
+				// console.log(key, dbKeys.indexOf(key));
+				dbKeys.splice(dbKeys.indexOf(key), 1);
+			}
+
+			if (this.compareArrays(mUnique.fields, dbUnique.relation_columns)) {
+				// They're the same, horray!
+			} else {
+				updates.push({
+					type: "unique",
+					table: table,
+					definition: mUnique,
+					old: dbUnique,
+				});
+			}
+		}
+
+		this.creates = [...this.creates, ...creates];
+		this.updates = [...this.updates, ...updates];
+
+		return dbKeys;
+	}
+
+	compareFKs(table, mFKs, dbFKs, dbKeys) {
+		let creates = [];
+		let updates = [];
+
+		// console.log(dbFKs);
+
+		for (let key in mFKs) {
+			let mFK = mFKs[key];
+			let dbFK = Object.entries(dbFKs).find((e) => {
+				return e[1].self_columns.includes(key) && e[1].table_from === table;
+			})[1];
+
+			if (!dbFK) {
+				creates.push({
+					type: "fk",
+					table: table,
+					definition: mFK,
+				});
+
+				continue;
+			}
+
+			if (dbFK.contype === "f") {
+				dbKeys.splice(dbKeys.indexOf(dbFK.conname), 1);
+			}
+
+			// Finally the actual comparisons
+			let actions = {
+				r: "RESTRICT",
+				c: "CASCADE",
+				a: "NO ACTION",
+				d: "SET DEFAULT",
+				n: "SET NULL",
+			};
+
+			let dbUpdate = actions[dbFK.relation_update_action];
+			let dbDelete = actions[dbFK.relation_delete_action];
+
+			if (dbUpdate !== mFK.onUpdate) {
+				updates.push({
+					type: "fk",
+					table: table,
+					definition: mFK,
+					old: dbFK,
+				});
+			}
+
+			if (dbDelete !== mFK.onDelete) {
+				updates.push({
+					type: "fk",
+					table: table,
+					definition: mFK,
+					old: dbFK,
+				});
+			}
+		}
+
+		this.creates = [...this.creates, ...creates];
+		this.updates = [...this.updates, ...updates];
+
+		return dbKeys;
+	}
+
+	compareArrays(arr1, arr2) {
+		return (
+			arr1.every((k) => arr2.includes(k)) && arr2.every((k) => arr1.includes(k))
+		);
+	}
 }
 
 (async () => {
 	const migrator = new Migrator();
+
 	await migrator.run();
 
+	console.log("Creates:", migrator.creates);
+	console.log("Updates:", migrator.updates);
+	console.log("Deletes:", migrator.deletes);
 	console.log("Done");
-	process.exit();
+
+	// This will throw an error, but it's just a hack to get nodemon to fully exit
+	process.exit(1);
 })();

@@ -39,6 +39,14 @@ class Candidate extends Model {
       },
     );
   }
+
+  static associate(models) {
+    this.belongsTo(models.Election, {
+      foreignKey: "election_id",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    });
+  }
 }
 
 export default Candidate;

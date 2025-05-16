@@ -37,17 +37,14 @@ export const createOffice = (args) => {
 export const createElection = (args) => {
   let { municipality_id, election } = args;
 
-  return fetch(
-    `http://127.0.0.1:5000/municipality/${municipality_id}/election`,
-    {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ ...election }),
+  return fetch(`http://127.0.0.1:5000/election`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
-  ).then((resp) => {
+    body: JSON.stringify({ ...election }),
+  }).then((resp) => {
     return resp.json();
   });
 };

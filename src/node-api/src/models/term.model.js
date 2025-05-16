@@ -90,6 +90,8 @@ class Term extends Model {
 
 		this.belongsTo(models.Seat, {
 			foreignKey: "seat_id",
+			onDelete: "CASCADE",
+			onUpdate: "CASCADE",
 		});
 	}
 }

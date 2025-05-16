@@ -73,14 +73,6 @@ class Requirement extends Model {
 					type: DataTypes.STRING,
 					allowNull: false,
 				},
-				municipality_id: {
-					type: DataTypes.INTEGER,
-					allowNull: false,
-					references: {
-						model: "municipality",
-						key: "id",
-					},
-				},
 				form_id: {
 					type: DataTypes.INTEGER,
 					allowNull: false,
@@ -116,6 +108,40 @@ class Requirement extends Model {
 				],
 			},
 		);
+	}
+
+	static associate(models) {
+		this.belongsToMany(models.Municipality, {
+			through: {
+				model: models.RequirementParent,
+				unique: false,
+			},
+			foreignKey: "requirement_id",
+			constraints: false,
+		});
+
+		this.belongsToMany(models.Election, {
+			through: {
+				model: models.RequirementParent,
+				unique: false,
+			},
+			foreignKey: "requirement_id",
+			constraints: false,
+		});
+
+		this.belongsTo(models.Deadline, {
+			foreignKey: "deadline_id",
+			onDelete: "CASCADE",
+			onUpdate: "CASCADE",
+			as: "deadline",
+		});
+
+		this.belongsTo(models.Form, {
+			foreignKey: "form_id",
+			onDelete: "CASCADE",
+			onUpdate: "CASCADE",
+			as: "form",
+		});
 	}
 }
 

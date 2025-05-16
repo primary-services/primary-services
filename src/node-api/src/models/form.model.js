@@ -77,6 +77,30 @@ class Form extends Model {
 			},
 		);
 	}
+
+	static associate(models) {
+		this.belongsToMany(models.Municipality, {
+			through: {
+				model: models.FormParent,
+				unique: false,
+			},
+			foreignKey: "form_id",
+			constraints: false,
+		});
+
+		this.belongsToMany(models.Election, {
+			through: {
+				model: models.FormParent,
+				unique: false,
+			},
+			foreignKey: "form_id",
+			constraints: false,
+		});
+
+		this.hasOne(models.Requirement, {
+			foreignKey: "deadline_id",
+		});
+	}
 }
 
 export default Form;
