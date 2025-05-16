@@ -4,6 +4,9 @@ function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase().concat(string.slice(1));
 }
 
+// TODO: This seems like a bad way to add this method, but
+// I can't figure out how to just extend the class otherwise
+
 Sequelize.Model.prototype.upsertAll = function async(data) {
   const singleTypes = ["HasOne", "BelongsTo"];
   const multipleTypes = ["HasMany", "BelongsToMany"];
