@@ -73,6 +73,11 @@ class Election extends Model {
 	}
 
 	static associate(models) {
+		this.belongsTo(models.Municipality, {
+			foreignKey: "municipality_id",
+			as: "municipality",
+		});
+
 		this.belongsToMany(models.Term, {
 			through: models.ElectionTerm,
 			foreignKey: "election_id",
