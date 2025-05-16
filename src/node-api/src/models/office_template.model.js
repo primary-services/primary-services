@@ -1,37 +1,3 @@
-// const Sequelize = require('sequelize');
-// module.exports = function(sequelize, DataTypes) {
-//   return sequelize.define('office_template', {
-//     id: {
-//       autoIncrement: true,
-//       type: DataTypes.INTEGER,
-//       allowNull: false,
-//       primaryKey: true
-//     },
-//     title: {
-//       type: DataTypes.STRING,
-//       allowNull: false
-//     },
-//     description: {
-//       type: DataTypes.STRING,
-//       allowNull: false
-//     }
-//   }, {
-//     sequelize,
-//     tableName: 'office_template',
-//     schema: 'public',
-//     timestamps: false,
-//     indexes: [
-//       {
-//         name: "office_template_pkey",
-//         unique: true,
-//         fields: [
-//           { name: "id" },
-//         ]
-//       },
-//     ]
-//   });
-// };
-
 import { Sequelize, DataTypes } from "sequelize";
 import Model from "../lib/base-model.js";
 
