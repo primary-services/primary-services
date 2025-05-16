@@ -33,11 +33,9 @@ Sequelize.Model.prototype.upsertAll = function async(data) {
 
     for (let x in associations) {
       if (!data[x]) {
-        console.log("Skipping:", x);
         continue;
       }
 
-      console.log("Getting:", x);
       let relType = associations[x].associationType;
 
       if (multipleTypes.includes(relType)) {
