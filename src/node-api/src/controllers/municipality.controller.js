@@ -52,10 +52,15 @@ let municipalityController = {
   },
 
   elections: async (req, res, next) => {
+    const { municipality_id } = req.params;
+
     try {
       const elections = await Election.findAll({
+        where: {
+          municipality_id: municipality_id,
+        },
         include: [
-          { model: Term, as: "terms" },
+          { model: Term, as: "terms", include: [{ model: Seat, as: "seat" }] },
           {
             model: Requirement,
             as: "requirements",

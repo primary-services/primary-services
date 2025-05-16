@@ -92,6 +92,7 @@ class Term extends Model {
 			foreignKey: "seat_id",
 			onDelete: "CASCADE",
 			onUpdate: "CASCADE",
+			as: "seat",
 		});
 	}
 }
