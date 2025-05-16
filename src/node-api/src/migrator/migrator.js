@@ -190,7 +190,12 @@ class Migrator {
 					dbColumns.splice(dbColIdx, 1);
 				} else {
 					// If it doesn't exist, it's a column to be added
-					creates.push(mAttrs);
+					creates.push({
+						type: "column",
+						action: "create",
+						table: model.tableName,
+						definition: mAttrs,
+					});
 					return;
 				}
 
@@ -229,6 +234,7 @@ class Migrator {
 			dbColumns.map((col) => {
 				deletes.push({
 					type: "column",
+					action: "delete",
 					table: model.tableName,
 					old: col,
 				});
@@ -252,11 +258,13 @@ class Migrator {
 
 			if (modelDataType !== dbDataType) {
 				let update = {
-					update: "datatype",
+					type: "column",
+					action: "update",
+					attribute: "datatype",
 					table: table,
 					column: column,
-					modelAttributes: mAttrs,
-					databaseAttributes: dbAttrs,
+					definition: mAttrs,
+					old: dbAttrs,
 				};
 
 				updates.push(update);
@@ -274,11 +282,13 @@ class Migrator {
 		let dbNullable = dbAttrs.is_nullable === "NO" ? false : true;
 		if (mAttrs.allowNull !== dbNullable) {
 			let update = {
-				update: "nullable",
+				type: "column",
+				action: "update",
+				attribute: "nullable",
 				table: table,
 				column: column,
-				modelAttributes: mAttrs,
-				databaseAttributes: dbAttrs,
+				definition: mAttrs,
+				old: dbAttrs,
 			};
 
 			updates.push(update);
@@ -309,11 +319,13 @@ class Migrator {
 
 			// It's an actual update
 			let update = {
-				update: "default",
+				type: "column",
+				action: "update",
+				attribute: "default",
 				table: table,
 				column: column,
-				modelAttributes: mAttrs,
-				databaseAttributes: dbAttrs,
+				definition: mAttrs,
+				old: dbAttrs,
 			};
 
 			updates.push(update);

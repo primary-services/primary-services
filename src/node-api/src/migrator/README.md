@@ -4,8 +4,6 @@ between the database and the models. It's a work in progress
 
 What is does so far
 
-*Big Warning renamed columns will be treated as removed and dropped, and I'm not sure how to fix that*
-
 - compares table columns for
 	- added/removed columns
 	- changes to the datatype
@@ -13,9 +11,11 @@ What is does so far
 	- changes to default values
 
 - what's planned
-	
 	- actually generating the file
 
+- known issues
+	- renamed columns will appear as a create/delete column
+	- through table relations aren't getting read right
 
 To use
 	- in the node-api root run `npm run migrations`
