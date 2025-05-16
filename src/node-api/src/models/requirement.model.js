@@ -17,7 +17,7 @@ class Requirement extends Model {
 				},
 				form_id: {
 					type: DataTypes.INTEGER,
-					allowNull: false,
+					allowNull: true,
 					references: {
 						model: "form",
 						key: "id",
@@ -25,7 +25,7 @@ class Requirement extends Model {
 				},
 				deadline_id: {
 					type: DataTypes.INTEGER,
-					allowNull: false,
+					allowNull: true,
 					references: {
 						model: "deadline",
 						key: "id",
