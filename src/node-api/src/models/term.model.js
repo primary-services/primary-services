@@ -44,6 +44,7 @@ class Term extends Model {
 		this.belongsToMany(models.Election, {
 			through: models.ElectionTerm,
 			foreignKey: "term_id",
+			as: "elections",
 		});
 
 		this.belongsTo(models.Seat, {

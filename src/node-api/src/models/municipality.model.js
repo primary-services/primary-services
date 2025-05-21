@@ -57,6 +57,7 @@ class Municipality extends Model {
       },
       foreignKey: "parent_id",
       constraints: false,
+      as: "requirements",
     });
 
     this.belongsToMany(models.Form, {
@@ -69,6 +70,7 @@ class Municipality extends Model {
       },
       foreignKey: "parent_id",
       constraints: false,
+      as: "forms",
     });
 
     this.belongsToMany(models.Deadline, {
@@ -81,6 +83,7 @@ class Municipality extends Model {
       },
       foreignKey: "parent_id",
       constraints: false,
+      as: "deadlines",
     });
   }
 }
