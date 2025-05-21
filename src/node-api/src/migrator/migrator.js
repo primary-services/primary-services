@@ -345,8 +345,6 @@ class Migrator {
 			mAssociations.map((association) => {
 				let ass = model.associations[association];
 
-				// console.log(model, Object.getOwnPropertyNames(ass));
-
 				let { tableName, foreignKey, onDelete, onUpdate, indexes, scopes } =
 					ass.options;
 
@@ -398,10 +396,6 @@ class Migrator {
 					old: dbConstraints[dbKey],
 				});
 			});
-
-			// console.log("Indexes:", model._indexes);
-			// console.log("Unique Keys:", model.uniqueKeys);
-			// console.log(foreignKeys);
 		});
 	}
 
@@ -423,7 +417,6 @@ class Migrator {
 			}
 
 			if (dbIdx.contype === "p") {
-				// console.log(mIdx.name, dbKeys.indexOf(mIdx.name));
 				dbKeys.splice(dbKeys.indexOf(mIdx.name), 1);
 				return;
 			}
@@ -458,7 +451,6 @@ class Migrator {
 			}
 
 			if (dbUnique.contype === "u") {
-				// console.log(key, dbKeys.indexOf(key));
 				dbKeys.splice(dbKeys.indexOf(key), 1);
 			}
 
@@ -483,8 +475,6 @@ class Migrator {
 	compareFKs(table, mFKs, dbFKs, dbKeys) {
 		let creates = [];
 		let updates = [];
-
-		// console.log(dbFKs);
 
 		for (let key in mFKs) {
 			let mFK = mFKs[key];
