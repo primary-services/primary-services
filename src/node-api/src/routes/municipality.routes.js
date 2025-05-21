@@ -13,5 +13,9 @@ municipalityRoutes.get(
 	"/municipalities/:municipality_id/elections",
 	municipalityController.elections,
 );
+municipalityRoutes.get(
+	"/municipalities/:municipality_id/collections",
+	municipalityController.collections,
+);
 
 export { municipalityRoutes };
