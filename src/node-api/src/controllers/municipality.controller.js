@@ -41,7 +41,22 @@ let municipalityController = {
         },
         include: [
           { model: Official, as: "officials" },
-          { model: Seat, as: "seats", include: [{ model: Term, as: "terms" }] },
+          {
+            model: Seat,
+            as: "seats",
+            include: [
+              {
+                model: Term,
+                as: "terms",
+                include: [
+                  {
+                    model: Election,
+                    as: "elections",
+                  },
+                ],
+              },
+            ],
+          },
         ],
       });
 
@@ -75,6 +90,31 @@ let municipalityController = {
       });
 
       return res.status(200).json(elections);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  collections: async (req, res, next) => {
+    const { municipality_id } = req.params;
+
+    try {
+      const municipality = await Municipality.findByPk(municipality_id, {
+        include: [
+          {
+            model: Requirement,
+            as: "requirements",
+            include: [
+              { model: Deadline, as: "deadline" },
+              { model: Form, as: "form" },
+            ],
+          },
+          { model: Deadline, as: "deadlines" },
+          { model: Form, as: "forms" },
+        ],
+      });
+
+      return res.status(200).json(municipality);
     } catch (error) {
       next(error);
     }
