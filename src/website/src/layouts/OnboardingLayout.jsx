@@ -7,7 +7,9 @@ export const OnboardingLayout = ({ children }) => {
   return (
     <section className="layout onboarding-layout">
       <Header />
-      <Outlet />
+      <section className="content">
+        <Outlet />
+      </section>
       <Footer />
     </section>
   );

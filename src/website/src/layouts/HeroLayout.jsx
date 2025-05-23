@@ -11,7 +11,9 @@ export const HeroLayout = ({ children }) => {
       <Header />
       <SubHeader />
       <Hero />
-      <Outlet />
+      <section className="content">
+        <Outlet />
+      </section>
       <Footer />
     </section>
   );
