@@ -160,8 +160,6 @@ Sequelize.Model.prototype.upsertAll = function async(data) {
   };
 
   const createItem = (transaction, instance, child, association) => {
-    console.log("Is New Record:", child.isNewRecord);
-
     if (child.isNewRecord) {
       let method = association.accessors.create;
       if (!!method) {
