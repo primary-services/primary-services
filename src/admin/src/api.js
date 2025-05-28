@@ -20,7 +20,6 @@ export const getTownRequirements = (town_id) =>
 
 export const createOffice = (args) => {
   let { municipality_id, office } = args;
-  console.log(municipality_id, office);
   // return fetch(`http://127.0.0.1:5000/municipality/${municipality_id}/office`, {
   return fetch(`http://127.0.0.1:5000/office`, {
     method: "POST",
@@ -76,4 +75,9 @@ export const getMunicipalityOffices = (municipality_id) =>
 export const getMunicipalityElections = (municipality_id) =>
   fetch(
     `http://127.0.0.1:5000/municipalities/${municipality_id}/elections`,
+  ).then((response) => response.json());
+
+export const getMunicipalityCollections = (municipality_id) =>
+  fetch(
+    `http://127.0.0.1:5000/municipalities/${municipality_id}/collections`,
   ).then((response) => response.json());

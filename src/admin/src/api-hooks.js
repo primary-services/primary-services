@@ -13,6 +13,7 @@ import {
   getMunicipality,
   getMunicipalityOffices,
   getMunicipalityElections,
+  getMunicipalityCollections,
 } from "./api";
 
 export const useTowns = () =>
@@ -68,7 +69,7 @@ export const invalidateTownRequirements = (town_id) => {
 export const useCreateOffice = () =>
   useMutation({
     mutationKey: ["office"],
-    mutationFn: (args) => createOffice(args),
+    mutationFn: createOffice,
     onSuccess: (office) => {
       invalidateMunicipalityOffices(office.municipality_id);
     },
@@ -115,6 +116,13 @@ export const useMunicipalityElections = (municipality_id) =>
     enabled: !!municipality_id,
   });
 
+export const useMunicipalityCollections = (municipality_id) =>
+  useQuery({
+    queryKey: ["municipalities", municipality_id, "collections"],
+    queryFn: () => getMunicipalityCollections(municipality_id),
+    enabled: !!municipality_id,
+  });
+
 export const invalidateMunicipality = (municipality_id) => {
   const queryClient = new QueryClient();
   return queryClient.invalidateQueries({
@@ -133,5 +141,12 @@ export const invalidateMunicipalityElections = (municipality_id) => {
   const queryClient = new QueryClient();
   return queryClient.invalidateQueries({
     queryKey: ["municipalities", municipality_id, "elections"],
+  });
+};
+
+export const invalidateMunicipalityCollections = (municipality_id) => {
+  const queryClient = new QueryClient();
+  return queryClient.invalidateQueries({
+    queryKey: ["municipalities", municipality_id, "collections"],
   });
 };
