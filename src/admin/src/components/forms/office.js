@@ -38,8 +38,17 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 
 	const validateSeat = () => {};
 
-	const save = () => {
-		onSave(office);
+	const save = async () => {
+		let resp = await onSave(office);
+
+		window.UIkit.notification({
+			message: `Saved ${office.title} successfully`,
+			status: "primary",
+			pos: "bottom-left",
+			timeout: 5000,
+		});
+
+		onCancel();
 	};
 
 	const cancel = () => {

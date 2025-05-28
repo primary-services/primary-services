@@ -6,6 +6,7 @@ export const SubForm = ({
 	label,
 	template,
 	items,
+	options,
 	onSave,
 	onValidate,
 }) => {
@@ -42,6 +43,7 @@ export const SubForm = ({
 		<section className="subform">
 			<div className="section-header">
 				<h3>{label}</h3>
+
 				{!child && (
 					<span
 						className="icon action clickable"
@@ -66,9 +68,13 @@ export const SubForm = ({
 				]}
 			</div>
 
-			{!!child && <Form child={child} setChild={setChild} />}
+			<div className="subform-content">
+				{!!child && (
+					<Form child={child} setChild={setChild} options={options} />
+				)}
 
-			<List items={items} onEdit={editChild} onDestory={destoryChild} />
+				<List items={items} onEdit={editChild} onDestory={destoryChild} />
+			</div>
 		</section>
 	);
 };

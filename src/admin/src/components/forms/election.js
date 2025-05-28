@@ -12,10 +12,14 @@ import { FormList } from "../lists/forms.js";
 import { RequirementForm } from "./requirements.js";
 import { RequirementList } from "../lists/requirements.js";
 
-import { useMunicipalityOffices } from "../../api-hooks.js";
+import {
+	useMunicipalityOffices,
+	useMunicipalityCollections,
+} from "../../api-hooks.js";
 
 export const ElectionForm = ({ selected, municipality, onSave, onCancel }) => {
 	const { data: offices } = useMunicipalityOffices(municipality?.id);
+	const { data: collections } = useMunicipalityCollections(municipality?.id);
 
 	const [election, setElection] = useState({
 		id: null,
@@ -72,7 +76,19 @@ export const ElectionForm = ({ selected, municipality, onSave, onCancel }) => {
 
 		setElection({
 			...election,
-			terms: values.filter((v) => !!v),
+			terms: values
+				.filter((v) => !!v)
+				.map((v) => {
+					// We don't want the elections sent here, but
+					// there's probably a better way to handle this
+
+					return {
+						id: v.id,
+						start: v.start,
+						end: v.end,
+						seat_id: v.seat_id,
+					};
+				}),
 		});
 	};
 
@@ -113,9 +129,17 @@ export const ElectionForm = ({ selected, municipality, onSave, onCancel }) => {
 		// Stub
 	};
 
-	const save = () => {
-		console.log("Election:", election);
-		onSave(election);
+	const save = async () => {
+		let resp = await onSave(election);
+
+		window.UIkit.notification({
+			message: `Saved election successfully`,
+			status: "primary",
+			pos: "bottom-left",
+			timeout: 5000,
+		});
+
+		onCancel();
 	};
 
 	const cancel = () => {
@@ -169,6 +193,7 @@ export const ElectionForm = ({ selected, municipality, onSave, onCancel }) => {
 					list={RequirementList}
 					label="Requirements"
 					items={election?.requirements || []}
+					options={collections?.requirements || []}
 					template={{
 						id: null,
 						label: "",
@@ -180,7 +205,7 @@ export const ElectionForm = ({ selected, municipality, onSave, onCancel }) => {
 					onValidate={validateRequirement}
 				/>
 
-				<SubForm
+				{/*				<SubForm
 					form={DeadlineForm}
 					list={DeadlineList}
 					label="Additional Deadlines"
@@ -208,7 +233,7 @@ export const ElectionForm = ({ selected, municipality, onSave, onCancel }) => {
 					}}
 					onSave={saveForms}
 					onValidate={validateForm}
-				/>
+				/>*/}
 			</div>
 
 			<section className="actions">

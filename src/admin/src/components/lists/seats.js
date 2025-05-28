@@ -4,8 +4,6 @@ import { useState, useEffect, useMemo } from "react";
 
 export const SeatList = ({ items: seats, onDestory }) => {
 	const nextTerm = (s) => {
-		console.log(s);
-
 		return {
 			start: "2025-01-25",
 			end: "2025-01-26",

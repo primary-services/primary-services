@@ -12,8 +12,9 @@ import { FormForm } from "./forms.js";
 export const RequirementForm = ({
 	child: requirement,
 	setChild: setRequirement,
+	options: options,
 }) => {
-	const { requirements, forms } = useContext(AppContexts.TownsContext);
+	// const { requirements, forms } = useContext(AppContexts.TownsContext);
 
 	const [selected, setSelected] = useState(null);
 
@@ -22,7 +23,7 @@ export const RequirementForm = ({
 	};
 
 	const select = (id) => {
-		let r = requirements.find((d) => +d.id === +id);
+		let r = options.find((d) => +d.id === +id);
 
 		if (!!r) {
 			setRequirement({ ...r });
@@ -54,7 +55,7 @@ export const RequirementForm = ({
 				options={[
 					{ value: null, label: "None" },
 					{ value: "new", label: "New Requirement" },
-					...requirements.map((d) => {
+					...options.map((d) => {
 						return { value: d.id, label: d.label };
 					}),
 				]}
@@ -63,7 +64,7 @@ export const RequirementForm = ({
 					select(e.target.value);
 				}}
 			/>
-			{(selected === "new" || requirements.length === 0) && (
+			{(selected === "new" || options.length === 0) && (
 				<>
 					<div className="input-wrapper grid">
 						<TextInput
