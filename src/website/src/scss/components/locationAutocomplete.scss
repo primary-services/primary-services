@@ -1,0 +1,52 @@
+.location-autocomplete {
+  position: relative;
+  display: inline-block;
+
+  input {
+    padding: 6px 36px 6px 12px;
+    border-radius: 4px;
+    width: 250px;
+  }
+
+  .geoapify-close-button {
+    position: absolute;
+    right: 3px;
+    top: 4px;
+  }
+
+  .geoapify-autocomplete-items {
+    margin: 0px;
+    position: absolute;
+    right: 0px;
+    box-sizing: border-box;
+    background-color: white;
+    border-radius: 3px;
+    box-shadow: 0px 6px 10px 1px #000000;
+    z-index: 1;
+    color: black;
+
+    .geoapify-autocomplete-item {
+      overflow: hidden;
+      padding: 10px 10px;
+      border-bottom: solid 1px;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background-color: var(--light-blue);
+      }
+
+      .icon {
+        display: none;
+      }
+
+      .address {
+        white-space: nowrap;
+        text-align: right;
+        float: right;
+      }
+    }
+  }
+}

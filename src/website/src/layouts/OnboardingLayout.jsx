@@ -6,11 +6,13 @@ import { Outlet } from "react-router";
 export const OnboardingLayout = ({ children }) => {
   return (
     <section className="layout onboarding-layout">
-      <Header />
-      <section className="content">
-        <Outlet />
-      </section>
-      <Footer />
+      <div>
+        <Header />
+        <section className="layout-content">
+          <Outlet />
+        </section>
+        <Footer />
+      </div>
     </section>
   );
 };

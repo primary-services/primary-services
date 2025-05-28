@@ -1,8 +1,22 @@
+@use "./pages/page.scss";
+@use "./pages/onboarding.scss";
+
+@use "./components/forms.scss";
+@use "./components/locationAutocomplete.scss";
+
 :root {
   --theme-yellow: #f4ab00;
   --theme-blue: #15008e;
-
   --font-blue: #241673;
+  --light-blue: #0020c325;
+
+  --header-height: 100px;
+  --footer-height: 50px;
+}
+
+html,
+body {
+  height: 100%;
 }
 
 body {
@@ -15,22 +29,68 @@ body {
   padding: 0px;
 }
 
-header.main-header {
-  width: 100%;
-  display: block;
-  overflow: hidden;
-  padding: 33px 26px;
+a {
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--font-blue);
+}
+
+.layout {
+  position: relative;
+  display: flex;
+  top: 0px;
+  left: 0px;
+  padding-top: var(--header-height);
+  width: 100vw;
+  min-height: 100vh;
   box-sizing: border-box;
 
-  .header-left {
-    float: left;
-    font-weight: bold;
-    font-size: 36px;
-    color: var(--font-blue);
+  .layout-content {
+    display: flex;
+    min-height: 100%;
   }
+}
 
-  .header-right {
-    float: right;
+header.main-header {
+  width: 100%;
+  height: var(--header-height);
+  margin-top: calc(var(--header-height) * -1);
+
+  display: block;
+  padding: 28px 26px;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 10px 5px #ccc;
+
+  .main-header-wrapper {
+    display: flex;
+    align-items: center;
+
+    .header-left {
+      font-weight: bold;
+      font-size: 36px;
+      color: var(--font-blue);
+      margin-right: auto;
+    }
+
+    .header-right {
+      text-align: right;
+
+      label {
+        margin-right: 10px;
+        font-weight: bold;
+      }
+
+      .address {
+        div {
+          display: inline-block;
+        }
+      }
+
+      .sub {
+        font-size: 80%;
+        margin-top: 5px;
+      }
+    }
   }
 }
 
@@ -47,6 +107,17 @@ header.sub-header {
     overflow: hidden;
     text-align: center;
   }
+}
+
+footer {
+  width: 100vw;
+  min-height: var(--footer-height);
+  display: flex;
+  background-color: var(--theme-blue);
+  color: white;
+}
+
+.layout-content {
 }
 
 .hero {
@@ -68,6 +139,7 @@ header.sub-header {
     .hero-content {
       display: inline-block;
       position: relative;
+      text-align: left;
 
       img {
         border-radius: 30px;
@@ -96,4 +168,8 @@ header.sub-header {
     flex: 1;
     text-align: right;
   }
+}
+
+.hidden {
+  display: none;
 }

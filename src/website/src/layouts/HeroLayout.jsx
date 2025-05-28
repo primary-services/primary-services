@@ -8,13 +8,15 @@ import { Outlet } from "react-router";
 export const HeroLayout = ({ children }) => {
   return (
     <section className="layout hero-layout">
-      <Header />
-      <SubHeader />
-      <Hero />
-      <section className="content">
-        <Outlet />
-      </section>
-      <Footer />
+      <div>
+        <Header />
+        <SubHeader />
+        <Hero />
+        <section className="layout-content">
+          <Outlet />
+        </section>
+        <Footer />
+      </div>
     </section>
   );
 };

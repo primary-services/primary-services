@@ -1,0 +1,159 @@
+.onboarding {
+	display: inline-flex;
+
+	.headline {
+		font-size: 36px;
+		font-weight: bold;
+		width: 70%;
+		padding: 0px 25px;
+		padding-bottom: 30px;
+	}
+
+	& > .form {
+		flex-basis: 58%;
+		box-sizing: border-box;
+		padding: 50px 25px;
+
+		.errors {
+			padding-left: 25px;
+			padding-bottom: 30px;
+			font-weight: bold;
+			color: red;
+		}
+
+		#user-location-autocomplete {
+			width: 100%;
+
+			.geoapify-close-button {
+				margin-top: 4px;
+				margin-right: 5px;
+			}
+
+			.geoapify-autocomplete-items {
+				right: auto;
+				width: 100%;
+
+				.geoapify-autocomplete-item {
+					.address {
+						text-align: left;
+						float: none;
+					}
+				}
+			}
+		}
+
+		.formatted-address {
+			width: 100%;
+			display: block;
+			position: relative;
+			border: solid 1px;
+			border-radius: 5px;
+			padding: 9px 12px;
+			box-sizing: border-box;
+
+			span {
+				margin-right: auto;
+			}
+
+			svg {
+				position: absolute;
+				right: 5px;
+				top: 7px;
+			}
+		}
+
+		button {
+			margin-left: 25px;
+			padding: 8px 12px;
+			background-color: var(--theme-blue);
+			color: white;
+			cursor: pointer;
+		}
+	}
+
+	& > .quote {
+		flex-basis: 42%;
+		box-sizing: border-box;
+		position: relative;
+
+		.overlay {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			background-color: var(--light-blue);
+			padding: 36px 82px;
+			box-sizing: border-box;
+
+			p {
+				font-size: 32px;
+				color: var(--theme-blue);
+				font-weight: bold;
+
+				&.attribution {
+					font-size: 26px;
+					text-align: right;
+
+					&:before {
+						content: "- ";
+					}
+				}
+			}
+		}
+
+		.bg {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			font-family: "Revalia", sans-serif;
+			font-weight: 400;
+			font-style: normal;
+			padding: 36px 82px;
+			color: var(--theme-yellow);
+			font-size: 100px;
+			margin-left: -26px;
+			margin-top: -40px;
+			transform: scale(-1);
+			text-align: right;
+		}
+	}
+}
+
+.onboarding.offices {
+	ul.offices {
+		list-style-type: none;
+		padding: 0px 25px;
+
+		li {
+			border-bottom: solid 1px #ccc;
+
+			&:last-child {
+				border-bottom: none;
+			}
+
+			.title {
+				div.name {
+					display: inline-block;
+					font-size: 22px;
+					font-weight: bold;
+					padding: 15px 0px;
+				}
+
+				a {
+					font-size: 14px;
+					display: inline-block;
+					margin-left: 15px;
+				}
+			}
+
+			ul {
+				list-style-type: none;
+				padding-left: 25px;
+				padding-bottom: 15px;
+
+				li {
+					padding: 5px 0px;
+				}
+			}
+		}
+	}
+}
