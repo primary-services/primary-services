@@ -52,6 +52,9 @@ let municipalityController = {
                   {
                     model: Election,
                     as: "elections",
+                    through: {
+                      attributes: [],
+                    },
                   },
                 ],
               },
@@ -75,7 +78,14 @@ let municipalityController = {
           municipality_id: municipality_id,
         },
         include: [
-          { model: Term, as: "terms", include: [{ model: Seat, as: "seat" }] },
+          {
+            model: Term,
+            as: "terms",
+            include: [{ model: Seat, as: "seat" }],
+            through: {
+              attributes: [],
+            },
+          },
           {
             model: Requirement,
             as: "requirements",
