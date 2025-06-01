@@ -478,12 +478,12 @@ class Migrator {
 
 		for (let key in mFKs) {
 			let mFK = mFKs[key];
-			let dbFK = Object.entries(dbFKs).find((e) => {
+			let dbFK = (Object.entries(dbFKs).find((e) => {
 				return (
 					this.compareArrays(e[1].self_columns, [key]) &&
 					e[1].table_from === table
 				);
-			})[1];
+			}) || [])[1];
 
 			if (!dbFK) {
 				creates.push({
