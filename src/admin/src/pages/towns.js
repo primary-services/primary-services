@@ -67,22 +67,22 @@ export const Towns = () => {
   const { data: collections } = useMunicipalityCollections(town?.id);
 
   const getClerk = (t) => {
-    if (!t || !t.officials) {
+    if (!t || !t.contacts) {
       return null;
     }
 
-    return t.officials.find((o) => {
-      return o.office.title === "Clerk";
+    return t.contacts.find((o) => {
+      return o.title === "Town Clerk";
     });
   };
 
   const getAssistantClerk = (t) => {
-    if (!t || !t.officials) {
+    if (!t || !t.contacts) {
       return null;
     }
 
-    return t.officials.find((o) => {
-      return o.office.title === "Assistant Clerk";
+    return t.contacts.find((o) => {
+      return o.title === "Assistant Town Clerk";
     });
   };
 
@@ -161,7 +161,16 @@ export const Towns = () => {
                   className="icon right-aligned clickable"
                   data-uk-icon="plus-circle"
                   onClick={() => {
-                    setOffice({});
+                    setOffice({
+                      id: null,
+                      title: "",
+                      description: "",
+                      salary: 0,
+                      elected: true,
+                      min_hours: 0,
+                      max_hours: 0,
+                      seats: [],
+                    });
                   }}
                 ></span>
               </div>
@@ -228,7 +237,14 @@ export const Towns = () => {
                   className="icon right-aligned clickable"
                   data-uk-icon="plus-circle"
                   onClick={() => {
-                    setElection({});
+                    setElection({
+                      id: null,
+                      polling_date: null,
+                      deadlines: [],
+                      requirements: [],
+                      forms: [],
+                      terms: [],
+                    });
                   }}
                 ></span>
               </div>
