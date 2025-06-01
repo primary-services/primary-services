@@ -20,7 +20,7 @@ module.exports = {
 
   async down(queryInterface, Sequelize) {
     queryInterface.removeConstraint(
-      "elecition",
+      "election",
       "election_municipality_id_fkey",
     );
 
