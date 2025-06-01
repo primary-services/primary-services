@@ -45,6 +45,14 @@ class Municipality extends Model {
       foreignKey: "municipality_id",
       onDelete: "CASCADE",
       onUpdate: "CASCADE",
+      as: "offices",
+    });
+
+    this.hasMany(models.Contact, {
+      foreignKey: "municipality_id",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+      as: "contacts",
     });
 
     this.belongsToMany(models.Requirement, {

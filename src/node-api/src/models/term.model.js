@@ -13,11 +13,19 @@ class Term extends Model {
 				},
 				start: {
 					type: DataTypes.DATEONLY,
-					allowNull: false,
+					allowNull: true,
+				},
+				start_year: {
+					type: DataTypes.INTEGER,
+					allowNull: true,
 				},
 				end: {
 					type: DataTypes.DATEONLY,
-					allowNull: false,
+					allowNull: true,
+				},
+				end_year: {
+					type: DataTypes.INTEGER,
+					allowNull: true,
 				},
 				seat_id: {
 					type: DataTypes.INTEGER,

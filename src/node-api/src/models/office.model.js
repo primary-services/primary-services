@@ -24,6 +24,10 @@ class Office extends Model {
 					allowNull: false,
 					defaultValue: true,
 				},
+				seat_count: {
+					type: DataTypes.INTEGER,
+					allowNull: true,
+				},
 				tenure: {
 					type: DataTypes.INTEGER,
 					allowNull: true,
@@ -75,7 +79,6 @@ class Office extends Model {
 		this.hasMany(models.Seat, {
 			foreignKey: "office_id",
 			as: "seats",
-			hooks: true,
 			onRemove: "DELETE", // Custom action for upsertAll
 		});
 
