@@ -1,6 +1,7 @@
 import Municipality from "../models/municipality.model.js";
 import Election from "../models/election.model.js";
 import Official from "../models/official.model.js";
+import Contact from "../models/contact.model.js";
 import Office from "../models/office.model.js";
 import Seat from "../models/seat.model.js";
 import Term from "../models/term.model.js";
@@ -23,7 +24,9 @@ let municipalityController = {
       //   include: [{ model: Office, include: Official }],
       // });
 
-      const municipalities = await Municipality.findAll();
+      const municipalities = await Municipality.findAll({
+        include: [{ model: Contact, as: "contacts" }],
+      });
 
       return res.status(200).json(municipalities);
     } catch (error) {
