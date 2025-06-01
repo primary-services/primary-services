@@ -163,7 +163,9 @@ Sequelize.Model.prototype.upsertAll = function async(data) {
     if (child.isNewRecord) {
       let method = association.accessors.create;
       if (!!method) {
-        return instance[method](child.get({ plain: true, transaction }));
+        return instance[method](child.get({ plain: true, transaction }), {
+          transaction,
+        });
       }
     } else {
       let method = association.accessors.add;
@@ -179,7 +181,6 @@ Sequelize.Model.prototype.upsertAll = function async(data) {
       return associations[key].target === child.constructor;
     });
     let association = associations[match];
-    // TODO: split between add and create?
     return createItem(transaction, parent, child, association);
   };
 
