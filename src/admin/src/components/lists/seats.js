@@ -3,11 +3,26 @@ import moment from "moment";
 import { useState, useEffect, useMemo } from "react";
 
 export const SeatList = ({ items: seats, onDestory }) => {
-	const nextTerm = (s) => {
-		return {
-			start: "2025-01-25",
-			end: "2025-01-26",
-		};
+	const nextTerm = (seat) => {
+		let { terms } = seat;
+
+		if (!terms) {
+			return null;
+		}
+
+		const sortedTerms = terms
+			.sort(
+				(a, b) =>
+					new moment(a.start, "YYYY-MM-DD").valueOf() -
+					new moment(b.start, "YYYY-MM-DD").valueOf(),
+			)
+			.filter((t) => {
+				let end = moment(t.end, "YYYY-MM-DD").valueOf();
+				let now = moment().valueOf();
+				return end - now > 0;
+			});
+
+		return sortedTerms[0] || null;
 	};
 
 	return seats.map((s, idx) => {
@@ -23,8 +38,8 @@ export const SeatList = ({ items: seats, onDestory }) => {
 					></span>
 				</div>
 				<div className="width-5-12">{s.name}</div>
-				<div className="width-3-12">{nextTerm(s).start}</div>
-				<div className="width-3-12">{nextTerm(s).end}</div>
+				<div className="width-3-12">{nextTerm(s)?.start || "N/A"}</div>
+				<div className="width-3-12">{nextTerm(s)?.end || "N/A"}</div>
 			</div>
 		);
 	});
