@@ -49,9 +49,11 @@ Sequelize.Model.prototype.upsertAll = function async(data) {
           instance,
           associations[x],
         );
+
         for (let i = 0; i < existing.length; i++) {
           let current = existing[i];
           if (isDeleted(associations[x].target, current, data[x])) {
+            console.log("None should be deleting");
             await removeItem(transaction, instance, current, associations[x]);
           }
         }
@@ -85,9 +87,11 @@ Sequelize.Model.prototype.upsertAll = function async(data) {
   const getInstance = async (transaction, model, data) => {
     let keys = getPrimaryKeys(model);
     let filters = keys.reduce((a, c) => {
-      a[c] = data[c];
+      a[c] = data[c] || null;
       return a;
     }, {});
+
+    console.log("Filters:", filters);
 
     let instance = await model.findOne({ where: filters }, { transaction });
     return !!instance ? instance : new model();
