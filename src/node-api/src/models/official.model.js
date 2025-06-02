@@ -54,6 +54,10 @@ class Official extends Model {
       onDelete: "CASCADE",
       onUpdate: "CASCADE",
     });
+
+    this.hasMany(models.Term, {
+      foreignKey: "official_id",
+    });
   }
 }
 
