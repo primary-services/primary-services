@@ -20,102 +20,91 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 		seats: [],
 	});
 
-	let [terms, setTerms] = useState([]);
-
 	useEffect(() => {
-		console.log("New Seat Count:", office.seat_count);
-		// let newTerms = [];
-		// for (let i = 0; i < office.seat_count; i++) {
-		// 	if (!!terms[i]) {
-		// 		newTerms.push(terms[i]);
-		// 	} else {
-		// 		newTerms.push({
-		// 			start: moment(),
-		// 			end: null,
-		// 			incumbent: {
-		// 				first_name: "",
-		// 				middle_name: "",
-		// 				last_name: "",
-		// 			},
-		// 		});
-		// 	}
-		// }
+		let newSeats = [...(selected.seats || [])];
+		let newCount = (office.seat_count || 0) - (selected.seat_count || 0);
+		for (let i = 0; i < newCount; i++) {
+			newSeats.push({
+				name: "",
+				terms: [
+					{
+						start: null,
+						start_year: +moment().format("YYYY"),
+						end: null,
+						end_year: +moment().add(office.tenure, "years").format("YYYY"),
+						official: {
+							first_name: "",
+							middle_name: "",
+							last_name: "",
+						},
+					},
+				],
+			});
+		}
 
-		// setTerms(newTerms);
+		setOffice({ ...office, seats: newSeats });
 	}, [office.seat_count]);
 
 	useEffect(() => {
 		if (selected) {
 			setOffice((prev) => ({ ...prev, ...selected }));
 		}
-
-		let { seats } = selected;
-		let currentYear = +moment().format("YYYY");
-		let currentTerms = (seats || []).map((seat) => {
-			let current = (seat.terms || [])
-				.filter((t) => {
-					return t.start_year <= currentYear && t.end_year >= currentYear;
-				})
-				.sort((a, b) => {
-					return a.start_year - b.start_year;
-				})
-				.pop();
-
-			if (!current) {
-				return {
-					start: null,
-					start_year: currentYear,
-					end: null,
-					end_year: null,
-				};
-			} else {
-				return current;
-			}
-		});
-
-		console.log(currentTerms);
-		setTerms(currentTerms);
 	}, [selected]);
 
-	let [seat, setSeat] = useState(null);
-	let [errors, setErrors] = useState({});
+	const currentTerm = (seat) => {
+		let currentYear = new Date().getFullYear();
+
+		return (seat.terms || [])
+			.filter((t) => {
+				return t.start_year <= currentYear && t.end_year >= currentYear;
+			})
+			.sort((a, b) => {
+				return a.start_year - b.start_year;
+			})
+			.pop();
+	};
 
 	const update = (field, value) => {
 		setOffice({ ...office, [field]: value });
 	};
 
 	const updateIncumbent = (term, field, value) => {
-		term.incumbent[field] = value;
-		setTerms([...terms]);
+		if (!term.official) {
+			term.official = {
+				first_name: "",
+				middle_name: "",
+				last_name: "",
+			};
+		}
+		term.official[field] = value;
+		setOffice({ ...office, seats: [...office.seats] });
 	};
 
 	const updateTerm = (term, field, value) => {
 		term[field] = value;
-		setTerms([...terms]);
+		setOffice({ ...office, seats: [...office.seats] });
 	};
 
-	const saveSeat = (items) => {
-		setOffice({
-			...office,
-			seats: items,
-		});
-	};
+	// const saveSeat = (items) => {
+	// 	setOffice({
+	// 		...office,
+	// 		seats: items,
+	// 	});
+	// };
 
 	const validateSeat = () => {};
 
 	const save = async () => {
-		console.log("Convert Terms to Seats", terms);
+		let resp = await onSave(office);
 
-		// let resp = await onSave(office);
+		window.UIkit.notification({
+			message: `Saved ${office.title} successfully`,
+			status: "primary",
+			pos: "bottom-left",
+			timeout: 5000,
+		});
 
-		// window.UIkit.notification({
-		// 	message: `Saved ${office.title} successfully`,
-		// 	status: "primary",
-		// 	pos: "bottom-left",
-		// 	timeout: 5000,
-		// });
-
-		// onCancel();
+		onCancel();
 	};
 
 	const cancel = () => {
@@ -187,7 +176,9 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 							<label>Number of Seats</label>
 							<input
 								type="number"
-								value={office.seat_count}
+								value={+office.seat_count}
+								min={+selected.seat_count}
+								step="1"
 								onInput={(e) => {
 									update("seat_count", +e.target.value);
 								}}
@@ -198,7 +189,9 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 							<label>Term Length (in years)</label>
 							<input
 								type="number"
-								value={office.tenure || 1}
+								value={+office.tenure || 1}
+								min="1"
+								step="1"
 								onInput={(e) => {
 									update("tenure", +e.target.value);
 								}}
@@ -206,9 +199,11 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 						</div>
 					</div>
 
-					<h2>Terms</h2>
+					<h3>Seats/Terms</h3>
 					<ul className="uk-list uk-list-striped">
-						{terms.map((term, index) => {
+						{office.seats.map((seat, index) => {
+							let term = currentTerm(seat);
+
 							return (
 								<li className="term">
 									<div className="input-wrapper">
@@ -217,7 +212,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 											<div className="width-1-2">
 												<input
 													type="text"
-													value={term.incumbent?.first_name || ""}
+													value={term.official?.first_name || ""}
 													placeholder="First Name"
 													onInput={(e) => {
 														updateIncumbent(term, "first_name", e.target.value);
@@ -227,7 +222,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 											<div className="width-1-2">
 												<input
 													type="text"
-													value={term.incumbent?.last_name || ""}
+													value={term.official?.last_name || ""}
 													placeHolder="Last Name"
 													onInput={(e) => {
 														updateIncumbent(term, "last_name", e.target.value);
@@ -243,10 +238,10 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 												<label>Term Start</label>
 												<input
 													type="number"
-													value={moment(term.start).format("YYYY")}
+													value={+term.start_year}
 													step="1"
 													onInput={(e) => {
-														updateTerm(term, "start", e.target.value);
+														updateTerm(term, "start_year", e.target.value);
 													}}
 												/>
 											</div>
@@ -254,11 +249,8 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 												<label>Term End</label>
 												<input
 													type="number"
-													value={term.end}
 													step="1"
-													value={moment(term.start)
-														.add(office.tenure, "years")
-														.format("YYYY")}
+													value={+term.start_year + +office.tenure}
 													disabled={true}
 												/>
 											</div>
