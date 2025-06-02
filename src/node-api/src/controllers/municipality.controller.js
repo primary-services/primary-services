@@ -53,11 +53,8 @@ let municipalityController = {
                 as: "terms",
                 include: [
                   {
-                    model: Election,
-                    as: "elections",
-                    through: {
-                      attributes: [],
-                    },
+                    model: Official,
+                    as: "official",
                   },
                 ],
               },
