@@ -9,74 +9,60 @@ import Requirement from "../models/requirement.model.js";
 import Deadline from "../models/deadline.model.js";
 import Form from "../models/form.model.js";
 
-import {
-  BadRequestError,
-  UnauthorizedError,
-  ValidationError,
-} from "../utils/ApiError";
-
 let officeController = {
   list: async (req, res, next) => {
-    try {
-      let { municipality_name } = req.params;
-      let sequelize = Municipality.sequelize;
+    let { municipality_name } = req.params;
+    let sequelize = Municipality.sequelize;
 
-      let municipality = await Municipality.findOne({
-        where: sequelize.where(
-          sequelize.fn("lower", sequelize.col("name")),
-          sequelize.fn("lower", municipality_name),
-        ),
-      });
+    let municipality = await Municipality.findOne({
+      where: sequelize.where(
+        sequelize.fn("lower", sequelize.col("name")),
+        sequelize.fn("lower", municipality_name),
+      ),
+    });
 
-      // Might want a view here
-      let offices = await Office.findAll({
-        where: { municipality_id: municipality.id, elected: true },
-        include: [
-          { model: Official, as: "officials" },
-          {
-            model: Seat,
-            as: "seats",
-            include: [
-              {
-                model: Term,
-                as: "terms",
-                include: [
-                  {
-                    model: Election,
-                    as: "elections",
+    // Might want a view here
+    let offices = await Office.findAll({
+      where: { municipality_id: municipality.id, elected: true },
+      include: [
+        { model: Official, as: "officials" },
+        {
+          model: Seat,
+          as: "seats",
+          include: [
+            {
+              model: Term,
+              as: "terms",
+              include: [
+                {
+                  model: Election,
+                  as: "elections",
 
-                    include: {
-                      model: Requirement,
-                      as: "requirements",
-                      include: [
-                        { model: Deadline, as: "deadline" },
-                        { model: Form, as: "form" },
-                      ],
-                    },
+                  include: {
+                    model: Requirement,
+                    as: "requirements",
+                    include: [
+                      { model: Deadline, as: "deadline" },
+                      { model: Form, as: "form" },
+                    ],
                   },
-                ],
-              },
-            ],
-          },
-        ],
-      });
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
 
-      return res.status(200).json(offices);
-    } catch (error) {
-      next(error);
-    }
+    return res.status(200).json(offices);
   },
 
   save: async (req, res, next) => {
-    try {
-      let data = req.body;
+    let data = req.body;
 
-      let office = Office.prototype.upsertAll(data);
+    let office = Office.prototype.upsertAll(data);
 
-      return res.status(200).json(office);
-    } catch (error) {
-      next(error);
-    }
+    return res.status(200).json(office);
   },
 };
 

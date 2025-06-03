@@ -2,6 +2,7 @@
   "name": "express-sequelize-boilerplate",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "repository": "https://github.com/gadfaria/express-sequelize-boilerplate.git",
   "author": "gadfaria <gadfaria@gmail.com>",
   "license": "MIT",
@@ -25,6 +26,7 @@
     "pg": "^8.15.6",
     "pluralize": "^8.0.0",
     "sequelize": "^6.28.2",
+    "serverless-http": "^3.2.0",
     "uuid": "^9.0.0",
     "yup": "^1.0.0"
   },

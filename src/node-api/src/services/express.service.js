@@ -2,7 +2,10 @@ import express from "express";
 import fs from "fs";
 import bodyParser from "body-parser";
 import cors from "cors";
-import globalErrorHandler from "../middlewares/errorHandler.middleware.js";
+import path from "path";
+
+const __dirname = path.resolve();
+
 /*
   body-parser: Parse incoming request bodies in a middleware before your handlers, 
   available under the req.body property.
@@ -14,7 +17,7 @@ var corsOptions = {
 };
 
 const routeFiles = fs
-  .readdirSync(__dirname + "/../routes/")
+  .readdirSync(__dirname + "/src/routes/")
   .filter((file) => file.endsWith(".js"));
 
 let server;
@@ -36,14 +39,22 @@ const expressService = {
       server.use(bodyParser.json());
       server.use(cors(corsOptions));
       server.use(routes);
-      server.use(globalErrorHandler);
 
-      server.listen(process.env.SERVER_PORT);
-      console.log("[EXPRESS] Express initialized");
+      if (process.env["NODE_ENV"] === "local") {
+        server.listen(process.env.SERVER_PORT);
+        console.log(
+          "[EXPRESS] Express initialized on ",
+          process.env.SERVER_PORT,
+        );
+      }
     } catch (error) {
       console.log("[EXPRESS] Error during express service initialization");
       throw error;
     }
+  },
+
+  getServer: () => {
+    return server;
   },
 };
 
