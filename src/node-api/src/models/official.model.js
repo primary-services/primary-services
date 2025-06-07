@@ -11,7 +11,15 @@ class Official extends Model {
           allowNull: false,
           primaryKey: true,
         },
-        name: {
+        first_name: {
+          type: DataTypes.STRING,
+          allowNull: true,
+        },
+        middle_name: {
+          type: DataTypes.STRING,
+          allowNull: true,
+        },
+        last_name: {
           type: DataTypes.STRING,
           allowNull: true,
         },
@@ -25,10 +33,6 @@ class Official extends Model {
         },
         contact_form: {
           type: DataTypes.STRING,
-          allowNull: true,
-        },
-        office_id: {
-          type: DataTypes.INTEGER,
           allowNull: true,
         },
       },
@@ -49,11 +53,11 @@ class Official extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Office, {
-      foreignKey: "office_id",
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
-    });
+    // this.belongsTo(models.Office, {
+    //   foreignKey: "office_id",
+    //   onDelete: "CASCADE",
+    //   onUpdate: "CASCADE",
+    // });
 
     this.hasMany(models.Term, {
       foreignKey: "official_id",
