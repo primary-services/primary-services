@@ -19,8 +19,6 @@ const sequelizeService = {
         console.log("Error loading database config");
       }
 
-      console.log(databaseConfig);
-
       const connection = new Sequelize(databaseConfig);
 
       /*
