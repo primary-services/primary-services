@@ -12,8 +12,6 @@ import Form from "../models/form.model.js";
 
 let municipalityController = {
   list: async (req, res, next) => {
-    console.log("Getting Towns");
-    console.log(Municipality.sequelize);
     const municipalities = await Municipality.findAll({
       include: [{ model: Contact, as: "contacts" }],
     });
@@ -30,7 +28,6 @@ let municipalityController = {
         municipality_id: municipality_id,
       },
       include: [
-        { model: Official, as: "officials" },
         {
           model: Seat,
           as: "seats",

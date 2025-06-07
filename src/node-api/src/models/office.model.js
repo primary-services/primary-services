@@ -70,11 +70,11 @@ class Office extends Model {
 	}
 
 	static associate(models) {
-		this.hasMany(models.Official, {
-			foreignKey: "office_id",
-			as: "officials",
-			onRemove: "DELETE", // Custom action for upsertAll
-		});
+		// this.hasMany(models.Official, {
+		// 	foreignKey: "office_id",
+		// 	as: "officials",
+		// 	onRemove: "DELETE", // Custom action for upsertAll
+		// });
 
 		this.hasMany(models.Seat, {
 			foreignKey: "office_id",
