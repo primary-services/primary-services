@@ -21,7 +21,13 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 	});
 
 	useEffect(() => {
-		let newSeats = [...(selected.seats || [])];
+		let newSeats = [...(selected.seats || [])].sort((a, b) => {
+			let cA = currentTerm(a);
+			let cB = currentTerm(b);
+
+			return (cA?.start_year || 0) - (cB?.start_year || 0);
+		});
+
 		let newCount = (office.seat_count || 0) - (selected.seat_count || 0);
 		for (let i = 0; i < newCount; i++) {
 			newSeats.push({
@@ -71,6 +77,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 	const updateIncumbent = (term, field, value) => {
 		if (!term.official) {
 			term.official = {
+				name: "",
 				first_name: "",
 				middle_name: "",
 				last_name: "",
@@ -212,7 +219,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 											<div className="width-1-2">
 												<input
 													type="text"
-													value={term.official?.first_name || ""}
+													value={term?.official?.first_name || ""}
 													placeholder="First Name"
 													onInput={(e) => {
 														updateIncumbent(term, "first_name", e.target.value);
@@ -222,7 +229,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 											<div className="width-1-2">
 												<input
 													type="text"
-													value={term.official?.last_name || ""}
+													value={term?.official?.last_name || ""}
 													placeHolder="Last Name"
 													onInput={(e) => {
 														updateIncumbent(term, "last_name", e.target.value);
@@ -236,21 +243,26 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 										<div className="grid">
 											<div className="width-1-2">
 												<label>Term Start</label>
-												<input
-													type="number"
+												<select
 													value={+term.start_year}
-													step="1"
 													onInput={(e) => {
 														updateTerm(term, "start_year", e.target.value);
 													}}
-												/>
+												>
+													{new Array(10).fill(null).map((_, idx) => {
+														let year = new Date().getFullYear();
+														return (
+															<option value={year - idx}>{year - idx}</option>
+														);
+													})}
+												</select>
 											</div>
 											<div className="width-1-2">
 												<label>Term End</label>
 												<input
 													type="number"
 													step="1"
-													value={+term.start_year + +office.tenure}
+													value={+term?.start_year + +office.tenure}
 													disabled={true}
 												/>
 											</div>

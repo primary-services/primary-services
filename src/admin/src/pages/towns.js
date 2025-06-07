@@ -1,4 +1,7 @@
 import { useState, useEffect, useContext } from "react";
+import { Link } from "react-router";
+import { useParams } from "react-router";
+
 import { AppContexts } from "../providers";
 // import { TownForm } from "../components/forms/town.js";
 import { OfficeForm } from "../components/forms/office.js";
@@ -58,6 +61,8 @@ const Clerk = ({ official }) => {
 export const Towns = () => {
   const { data: towns, isLoading: townsLoading } = useTowns();
 
+  const params = useParams();
+
   const [town, setTown] = useState(null);
   const [office, setOffice] = useState(false);
   const [election, setElection] = useState(false);
@@ -65,6 +70,19 @@ export const Towns = () => {
   const { data: offices } = useMunicipalityOffices(town?.id);
   const { data: elections } = useMunicipalityElections(town?.id);
   const { data: collections } = useMunicipalityCollections(town?.id);
+
+  useEffect(() => {
+    if (!towns) {
+      return setTown(null);
+    }
+
+    let { slug } = params;
+    let town = towns.find((t) => {
+      return t.slug === slug;
+    });
+
+    setTown(town);
+  }, [towns, params]);
 
   const getClerk = (t) => {
     if (!t || !t.contacts) {
@@ -117,15 +135,7 @@ export const Towns = () => {
                         : `title: Mark Completed`
                     }
                   ></span>
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setTown(t);
-                    }}
-                  >
-                    {t.name}
-                  </a>
+                  <Link to={`/towns/ma/${t.slug}`}>{t.name}</Link>
                 </li>
               );
             })}
@@ -137,11 +147,27 @@ export const Towns = () => {
         {!town && <h2>Select a town to the left to get started</h2>}
         {!!town && (
           <>
-            <h2>
-              <a href={town?.website || "#"} target="_blank">
-                {town?.name || "Town Name"}
-              </a>
-            </h2>
+            <div className="uk-flex town-header">
+              <h2>
+                <a href={town?.website || "#"} target="_blank">
+                  {town?.name || "Town Name"}
+                </a>
+              </h2>
+              <div>
+                <a
+                  href="https://docs.google.com/spreadsheets/d/1d4eHMwQLlPJGJvA7URVZ9ZICRqVVCny_uu6mj2j5a4Q/edit"
+                  target="_blank"
+                >
+                  Town Assignments
+                </a>
+                <a
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSekaJ1HUhgOj8M8gf6WsTKzslsCQXw7R8wGQh-swqlHv1QSww/viewform"
+                  target="_blank"
+                >
+                  Report a Bug
+                </a>
+              </div>
+            </div>
 
             <div className="uk-width-1-1 uk-flex">
               <div className="uk-width-1-2">

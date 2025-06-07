@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router";
 
 export const LandingPage = () => {
   return (
@@ -7,7 +8,7 @@ export const LandingPage = () => {
 
       <ul className="uk-list">
         <li>
-          <a href="/towns">Update Town Data</a>
+          <Link to="/towns">Update Town Data</Link>
         </li>
       </ul>
     </section>

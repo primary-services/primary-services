@@ -34,6 +34,18 @@
 		height: 100vh;
 		overflow: auto;
 
+		.town-header {
+			align-items: center;
+
+			h2 {
+				margin-right: auto;
+			}
+
+			a {
+				display: block;
+			}
+		}
+
 		section {
 			&.uk-flex {
 				section:first-child {
