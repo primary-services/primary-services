@@ -67,9 +67,13 @@ export const Towns = () => {
   const [office, setOffice] = useState(false);
   const [election, setElection] = useState(false);
 
-  const { data: offices } = useMunicipalityOffices(town?.id);
-  const { data: elections } = useMunicipalityElections(town?.id);
-  const { data: collections } = useMunicipalityCollections(town?.id);
+  const { data: offices, refetch: refetchOffices } = useMunicipalityOffices(
+    town?.id,
+  );
+  const { data: elections, refetch: refetchElections } =
+    useMunicipalityElections(town?.id);
+  const { data: collections, refetch: refetchCollections } =
+    useMunicipalityCollections(town?.id);
 
   useEffect(() => {
     if (!towns) {
@@ -314,7 +318,11 @@ export const Towns = () => {
             municipality={town}
             selected={office}
             onSave={(o) => {
-              return saveOffice({ municipality_id: town.id, office: o });
+              return saveOffice({ municipality_id: town.id, office: o }).then(
+                () => {
+                  return refetchOffices();
+                },
+              );
             }}
             onCancel={() => {
               setOffice(false);
@@ -328,7 +336,12 @@ export const Towns = () => {
             municipality={town}
             selected={election}
             onSave={(e) => {
-              return saveElection({ municipality_id: town.id, election: e });
+              return saveElection({
+                municipality_id: town.id,
+                election: e,
+              }).then(() => {
+                return Promise.all([refetchElections(), refetchCollections()]);
+              });
             }}
             onCancel={() => {
               setElection(false);
