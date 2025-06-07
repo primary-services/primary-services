@@ -3,7 +3,7 @@ provider "aws" {
   profile = "elections"
 }
 
-module "statis-website" {
+module "static-website" {
   source = "../../../modules/s3/static-website"
 
   bucket_name = "elections-admin-front"
