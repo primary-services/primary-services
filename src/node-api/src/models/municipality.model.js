@@ -1,4 +1,5 @@
 import { Sequelize, DataTypes } from "sequelize";
+import slugify from "slugify";
 import Model from "../lib/base-model.js";
 
 class Municipality extends Model {
@@ -23,12 +24,25 @@ class Municipality extends Model {
           type: DataTypes.STRING,
           allowNull: true,
         },
+        slug: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
       },
       {
         sequelize,
         tableName: "municipality",
         schema: "public",
         timestamps: false,
+        hooks: {
+          beforeSave: (instance, options) => {
+            console.log(
+              instance.name,
+              slugify(instance.name.toLowerCase(), "_"),
+            );
+            instance.slug = slugify(instance.name.toLowerCase(), "_");
+          },
+        },
         indexes: [
           {
             name: "municipality_pkey",
