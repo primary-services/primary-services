@@ -117,6 +117,7 @@ resource "aws_lambda_function" "node_api" {
 
   runtime = "nodejs20.x"
   timeout = 10
+  memory_size = 1024
   publish = true
 
   vpc_config {
@@ -216,4 +217,56 @@ resource "aws_iam_role_policy_attachment" "node_api_ec2" {
 resource "aws_iam_role_policy_attachment" "lambda_vpc_access_execution" {
   role       = aws_iam_role.iam_for_node_api.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+}
+
+data "aws_cloudfront_cache_policy" "caching_disabled" {
+  name = "Managed-CachingDisabled"
+}
+
+data "aws_cloudfront_origin_request_policy" "all_except_host" {
+  name = "Managed-AllViewerExceptHostHeader"
+}
+
+resource "aws_cloudfront_distribution" "api_gateway" {
+  origin {
+    domain_name = replace(aws_api_gateway_stage.node_api.invoke_url, "/^https?://([^/]*).*/", "$1")
+    origin_path = "/${aws_api_gateway_stage.node_api.stage_name}"
+    origin_id   = "node_api"
+
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "https-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
+  }
+
+  enabled             = true
+  aliases             = var.aliases
+
+  default_cache_behavior {
+    target_origin_id = "node_api"
+    cache_policy_id = data.aws_cloudfront_cache_policy.caching_disabled.id
+    origin_request_policy_id = data.aws_cloudfront_origin_request_policy.all_except_host.id
+
+    allowed_methods = ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"]
+    cached_methods = ["GET", "HEAD"]
+    compress = true
+    viewer_protocol_policy = "https-only"
+  }
+
+  price_class = "PriceClass_100"
+
+  viewer_certificate {
+    cloudfront_default_certificate = var.use_default_certificate
+    acm_certificate_arn = var.certificate_arn
+    minimum_protocol_version = var.certificate_minimum_protocol_version
+    ssl_support_method = var.certificate_ssl_support_method
+  }
+
+  restrictions {
+    geo_restriction {
+      restriction_type = "none"
+    }
+  }
 }
