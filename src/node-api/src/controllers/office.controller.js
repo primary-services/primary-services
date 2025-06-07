@@ -25,7 +25,6 @@ let officeController = {
     let offices = await Office.findAll({
       where: { municipality_id: municipality.id, elected: true },
       include: [
-        { model: Official, as: "officials" },
         {
           model: Seat,
           as: "seats",
@@ -60,7 +59,7 @@ let officeController = {
   save: async (req, res, next) => {
     let data = req.body;
 
-    let office = Office.prototype.upsertAll(data);
+    let office = await Office.prototype.upsertAll(data);
 
     return res.status(200).json(office);
   },
