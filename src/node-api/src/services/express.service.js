@@ -12,7 +12,13 @@ const __dirname = path.resolve();
 */
 
 var corsOptions = {
-  origin: ["http://localhost:3000", "http://localhost:5173"],
+  origin: [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "https://deadlykitten.com",
+    "https://www.deadlykitten.com",
+    "https://admin.deadlykitten.com",
+  ],
   credentials: true,
 };
 
