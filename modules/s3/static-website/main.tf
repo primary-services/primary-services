@@ -51,7 +51,7 @@ data "aws_s3_bucket" "selected_bucket" {
 }
 
 resource "aws_cloudfront_origin_access_control" "cf-s3-oac" {
-  name                              = "CloudFront S3 OAC"
+  name                              = "${aws_s3_bucket.s3-static-website.bucket} CloudFront S3 OAC"
   description                       = "CloudFront S3 OAC"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
@@ -67,6 +67,8 @@ resource "aws_cloudfront_distribution" "cf-dist" {
     origin_id                = aws_s3_bucket.s3-static-website.id
     origin_access_control_id = aws_cloudfront_origin_access_control.cf-s3-oac.id
   }
+
+  aliases = var.aliases
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
@@ -95,7 +97,10 @@ resource "aws_cloudfront_distribution" "cf-dist" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    cloudfront_default_certificate = var.use_default_certificate
+    acm_certificate_arn = var.certificate_arn
+    minimum_protocol_version = var.certificate_minimum_protocol_version
+    ssl_support_method = var.certificate_ssl_support_method
   }
 
   custom_error_response {
@@ -134,4 +139,13 @@ data "aws_iam_policy_document" "s3_bucket_policy" {
 resource "aws_s3_bucket_policy" "static_site_bucket_policy" {
   bucket = aws_s3_bucket.s3-static-website.id
   policy = data.aws_iam_policy_document.s3_bucket_policy.json
+}
+
+resource "null_resource" "invalidate_cf_cache" {
+  provisioner "local-exec" {
+    command = "AWS_PROFILE=${var.profile} aws cloudfront create-invalidation --distribution-id ${aws_cloudfront_distribution.cf-dist.id} --paths '/*'"
+  }
+  triggers = {
+    always_run = timestamp()
+  }
 }

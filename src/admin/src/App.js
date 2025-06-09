@@ -31,6 +31,7 @@ function App() {
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/towns" element={<Towns />} />
+            <Route path="/towns/ma/:slug" element={<Towns />} />
           </Routes>
         </BrowserRouter>
       </div>

@@ -5,16 +5,14 @@ import { createContext, useState } from "react";
 
 export const TownsContext = createContext();
 export const TownsProvider = ({ children }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState({});
   const [towns, setTowns] = useState([]);
   const [town, setTown] = useState(null);
 
   // This is all just test data
   const [deadlines, setDeadlines] = useState([
     {
-      id: 0,
-      town_id: 0,
-      office_id: 0,
+      id: 15,
       label: "Form Submission",
       description: "All forms must be submitted to the Town Clerk by 5pm",
       deadline: "2025-07-01 17:00:00",
@@ -54,7 +52,7 @@ export const TownsProvider = ({ children }) => {
   ]);
   const [forms, setForms] = useState([
     {
-      id: 0,
+      id: 9,
       label: "26J: Conflict of Interest Declaration",
       description:
         "Form 26J can be picked up from the town clerk, or printed out. You must list all potential conflict of interests on this form. A conflict of interest does not bar you from holding any office, but it must be declared beforehand. Failure to disclose can result in potential criminial libability",
@@ -75,10 +73,12 @@ export const TownsProvider = ({ children }) => {
 
     // Methods
     getTowns: async () => {
+      setLoading((prev) => ({ ...prev, getTowns: true }));
       const resp = await fetch("http://127.0.0.1:5000/towns");
       const list = await resp.json();
 
       setTowns(list);
+      setLoading((prev) => ({ ...prev, getTowns: false }));
     },
 
     getTown: async (id) => {
@@ -156,6 +156,7 @@ export const TownsProvider = ({ children }) => {
       console.log(town);
       console.log(office);
 
+      setLoading((prev) => ({ ...prev, createOffice: true }));
       let officeResp = await fetch("http://127.0.0.1:5000/office", {
         method: "POST",
         headers: {
@@ -166,6 +167,7 @@ export const TownsProvider = ({ children }) => {
       }).then((resp) => {
         return resp.json();
       });
+      setLoading((prev) => ({ ...prev, createOffice: false }));
 
       console.log(officeResp);
 

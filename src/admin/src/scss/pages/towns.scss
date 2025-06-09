@@ -34,6 +34,18 @@
 		height: 100vh;
 		overflow: auto;
 
+		.town-header {
+			align-items: center;
+
+			h2 {
+				margin-right: auto;
+			}
+
+			a {
+				display: block;
+			}
+		}
+
 		section {
 			&.uk-flex {
 				section:first-child {
@@ -113,7 +125,7 @@
 		&.offices {
 			.grid-list-item,
 			.grid-list-header {
-				grid-template-columns: 30px 1fr 1fr 1fr 1fr;
+				grid-template-columns: 30px 1.5fr 0.8fr 0.8fr 0.8fr 1.2fr 1.4fr 0.7fr;
 			}
 		}
 

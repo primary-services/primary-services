@@ -1,0 +1,52 @@
+form {
+	.input-wrapper {
+		padding: 0px 25px;
+		box-sizing: border-box;
+		display: inline-block;
+		width: 100%;
+		padding-bottom: 30px;
+
+		&.half {
+			width: 50%;
+		}
+
+		&.third {
+			width: 33.3%;
+		}
+
+		&.required {
+			label {
+				&:after {
+					content: " *";
+					position: relative;
+					top: -2px;
+				}
+			}
+		}
+
+		label {
+			display: block;
+			font-size: 14px;
+			padding-bottom: 5px;
+		}
+
+		input {
+			display: block;
+			width: 100%;
+			box-sizing: border-box;
+			padding: 8px 12px;
+			border: solid 1px;
+			border-radius: 5px;
+			font-size: 18px;
+		}
+	}
+
+	.error {
+		color: red;
+
+		input {
+			border: solid 1px red;
+			color: red;
+		}
+	}
+}
