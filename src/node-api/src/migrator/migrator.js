@@ -1,7 +1,9 @@
 import { Sequelize } from "sequelize";
 
-import databaseConfig from "../config/database.js";
+import { config } from "../config/database.js";
 import { columntypes } from "./datatypes.js";
+import { build } from "./builder.js";
+import { coalesce } from "./coalesce.js";
 import fs from "fs";
 
 const modelFiles = fs
@@ -16,20 +18,79 @@ class Migrator {
 		this.creates = [];
 		this.updates = [];
 		this.deletes = [];
+
+		this.changes = {
+			tables: {
+				up: {
+					creates: {},
+					updates: {},
+					deletes: {},
+				},
+				down: {
+					creates: {},
+					updates: {},
+					deletes: {},
+				},
+			},
+			columns: {
+				up: {
+					creates: {},
+					updates: {},
+					deletes: {},
+				},
+				down: {
+					creates: {},
+					updates: {},
+					deletes: {},
+				},
+			},
+			constraints: {
+				up: {
+					creates: {},
+					updates: {},
+					deletes: {},
+				},
+				down: {
+					creates: {},
+					updates: {},
+					deletes: {},
+				},
+			},
+		};
 	}
 
+	/**
+	 * Compares the DB to the models.
+	 *  - First initialize the DB
+	 *  - Get all the table, column, and constraints from
+	 *    from the DB
+	 *  - Compare column and contraint definitions
+	 *  - Coalesce all the changes into up and down
+	 *    definitions based on the table/column/key
+	 *    effected
+	 *  - Write the migration script
+	 */
 	async run() {
 		await this.init();
 		await this.getTables();
 		await this.getColumnInfo();
 		await this.getConstraintInfo();
-		// TODO: compare tables
+		// TODO: compare
 		await this.compareColumns();
 		await this.compareConstraints();
+		// TODO: create migration script
+		await this.coalesce();
+		await this.build();
 	}
 
 	async init() {
 		try {
+			const [databaseConfig, databaseConfigErr] = await config();
+
+			if (databaseConfigErr !== null) {
+				console.log("Error loading database config");
+			}
+
 			this.connection = new Sequelize({ ...databaseConfig, logging: false });
 
 			for (const file of modelFiles) {
@@ -52,6 +113,14 @@ class Migrator {
 			console.log("[SEQUELIZE] Error during database service initialization");
 			throw error;
 		}
+	}
+
+	async coalesce() {
+		return coalesce(this.changes, this.creates, this.updates, this.deletes);
+	}
+
+	async build() {
+		return build(this.changes);
 	}
 
 	async getTables() {
@@ -443,6 +512,7 @@ class Migrator {
 				creates.push({
 					type: "unique",
 					table: table,
+					key: key,
 					definition: mUnique,
 					old: dbUnique,
 				});
@@ -460,6 +530,7 @@ class Migrator {
 				updates.push({
 					type: "unique",
 					table: table,
+					key: key,
 					definition: mUnique,
 					old: dbUnique,
 				});
@@ -488,6 +559,7 @@ class Migrator {
 			if (!dbFK) {
 				creates.push({
 					type: "fk",
+					key: key,
 					table: table,
 					definition: mFK,
 				});
@@ -514,6 +586,7 @@ class Migrator {
 			if (dbUpdate !== mFK.onUpdate) {
 				updates.push({
 					type: "fk",
+					key: key,
 					table: table,
 					definition: mFK,
 					old: dbFK,
@@ -523,6 +596,7 @@ class Migrator {
 			if (dbDelete !== mFK.onDelete) {
 				updates.push({
 					type: "fk",
+					key: key,
 					table: table,
 					definition: mFK,
 					old: dbFK,
@@ -548,10 +622,10 @@ class Migrator {
 
 	await migrator.run();
 
-	console.log("Creates:", migrator.creates);
-	console.log("Updates:", migrator.updates);
-	console.log("Deletes:", migrator.deletes);
-	console.log("Done");
+	// console.log("Creates:", migrator.creates);
+	// console.log("Updates:", migrator.updates);
+	// console.log("Deletes:", migrator.deletes);
+	// console.log("Done");
 
 	// This will throw an error, but it's just a hack to get nodemon to fully exit
 	process.exit(1);

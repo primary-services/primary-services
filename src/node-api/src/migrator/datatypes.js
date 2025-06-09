@@ -34,9 +34,8 @@ export const columntypes = {
 	"TIME(6)": "TIME(6)",
 	NOW: "NOW",
 	UUID: "UUID",
-	uuidV1: "uuid_generate_v1 (requires uuid-ossp)",
-	uuidV4:
-		"pg >= v13: gen_random_uuid\npg < v13: uuid_generate_v4 (requires uuid-ossp)",
+	uuidV1: "uuid_generate_v1",
+	uuidV4: "pg >= v13: gen_random_uuid\npg < v13: uuid_generate_v4",
 	BLOB: "BYTEA",
 	"BLOB('tiny')": "BYTEA",
 	"BLOB('medium')": "BYTEA",
@@ -54,4 +53,22 @@ export const columntypes = {
 	INET: "INET",
 	MACADDR: "MACADDR",
 	MACADDR8: "MACADDR8",
+};
+
+export const aliases = {
+	bigint: "int8",
+	bigserial: "serial8",
+	"bit varying": "varbit",
+	boolean: "bool",
+	character: "char",
+	"character varying": "varchar",
+	"double precision": "float8",
+	integer: "int, int4",
+	numeric: "decimal",
+	real: "float4",
+	smallint: "int2",
+	smallserial: "serial2",
+	serial: "serial4",
+	time: "timetz",
+	timestamp: "timestamptz",
 };
