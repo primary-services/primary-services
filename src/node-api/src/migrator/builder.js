@@ -21,13 +21,13 @@ const formatDefaultValue = (value) => {
 
 const addTables = (dir, tables) => {
 	for (t in tables) {
-		queries.push(`queryInterface.createTable('${t.table}', {})`);
+		queries.push(`await queryInterface.createTable('${t.table}', {})`);
 	}
 };
 
 const dropTables = (dir, tables) => {
 	for (t in tables) {
-		queries.push(`queryInterface.dropTable('${t.table}', {})`);
+		queries.push(`await queryInterface.dropTable('${t.table}', {})`);
 	}
 };
 
@@ -45,7 +45,7 @@ const addColumns = (dir, columns) => {
 
 		queries[dir].push(
 			`
-			queryInterface.addColumn("${c.table}", "${c.column}", {
+			await queryInterface.addColumn("${c.table}", "${c.column}", {
 				type: ${type},
 				allowNull: ${allowNull},
 				primaryKey: ${primaryKey},
@@ -73,7 +73,7 @@ const updateColumns = (dir, columns) => {
 
 		queries[dir].push(
 			`
-			queryInterface.changeColumn("${c.table}", "${c.column}", {
+			await queryInterface.changeColumn("${c.table}", "${c.column}", {
 				type: ${type},
 				allowNull: ${allowNull},
 				primaryKey: ${primaryKey},
@@ -92,7 +92,7 @@ const dropColumns = (dir, columns) => {
 		let c = columns[key];
 
 		queries[dir].push(
-			`queryInterface.removeColumn('${c.table}', ${c.column}, {})`,
+			`await queryInterface.removeColumn('${c.table}', ${c.column}, {})`,
 		);
 	}
 };
@@ -104,7 +104,7 @@ const addConstraints = (dir, constraints) => {
 		if (c.type === "unique") {
 			queries[dir].push(
 				`
-				queryInterface.addConstraint('${c.table}', {
+				await queryInterface.addConstraint('${c.table}', {
 					fields: [${c.definition.fields.join(",")}],
 					type: "unique",
 					name: ${c.key},
@@ -121,7 +121,7 @@ const addConstraints = (dir, constraints) => {
 		if (c.type === "index") {
 			queries[dir].push(
 				`
-				queryInterface.addConstraint('${c.table}', {
+				await queryInterface.addConstraint('${c.table}', {
 			   	fields: [${c.definition.fields.join(",")}],
 			   	type: 'primary key',
 			   	name: '${c.table}_pkey'
@@ -134,7 +134,7 @@ const addConstraints = (dir, constraints) => {
 		if (c.type === "fk") {
 			queries[dir].push(
 				`
-				queryInterface.addConstraint('${c.table}', {
+				await queryInterface.addConstraint('${c.table}', {
 				  fields: [${c.definition.field}],
 				  type: 'foreign key',
 				  name: '${c.table}_${c.key}_fkey',
@@ -192,7 +192,7 @@ const dropConstraints = (dir, constraints) => {
 	for (let key in constraints) {
 		let c = constraints[key];
 		queries[dir].push(
-			`queryInterface.removeConstraint('${c.table}', ${c.name}, {})`,
+			`await queryInterface.removeConstraint('${c.table}', ${c.name}, {})`,
 		);
 	}
 };
@@ -232,5 +232,22 @@ export const build = async (changes) => {
 	dropConstraints("down", constraints.down.deletes);
 	dropColumns("down", columns.down.deletes);
 
-	console.log(queries);
+	let migration = `
+"use strict";
+
+/** 
+		Generated file, please proof before running
+*/
+module.exports = {
+  async up(queryInterface, Sequelize) {
+    ${queries.up.join("\n    ")}
+  },
+
+  async down(queryInterface, Sequelize) {
+    ${queries.down.join("\n    ")}
+  },
+};
+`;
+
+	console.log(migration);
 };
