@@ -7,23 +7,8 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon src/index.js",
-    "migration": "nodemon ./src/migrator/migrator.js --exitcrash"
-  },
-  "nodemonConfig": {
-    "env": {
-      "SERVER_PORT": 5000,
-      "NODE_ENV": "local",
-      "SERVER_JWT": "",
-      "SERVER_JWT_SECRET": "",
-      "SERVER_JWT_TIMEOUT": "",
-      "DB_DIALECT": "postgres",
-      "DB_HOST": "127.0.0.1",
-      "DB_USER": "",
-      "DB_PASS": "",
-      "DB_NAME": "elections",
-      "AWS_REGION": "us-east-2"
-    }
+    "dev": "nodemon src/index.js --env-file=.env",
+    "migration": "nodemon ./src/migrator/migrator.js --exitcrash --env-file=.env"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.310.0",
