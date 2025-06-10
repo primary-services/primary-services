@@ -88,7 +88,7 @@ export const SubForm = ({
 					<Form child={child} setChild={setChild} options={options} />
 				)}
 
-				<List items={items} onEdit={editChild} onDestory={destoryChild} />
+				<List items={items} onEdit={changeChild} onDestory={destoryChild} />
 			</div>
 		</section>
 	);

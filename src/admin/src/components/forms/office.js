@@ -6,7 +6,7 @@ import { SeatForm } from "./seats.js";
 import { SeatList } from "../lists/seats.js";
 import { SubForm } from "./subform.js";
 
-export const OfficeForm = ({ editing, onSave, onCancel }) => {
+export const OfficeForm = ({ selected, onSave, onCancel }) => {
 	let [office, setOffice] = useState({
 		id: null,
 		title: "",
