@@ -7,8 +7,8 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon src/index.js --env-file=.env",
-    "migration": "nodemon ./src/migrator/migrator.js --exitcrash --env-file=.env"
+    "dev": "nodemon --env-file=.env src/index.js",
+    "migration": "nodemon --env-file=.env ./src/migrator/migrator.js --exitcrash"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.310.0",
