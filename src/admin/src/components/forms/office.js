@@ -28,7 +28,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 			return (cA?.start_year || 0) - (cB?.start_year || 0);
 		});
 
-		let newCount = (office.seat_count || 0) - (selected.seat_count || 0);
+		let newCount = (office.seat_count || 0) - newSeats.length;
 		for (let i = 0; i < newCount; i++) {
 			newSeats.push({
 				name: "",
@@ -188,7 +188,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 							<input
 								type="number"
 								value={+office.seat_count}
-								min={+selected.seat_count}
+								min={Math.max((selected?.seats || []).length, 0)}
 								step="1"
 								onInput={(e) => {
 									update("seat_count", +e.target.value);
