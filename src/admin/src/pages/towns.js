@@ -20,6 +20,10 @@ import {
   useMunicipalityElections,
   useMunicipalityCollections,
 } from "../api-hooks.js";
+
+import { useCreateNote, useDeleteNote } from "../api/hooks/note.hooks.js";
+import { useCreateSource, useDeleteSource } from "../api/hooks/source.hooks.js";
+
 import { cleanDateString } from "../utils.js";
 
 const Clerk = ({ official }) => {
@@ -66,6 +70,8 @@ export const Towns = () => {
   const [town, setTown] = useState(null);
   const [office, setOffice] = useState(false);
   const [election, setElection] = useState(false);
+  const [source, setSource] = useState(null);
+  const [note, setNote] = useState(null);
 
   const { data: offices, refetch: refetchOffices } = useMunicipalityOffices(
     town?.id,
@@ -110,15 +116,131 @@ export const Towns = () => {
 
   const { mutateAsync: saveOffice } = useCreateOffice();
   const { mutateAsync: saveElection } = useCreateElection();
+  const { mutateAsync: saveNote } = useCreateNote();
+  const { mutateAsync: deleteNote } = useDeleteNote();
+  const { mutateAsync: saveSource } = useCreateSource();
+  const { mutateAsync: deleteSource } = useDeleteSource();
 
   const removeElection = (e) => {
     console.log(e);
+  };
+
+  const removeOffice = (o) => {
+    console.log(o);
+  };
+
+  const removeSeat = (s) => {
+    console.log(s);
   };
 
   const seatNames = (e) => {
     return (e.terms || []).map((t) => {
       return t.seat?.name || "";
     });
+  };
+
+  const sourceForm = () => {
+    return (
+      <form className="grid row">
+        <div className="width-1-12">
+          <span
+            key="confirm"
+            className="icon affirm clickable action left-aligned"
+            data-uk-icon="check"
+            onClick={() => {
+              return saveSource({
+                item_id: town.id,
+                item_type: "municipality",
+                source: source,
+              }).then(() => {
+                setSource(null);
+                refetchCollections();
+              });
+            }}
+          ></span>
+          <span
+            key="cancel"
+            className="icon cancel clickable action left-aligned"
+            data-uk-icon="close"
+            onClick={() => {
+              setSource(null);
+            }}
+          ></span>
+        </div>
+        <div className="input-wrapper width-6-12">
+          <input
+            type="text"
+            value={source.summary}
+            placeholder="Summary: Town Charter, 2024 Annual Report, etc..."
+            onInput={(e) => setSource({ ...source, summary: e.target.value })}
+          />
+        </div>
+        <div className="input-wrapper width-5-12">
+          <input
+            type="text"
+            value={source.url}
+            placeholder="URL"
+            onInput={(e) => setSource({ ...source, url: e.target.value })}
+          />
+        </div>
+      </form>
+    );
+  };
+
+  const noteForm = () => {
+    return (
+      <form>
+        <div className="note grid">
+          <div className="width-1-12">
+            <span
+              key="confirm"
+              className="icon affirm clickable action left-aligned"
+              data-uk-icon="check"
+              onClick={() => {
+                return saveNote({
+                  item_id: town.id,
+                  item_type: "municipality",
+                  note: note,
+                }).then(() => {
+                  setNote(null);
+                  refetchCollections();
+                });
+              }}
+            ></span>
+            <span
+              key="cancel"
+              className="icon cancel clickable action left-aligned"
+              data-uk-icon="close"
+              onClick={() => {
+                setNote(null);
+              }}
+            ></span>
+          </div>
+          <div className="input-wrapper width-8-12">
+            <input
+              type="text"
+              value={note.summary}
+              placeholder="Summary: I wasn't sure about.., The mayor's election is..."
+              onInput={(e) => setNote({ ...note, summary: e.target.value })}
+            />
+          </div>
+        </div>
+        <div className="note grid row">
+          <div className="width-1-12"></div>
+          <div className="content input-wrapper width-8-12">
+            <div>
+              <textarea
+                type="text"
+                value={note.content}
+                placeholder="Note: This election system was designed by a 12th century madman"
+                rows="6"
+                onInput={(e) => setNote({ ...note, content: e.target.value })}
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      </form>
+    );
   };
 
   return (
@@ -208,11 +330,7 @@ export const Towns = () => {
                 <div className="grid-list offices uk-width-1-1">
                   <div className="grid header">
                     <div className="width-1-12"></div>
-                    <div className="width-4-12">Office</div>
-                    <div className="width-3-12">Hours</div>
-                    <div className="width-3-12">Salary</div>
-                    {/*<div>Term Length</div>
-                    <div>Next Election</div>*/}
+                    <div className="width-10-12">Office</div>
                     <div className="width-1-12"># Seats</div>
                   </div>
                   {offices
@@ -227,30 +345,8 @@ export const Towns = () => {
                             }}
                           ></span>
                         </div>
-                        <div className="width-4-12">{o.title}</div>
-                        {/*<div className="width-2-12">
-                        {o.elected ? (
-                          <span
-                            key="confirm"
-                            className="icon affirm"
-                            data-uk-icon="check"
-                          ></span>
-                        ) : (
-                          <span
-                            key="cancel"
-                            className="icon cancel"
-                            data-uk-icon="close"
-                          ></span>
-                        )}
-                      </div>*/}
-                        <div className="width-3-12">
-                          {o.min_hours}-{o.max_hours}
-                        </div>
-                        <div className="width-3-12">
-                          {o.salary ? "$" + `${o.salary}` : "-"}
-                        </div>
-                        {/*<div>{o.term_length ?? "-"}</div>
-                      <div>{cleanDateString(o.next_election_date) ?? "-"}</div>*/}
+                        <div className="width-10-12">{o.title}</div>
+
                         <div className="width-1-12">
                           {(o.seats || []).length}
                         </div>
@@ -260,7 +356,7 @@ export const Towns = () => {
               )}
             </section>
 
-            <section className="uk-width-1-1">
+            {/*<section className="uk-width-1-1">
               <div className="section-header">
                 <h2>Elections</h2>
                 <span
@@ -308,6 +404,133 @@ export const Towns = () => {
                   })}
                 </div>
               )}
+            </section>*/}
+
+            <section className="uk-width-1-1">
+              <div className="section-header">
+                <h2>Sources</h2>
+                <span
+                  className="icon right-aligned clickable"
+                  data-uk-icon="plus-circle"
+                  onClick={() => {
+                    setSource({
+                      id: null,
+                      summary: "",
+                      url: "",
+                    });
+                  }}
+                ></span>
+              </div>
+
+              <div>
+                <div className="grid header">
+                  <div className="width-1-12"></div>
+                  <div className="width-6-12">Summary</div>
+                  <div className="width-5-12">URL</div>
+                </div>
+
+                {!!source && !source.id && sourceForm()}
+
+                {(collections?.sources || []).map((s) => {
+                  return s.id !== source?.id ? (
+                    <div className="source grid row">
+                      <div className="width-1-12">
+                        <span
+                          className="icon clickable left-aligned"
+                          uk-icon="pencil"
+                          onClick={() => {
+                            setSource({ ...s });
+                          }}
+                        ></span>
+                        <span
+                          className="icon clickable left-aligned"
+                          uk-icon="trash"
+                          onClick={() => {
+                            deleteSource({
+                              item_id: town.id,
+                              item_type: "municipality",
+                              source: { ...s },
+                            }).then(() => {
+                              setSource(null);
+                              refetchCollections();
+                            });
+                          }}
+                        ></span>
+                      </div>
+                      <div className="width-6-12">{s.summary}</div>
+                      <div className="width-5-12 url">
+                        <a href={s.url} target="_blank">
+                          {s.url}
+                        </a>
+                      </div>
+                    </div>
+                  ) : (
+                    sourceForm()
+                  );
+                })}
+              </div>
+            </section>
+
+            <section className="uk-width-1-1">
+              <div className="section-header">
+                <h2>Notes</h2>
+                <span
+                  className="icon right-aligned clickable"
+                  data-uk-icon="plus-circle"
+                  onClick={() => {
+                    setNote({
+                      id: null,
+                      summary: "",
+                      content: "",
+                    });
+                  }}
+                ></span>
+              </div>
+
+              <div>
+                {!!note && !note.id && noteForm()}
+
+                {(collections?.notes || []).map((n) => {
+                  return n.id !== note?.id ? (
+                    <div>
+                      <div className="note grid">
+                        <div className="width-1-12">
+                          <span
+                            className="icon clickable left-aligned"
+                            uk-icon="pencil"
+                            onClick={() => {
+                              setNote({ ...n });
+                            }}
+                          ></span>
+                          <span
+                            className="icon clickable left-aligned"
+                            uk-icon="trash"
+                            onClick={() => {
+                              deleteNote({
+                                item_id: town.id,
+                                item_type: "municipality",
+                                note: { ...n },
+                              }).then(() => {
+                                setNote(null);
+                                refetchCollections();
+                              });
+                            }}
+                          ></span>
+                        </div>
+                        <div className="summary width-11-12">{n.summary}</div>
+                      </div>
+                      <div className="note grid row">
+                        <div className="width-1-12"></div>
+                        <div className="content width-8-12">
+                          <div>{n.content}</div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    noteForm()
+                  );
+                })}
+              </div>
             </section>
           </>
         )}

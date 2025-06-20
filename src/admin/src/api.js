@@ -1,9 +1,5 @@
-const apiRoot =
-  process.env.NODE_ENV === "production"
-    ? "https://api.deadlykitten.com"
-    : "http://127.0.0.1:5000";
+import { apiRoot } from "./constants.js";
 
-console.log("API ROOT:", apiRoot);
 export const getTowns = () =>
   fetch(`${apiRoot}/municipalities/towns`).then((response) => response.json());
 

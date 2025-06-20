@@ -17,5 +17,24 @@ municipalityRoutes.get(
 	"/municipalities/:municipality_id/collections",
 	municipalityController.collections,
 );
+municipalityRoutes.post(
+	"/municipalities/:municipality_id/note",
+	municipalityController.createNote,
+);
+municipalityRoutes.delete(
+	"/municipalities/:municipality_id/note/:note_id",
+	municipalityController.deleteNote,
+);
+municipalityRoutes.post(
+	"/municipalities/:municipality_id/source/",
+	municipalityController.createSource,
+);
+municipalityRoutes.delete(
+	"/municipalities/:municipality_id/source/:source_id",
+	municipalityController.deleteSource,
+);
+
+municipalityRoutes.post("/municipalities/:municipality_id/source");
+municipalityRoutes.delete("/municipalities/:municipality_id/source/:source_id");
 
 export { municipalityRoutes };
