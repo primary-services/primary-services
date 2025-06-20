@@ -10,6 +10,9 @@ import Requirement from "../models/requirement.model.js";
 import Deadline from "../models/deadline.model.js";
 import Form from "../models/form.model.js";
 
+import Source from "../models/source.model.js";
+import Note from "../models/note.model.js";
+
 let municipalityController = {
   list: async (req, res, next) => {
     const municipalities = await Municipality.findAll({
@@ -97,10 +100,52 @@ let municipalityController = {
         },
         { model: Deadline, as: "deadlines" },
         { model: Form, as: "forms" },
+        { model: Source, as: "sources" },
+        { model: Note, as: "notes" },
       ],
     });
 
     return res.status(200).json(municipality);
+  },
+
+  createSource: async (req, res, next) => {
+    let data = req.body;
+    let source = await Source.prototype.upsertAll(data);
+    return res.status(200).json(source);
+  },
+
+  deleteSource: async (req, res, next) => {
+    let { source_id } = req.params;
+
+    if (!!source_id) {
+      await Source.destroy({
+        where: {
+          id: source_id,
+        },
+      });
+    }
+
+    return res.status(200).json({ success: true });
+  },
+
+  createNote: async (req, res, next) => {
+    let data = req.body;
+    let note = await Note.prototype.upsertAll(data);
+    return res.status(200).json(note);
+  },
+
+  deleteNote: async (req, res, next) => {
+    let { note_id } = req.params;
+
+    if (!!note_id) {
+      await Note.destroy({
+        where: {
+          id: note_id,
+        },
+      });
+    }
+
+    return res.status(200).json({ success: true });
   },
 };
 

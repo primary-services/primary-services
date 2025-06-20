@@ -107,6 +107,24 @@ class Municipality extends Model {
       constraints: false,
       as: "deadlines",
     });
+
+    this.hasMany(models.Note, {
+      foreignKey: "item_id",
+      constraints: false,
+      scope: {
+        item_type: "municipality",
+      },
+      as: "notes",
+    });
+
+    this.hasMany(models.Source, {
+      foreignKey: "item_id",
+      constraints: false,
+      scope: {
+        item_type: "municipality",
+      },
+      as: "sources",
+    });
   }
 }
 
