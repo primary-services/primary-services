@@ -27,6 +27,7 @@
     "pg": "^8.15.6",
     "pluralize": "^8.0.0",
     "sequelize": "^6.28.2",
+    "sequelize-cli": "^6.6.3",
     "serverless-http": "^3.2.0",
     "slugify": "^1.6.6",
     "uuid": "^9.0.0",
@@ -34,7 +35,6 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.18",
-    "sequelize-cli": "^6.4.1",
     "sucrase": "^3.23.0"
   }
 }
