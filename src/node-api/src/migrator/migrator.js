@@ -75,10 +75,11 @@ class Migrator {
 		await this.getTables();
 		await this.getColumnInfo();
 		await this.getConstraintInfo();
-		// TODO: compare
+		// Comparing
+		await this.compareTables();
 		await this.compareColumns();
 		await this.compareConstraints();
-		// TODO: create migration script
+		// Create migration script
 		await this.coalesce();
 		await this.build();
 	}
@@ -154,6 +155,39 @@ class Migrator {
 				};
 			}),
 		);
+	}
+
+	async compareTables() {
+		let creates = [];
+		let deletes = Object.keys(this.tables).map((t) => {
+			let table = this.tables[t];
+
+			return {
+				type: "table",
+				action: "delete",
+				table: t,
+				old: table,
+			};
+		});
+
+		Object.keys(this.connection.models).map((key) => {
+			let model = this.connection.models[key];
+			let idx = deletes.findIndex((d) => d.table === model.tableName);
+
+			if (idx !== -1) {
+				deletes.splice(idx, 1);
+			} else {
+				creates.push({
+					type: "table",
+					action: "create",
+					table: model.tableName,
+					definition: model,
+				});
+			}
+		});
+
+		this.creates = [...this.creates, ...creates];
+		this.deletes = [...this.deletes, ...deletes];
 	}
 
 	async getColumnInfo() {
@@ -246,7 +280,7 @@ class Migrator {
 		Object.keys(this.connection.models).map((key) => {
 			let model = this.connection.models[key];
 			let modelColumns = Object.keys(model.tableAttributes);
-			let dbColumns = Object.keys(this.tables[model.tableName].columns);
+			let dbColumns = Object.keys(this.tables[model.tableName]?.columns || {});
 
 			modelColumns.map((mc, mcColIdx) => {
 				let mAttrs = model.tableAttributes[mc];
@@ -414,15 +448,22 @@ class Migrator {
 			mAssociations.map((association) => {
 				let ass = model.associations[association];
 
-				let { tableName, foreignKey, onDelete, onUpdate, indexes, scopes } =
-					ass.options;
-
+				let {
+					tableName,
+					foreignKey,
+					constraints,
+					onDelete,
+					onUpdate,
+					indexes,
+					scopes,
+				} = ass.options;
 				let ignoredAsses = ["HasMany", "HasOne", "BelongsToMany"];
 
 				if (!ignoredAsses.includes(ass.associationType)) {
 					foreignKeys[foreignKey] = {
 						table: tableName,
 						field: foreignKey,
+						constraints: constraints,
 						target: {
 							table: ass.target.tableName,
 							field: ass.targetKeyField,
@@ -434,7 +475,7 @@ class Migrator {
 			});
 
 			// Var for raw db constraints list
-			let dbConstraints = this.tables[model.tableName].contraints;
+			let dbConstraints = this.tables[model.tableName]?.contraints || [];
 			let dbKeys = Object.keys(dbConstraints);
 
 			// Compare the indexes, keep track of the dbKeys used
@@ -557,12 +598,14 @@ class Migrator {
 			}) || [])[1];
 
 			if (!dbFK) {
-				creates.push({
-					type: "fk",
-					key: key,
-					table: table,
-					definition: mFK,
-				});
+				if (mFK.constraints !== false) {
+					creates.push({
+						type: "fk",
+						key: key,
+						table: table,
+						definition: mFK,
+					});
+				}
 
 				continue;
 			}

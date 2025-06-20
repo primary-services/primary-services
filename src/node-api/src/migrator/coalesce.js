@@ -13,6 +13,23 @@ const getSequelizeType = (pgType) => {
 
 export const coalesce = (changes, creates, updates, deletes) => {
 	creates.map((c) => {
+		if (c.type === "table") {
+			let key = `${c.table}`;
+			let { up, down } = changes.tables;
+
+			let upDef = up.creates[key] || {
+				table: c.table,
+				definition: c.definition,
+			};
+
+			let downDef = down.deletes[key] || {
+				table: c.table,
+			};
+
+			up.creates[key] = upDef;
+			down.deletes[key] = downDef;
+		}
+
 		if (c.type === "column") {
 			let key = `${c.table}.${c.definition.field}`;
 			let { up, down } = changes.columns;
@@ -110,6 +127,20 @@ export const coalesce = (changes, creates, updates, deletes) => {
 
 	deletes.map((d) => {
 		// console.log(d);
+		if (d.type === "table") {
+			let key = `${d.table}`;
+			let { up, down } = changes.tables;
+
+			let upDef = up.deletes[key] || {
+				table: d.table,
+			};
+
+			let downDef = down.creates[key] || {
+				table: d.table,
+				definition: d.definition,
+			};
+		}
+
 		if (d.type === "column") {
 			let key = `${d.table}.${d.old}`;
 			let { up, down } = changes.columns;

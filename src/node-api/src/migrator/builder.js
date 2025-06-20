@@ -1,3 +1,11 @@
+/*
+		TODOS:
+
+		- auto generate file
+		- if a table is being added create columns in that command
+		- if a table is being dropped, ignore all the dropped column/constraints
+ */
+
 const queries = {
 	up: [],
 	down: [],
@@ -6,6 +14,10 @@ const queries = {
 const formatDefaultValue = (value) => {
 	if (value === undefined) {
 		return "";
+	}
+
+	if (value === null) {
+		return null;
 	}
 
 	if (typeof value === "number") {
@@ -19,15 +31,31 @@ const formatDefaultValue = (value) => {
 	return `defaultValue: "${value}"`;
 };
 
+const formatFields = (fields) => {
+	return fields
+		.map((field) => {
+			if (typeof field === "object") {
+				return `'${field.name}'`;
+			} else {
+				return `'${field}'`;
+			}
+		})
+		.join(", ");
+};
+
 const addTables = (dir, tables) => {
-	for (t in tables) {
-		queries.push(`await queryInterface.createTable('${t.table}', {})`);
+	for (let t in tables) {
+		queries[dir].push(
+			`await queryInterface.createTable('${tables[t].table}', {})`,
+		);
 	}
 };
 
 const dropTables = (dir, tables) => {
-	for (t in tables) {
-		queries.push(`await queryInterface.dropTable('${t.table}', {})`);
+	for (let t in tables) {
+		queries[dir].push(
+			`await queryInterface.dropTable('${tables[t].table}', {})`,
+		);
 	}
 };
 
@@ -46,12 +74,12 @@ const addColumns = (dir, columns) => {
 		queries[dir].push(
 			`
 			await queryInterface.addColumn("${c.table}", "${c.column}", {
-				type: ${type},
+				type: "${type}",
 				allowNull: ${allowNull},
 				primaryKey: ${primaryKey},
 				autoIncrement: ${autoIncrement},
 				${formatDefaultValue(defaultValue)}
-			}
+			})
 		`
 				.replace(/\s{2,}/g, " ")
 				.trim(),
@@ -74,12 +102,12 @@ const updateColumns = (dir, columns) => {
 		queries[dir].push(
 			`
 			await queryInterface.changeColumn("${c.table}", "${c.column}", {
-				type: ${type},
+				type: "${type}",
 				allowNull: ${allowNull},
 				primaryKey: ${primaryKey},
 				autoIncrement: ${autoIncrement},
 				${formatDefaultValue(defaultValue)}
-			}
+			})
 		`
 				.replace(/\s{2,}/g, " ")
 				.trim(),
@@ -92,7 +120,7 @@ const dropColumns = (dir, columns) => {
 		let c = columns[key];
 
 		queries[dir].push(
-			`await queryInterface.removeColumn('${c.table}', ${c.column}, {})`,
+			`await queryInterface.removeColumn('${c.table}', '${c.column}', {})`,
 		);
 	}
 };
@@ -105,7 +133,7 @@ const addConstraints = (dir, constraints) => {
 			queries[dir].push(
 				`
 				await queryInterface.addConstraint('${c.table}', {
-					fields: [${c.definition.fields.join(",")}],
+					fields: [${formatFields(c.definition.fields)}],
 					type: "unique",
 					name: ${c.key},
 				})`
@@ -122,7 +150,7 @@ const addConstraints = (dir, constraints) => {
 			queries[dir].push(
 				`
 				await queryInterface.addConstraint('${c.table}', {
-			   	fields: [${c.definition.fields.join(",")}],
+			   	fields: [${formatFields(c.definition.fields)}],
 			   	type: 'primary key',
 			   	name: '${c.table}_pkey'
 				})`
@@ -135,7 +163,7 @@ const addConstraints = (dir, constraints) => {
 			queries[dir].push(
 				`
 				await queryInterface.addConstraint('${c.table}', {
-				  fields: [${c.definition.field}],
+				  fields: ['${c.definition.field}'],
 				  type: 'foreign key',
 				  name: '${c.table}_${c.key}_fkey',
 				  references: {
@@ -200,10 +228,9 @@ const dropConstraints = (dir, constraints) => {
 export const build = async (changes) => {
 	let { tables, columns, constraints } = changes;
 
-	console.log(changes);
+	// console.log(changes);
 
 	addTables("up", tables.up.creates);
-	dropTables("up", tables.up.deletes);
 
 	addColumns("up", columns.up.creates);
 	updateColumns("up", columns.up.updates);
@@ -216,11 +243,11 @@ export const build = async (changes) => {
 
 	dropConstraints("up", constraints.up.deletes);
 	dropColumns("up", columns.up.deletes);
+	dropTables("up", tables.up.deletes);
 
 	// Up order and down order will be the same?
 	// That doesn't seem right
 	addTables("down", tables.down.creates);
-	dropTables("down", tables.down.deletes);
 
 	addColumns("down", columns.down.creates);
 	updateColumns("down", columns.down.updates);
@@ -231,6 +258,7 @@ export const build = async (changes) => {
 
 	dropConstraints("down", constraints.down.deletes);
 	dropColumns("down", columns.down.deletes);
+	dropTables("down", tables.down.deletes);
 
 	let migration = `
 "use strict";
