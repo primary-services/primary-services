@@ -70,12 +70,18 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 			.pop();
 	};
 
-	useEffect(() => {
-		console.log("Office", office);
-	}, [office]);
-
 	const update = (field, value) => {
+		// value = value.replace(/(?<!\.|\?)([\r|\n])+([^?\.]+)/gm, "");
 		setOffice({ ...office, [field]: value });
+	};
+
+	const format = (field, e) => {
+		e.preventDefault();
+
+		let value = (e.clipboardData || window.clipboardData).getData("text");
+		let formatted = value.replace(/(?<!\.|\?|\n)([\r|\n])+([^?\.]+)/gm, "");
+
+		setOffice({ ...office, [field]: formatted });
 	};
 
 	const updateIncumbent = (term, field, value) => {
@@ -143,6 +149,9 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 						rows="5"
 						onInput={(e) => {
 							update("description", e.target.value);
+						}}
+						onPaste={(e) => {
+							format("description", e);
 						}}
 					></textarea>
 				</div>
