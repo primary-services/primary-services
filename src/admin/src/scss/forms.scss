@@ -101,6 +101,12 @@ form {
 		}
 	}
 
+	.input-wrapper {
+		span.uk-search-icon {
+			top: -7px;
+		}
+	}
+
 	.override-width {
 		input {
 			width: calc(100% - 32px);
