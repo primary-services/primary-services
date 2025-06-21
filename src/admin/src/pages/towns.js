@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useMemo, useContext } from "react";
 import { Link } from "react-router";
 import { useParams } from "react-router";
 
@@ -72,6 +72,7 @@ export const Towns = () => {
   const [election, setElection] = useState(false);
   const [source, setSource] = useState(null);
   const [note, setNote] = useState(null);
+  const [search, setSearch] = useState("");
 
   const { data: offices, refetch: refetchOffices } = useMunicipalityOffices(
     town?.id,
@@ -138,6 +139,16 @@ export const Towns = () => {
       return t.seat?.name || "";
     });
   };
+
+  const filteredTowns = useMemo(() => {
+    return (towns || []).filter((t) => {
+      if (search.trim() === "") {
+        return true;
+      } else {
+        return t.name.toLowerCase().startsWith(search.toLowerCase());
+      }
+    });
+  }, [towns, search]);
 
   const sourceForm = () => {
     return (
@@ -249,23 +260,43 @@ export const Towns = () => {
         {townsLoading ? (
           <p>Loading...</p>
         ) : (
-          <ul className="uk-list">
-            {towns.map((t) => {
-              return (
-                <li key={t.name}>
+          <div>
+            <div className="sidebar-header">
+              <form className="uk-search uk-search-default">
+                <div className="input-wrapper">
+                  <input
+                    type="text"
+                    className="uk-search-input"
+                    onInput={(e) => {
+                      setSearch(e.target.value);
+                    }}
+                    value={search}
+                  />
                   <span
-                    uk-icon="icon: check"
-                    uk-tooltip={
-                      !!t.completed
-                        ? `title: Completed`
-                        : `title: Mark Completed`
-                    }
+                    className="uk-search-icon-flip"
+                    data-uk-search-icon
                   ></span>
-                  <Link to={`/towns/ma/${t.slug}`}>{t.name}</Link>
-                </li>
-              );
-            })}
-          </ul>
+                </div>
+              </form>
+            </div>
+            <ul className="uk-list">
+              {filteredTowns.map((t) => {
+                return (
+                  <li key={t.name}>
+                    <span
+                      uk-icon="icon: check"
+                      uk-tooltip={
+                        !!t.completed
+                          ? `title: Completed`
+                          : `title: Mark Completed`
+                      }
+                    ></span>
+                    <Link to={`/towns/ma/${t.slug}`}>{t.name}</Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         )}
       </div>
 

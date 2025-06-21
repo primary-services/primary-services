@@ -3,7 +3,7 @@
 	padding-top: 0px;
 
 	.sidebar {
-		padding-top: 60px;
+		padding-right: 30px;
 		flex: 0.2;
 		height: 100vh;
 		overflow: auto;
@@ -25,6 +25,14 @@
 
 		border-right: solid 1px #ccc;
 		box-shadow: 0 0 0 0 #ccc;
+
+		.sidebar-header {
+			position: sticky;
+			top: 0px;
+			padding-top: 60px;
+			background-color: white;
+			z-index: 1;
+		}
 	}
 
 	.page-content {
