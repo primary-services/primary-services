@@ -74,3 +74,27 @@ Run ``npm run dev`` and the server should be started
 ``cd /environments/dev/node-api``
 Run ``terraform plan``, and make sure the changes look right
 If they do ``terraform apply``
+
+### Dev workflow
+
+Here's some general guidelines for contributing
+
+1. **Create issue**
+
+   Create github issue with description of job-to-be-done and set its issue type:
+    - **Bug** for fixing errors or buggy behavior
+    - **Feature** for new functionality or UI
+    - **Task** for non-user-impacting changes
+
+2. **Create branch for job-to-be-done(s)**
+
+   On your local, create a new branch w/ naming convention `NAME/ISSUENUM-DESCRIPTION-OF-CHANGES` (e.g. `jerry/21-add-error-toasts`)
+   Use your judgement regarding batching changes, but for larger / more complicated JTBD it's probably best to tackle each in their own branch
+
+3. **Create PR**
+
+   Once ready, push changes and open a PR comparing your branch against main. In the description, link the issue name & summarize the code changes -- can be brief. Code review isn't required. If you really want another pair of eyes, request review via github & some other comms channel in case they don't have github notifications
+
+4. **Merge PR & Deploy**
+
+   When you're ready to deploy, merge your changes into main. Checkout main on your local and pull, and then follow the instructions above to deploy
