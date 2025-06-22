@@ -81,10 +81,12 @@ Here's some general guidelines for contributing
 
 1. **Create issue**
 
-   Create github issue with description of job-to-be-done and set its issue type:
+   If one doesn't already exist, create github issue with description of job-to-be-done and set its issue type:
     - **Bug** for fixing errors or buggy behavior
     - **Feature** for new functionality or UI
     - **Task** for non-user-impacting changes
+    
+    If you're planning on implementing the changes, assign the issue to yourself. 
 
 2. **Create branch for job-to-be-done(s)**
 
