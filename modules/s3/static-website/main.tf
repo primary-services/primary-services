@@ -89,6 +89,13 @@ resource "aws_cloudfront_distribution" "cf-dist" {
 
   price_class = "PriceClass_100"
 
+  restrictions {
+    geo_restriction {
+      restriction_type = "none"
+      locations = []
+    }
+  }
+
   viewer_certificate {
     cloudfront_default_certificate = var.use_default_certificate
     acm_certificate_arn = var.certificate_arn
