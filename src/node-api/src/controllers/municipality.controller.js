@@ -17,6 +17,9 @@ let municipalityController = {
   list: async (req, res, next) => {
     const municipalities = await Municipality.findAll({
       include: [{ model: Contact, as: "contacts" }],
+      order: [
+        ["id", "ASC"],
+      ],
     });
 
     return res.status(200).json(municipalities);

@@ -120,7 +120,7 @@ export const useMunicipalityCollections = (municipality_id) =>
   useQuery({
     queryKey: ["municipalities", municipality_id, "collections"],
     queryFn: () => getMunicipalityCollections(municipality_id),
-    enabled: !!municipality_id,
+    enabled: municipality_id !== undefined,
   });
 
 export const invalidateMunicipality = (municipality_id) => {
