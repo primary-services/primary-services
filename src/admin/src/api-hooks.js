@@ -99,21 +99,21 @@ export const useMunicipality = (municipality_id) =>
   useQuery({
     queryKey: ["municipalities", municipality_id],
     queryFn: () => getMunicipality(municipality_id),
-    enabled: !!municipality_id,
+    enabled: municipality_id !== undefined,
   });
 
 export const useMunicipalityOffices = (municipality_id) =>
   useQuery({
     queryKey: ["municipalities", municipality_id, "offices"],
     queryFn: () => getMunicipalityOffices(municipality_id),
-    enabled: !!municipality_id,
+    enabled: municipality_id !== undefined,
   });
 
 export const useMunicipalityElections = (municipality_id) =>
   useQuery({
     queryKey: ["municipalities", municipality_id, "elections"],
     queryFn: () => getMunicipalityElections(municipality_id),
-    enabled: !!municipality_id,
+    enabled: municipality_id !== undefined,
   });
 
 export const useMunicipalityCollections = (municipality_id) =>
