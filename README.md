@@ -85,13 +85,15 @@ Here's some general guidelines for contributing
     - **Bug** for fixing errors or buggy behavior
     - **Feature** for new functionality or UI
     - **Task** for non-user-impacting changes
-    
+
     If you're planning on implementing the changes, assign the issue to yourself. 
 
 2. **Create branch for job-to-be-done(s)**
 
    On your local, create a new branch w/ naming convention `NAME/ISSUENUM-DESCRIPTION-OF-CHANGES` (e.g. `jerry/21-add-error-toasts`)
    Use your judgement regarding batching changes, but for larger / more complicated JTBD it's probably best to tackle each in their own branch
+
+   _Note: feel free to push incremental commits if you'd like, but it's not a hard requirement__ 
 
 3. **Create PR**
 
