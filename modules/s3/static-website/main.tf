@@ -92,6 +92,7 @@ resource "aws_cloudfront_distribution" "cf-dist" {
   restrictions {
     geo_restriction {
       restriction_type = "none"
+      locations = []
     }
   }
 
