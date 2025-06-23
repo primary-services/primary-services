@@ -15,4 +15,5 @@ module "static-website" {
   certificate_arn = "arn:aws:acm:us-east-1:173549513063:certificate/00b49dab-5581-4afc-a417-13a32b1380b4"
   certificate_minimum_protocol_version = "TLSv1.2_2021"
   certificate_ssl_support_method = "sni-only"
+  profile = "elections"
 }
