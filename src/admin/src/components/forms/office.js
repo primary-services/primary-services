@@ -142,6 +142,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 						}}
 					/>
 				</div>
+				{/*
 				<div className="input-wrapper uk-width-1-1">
 					<label>Description</label>
 					<textarea
@@ -155,6 +156,8 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 						}}
 					></textarea>
 				</div>
+				*/}
+				{/*
 				<div className="input-wrapper grid">
 					<div className="width-1-2">
 						<label>Salary</label>
@@ -187,6 +190,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 						/>
 					</div>
 				</div>
+				*/}
 			</section>
 
 			{office.elected && (
