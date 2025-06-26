@@ -260,7 +260,7 @@ export const Towns = () => {
         {townsLoading ? (
           <p>Loading...</p>
         ) : (
-          <div>
+          <>
             <div className="sidebar-header">
               <form className="uk-search uk-search-default">
                 <div className="input-wrapper">
@@ -296,7 +296,7 @@ export const Towns = () => {
                 );
               })}
             </ul>
-          </div>
+          </>
         )}
       </div>
 

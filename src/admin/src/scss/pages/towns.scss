@@ -1,14 +1,26 @@
 #towns {
 	display: flex;
-	padding-top: 0px;
+	padding-top: 80px;
+	padding-bottom: 0;
+	height: 100vh;
+	box-sizing: border-box;
+	padding-left: 0;
+	padding-right: 0;
 
 	.sidebar {
-		padding-right: 30px;
 		flex: 0.2;
-		height: 100vh;
-		overflow: auto;
+		height: 100%;
+		box-sizing: border-box;
+		padding-top: 110px;
 
 		ul {
+			height: 100%;
+			overflow: auto;
+			margin-top: 0;
+			padding-top: 20px;
+			padding-bottom: 20px;
+			box-sizing: border-box;
+
 			li {
 				width: 100%;
 
@@ -27,9 +39,10 @@
 		box-shadow: 0 0 0 0 #ccc;
 
 		.sidebar-header {
-			position: sticky;
-			top: 0px;
-			padding-top: 60px;
+			position: relative;
+			padding-right: 30px;
+			box-sizing: border-box;
+			margin-top: -50px;
 			background-color: white;
 			z-index: 1;
 		}
@@ -39,8 +52,10 @@
 		padding-top: 60px;
 		padding-left: 60px;
 		padding-right: 30px;
+		padding-bottom: 20px;
+		box-sizing: border-box;
 		flex: 0.8;
-		height: 100vh;
+		height: 100%;
 		overflow: auto;
 
 		.town-header {
