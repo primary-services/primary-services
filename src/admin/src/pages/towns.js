@@ -258,7 +258,7 @@ export const Towns = () => {
     <section id="towns" className="page">
       <div className="sidebar">
         {townsLoading ? (
-          <p>Loading...</p>
+          <p className="loading">Loading...</p>
         ) : (
           <>
             <div className="sidebar-header">
