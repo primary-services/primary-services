@@ -12,6 +12,36 @@ if (process.env["NODE_ENV"] !== "local") {
   cookieConfig.domain = ".deadlykitten.com";
 }
 
+const validPassword = (password) => {
+  let hasMinLen = false;
+  let hasUpper = false;
+  let hasLower = false;
+  let hasNumber = false;
+  let hasSpecial = false;
+
+  if (password.length >= 8) {
+    hasMinLen = true;
+  }
+
+  if (/[!|@|#\$|%|\^|&|_]+/g.test(password)) {
+    hasSpecial = true;
+  }
+
+  if (/[A-Z]+/g.test(password)) {
+    hasUpper = true;
+  }
+
+  if (/[a-z]+/g.test(password)) {
+    hasLower = true;
+  }
+
+  if (/[0-9]+/g.test(password)) {
+    hasNumber = true;
+  }
+
+  return hasMinLen && hasUpper && hasLower && hasNumber && hasSpecial;
+};
+
 export default {
   signup: async (req, res) => {
     let requiredFields = [
