@@ -49,12 +49,12 @@ class Identity extends Model {
 	}
 
 	static associate(models) {
-		this.belongsToMany(models.Municipality, {
+		this.belongsToMany(models.User, {
 			through: {
-				model: models.FormParent,
+				model: models.IdentityParent,
 				unique: false,
 			},
-			foreignKey: "form_id",
+			foreignKey: "identity_id",
 			constraints: false,
 		});
 	}

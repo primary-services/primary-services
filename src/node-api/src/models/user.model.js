@@ -45,7 +45,7 @@ class User extends Model {
           primaryKey: true,
         },
         email: {
-          type: DataTypes.STRING,
+          type: DataTypes.TEXT,
           unique: true,
           allowNull: false,
           validate: {
@@ -53,11 +53,11 @@ class User extends Model {
           },
         },
         password: {
-          type: DataTypes.STRING,
+          type: DataTypes.TEXT,
           allowNull: false,
         },
         resetToken: {
-          type: DataTypes.STRING,
+          type: DataTypes.TEXT,
           allowNull: true,
         },
         resetTokenExpiry: {
@@ -110,6 +110,17 @@ class User extends Model {
         ],
       },
     );
+  }
+
+  static associate(models) {
+    this.belongsToMany(models.Identity, {
+      through: {
+        model: models.IdentityParent,
+        unique: false,
+      },
+      foreignKey: "identity_id",
+      constraints: false,
+    });
   }
 }
 
