@@ -419,6 +419,12 @@ class Migrator {
 				return updates;
 			}
 
+			if (mDefault instanceof Sequelize.NOW) {
+				if (dbDefault.toLowerCase() === "now()") {
+					return updates;
+				}
+			}
+
 			// It's an actual update
 			let update = {
 				type: "column",
