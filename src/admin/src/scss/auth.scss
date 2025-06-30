@@ -1,0 +1,25 @@
+.auth {
+	.uk-modal-close {
+		position: absolute;
+		top: 20px;
+		right: 20px;
+	}
+
+	.bot-check {
+		position: absolute;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	form {
+		div.btn {
+			margin-top: 10px;
+		}
+	}
+}
+
+#login-form {
+}
+
+#signup-form {
+}

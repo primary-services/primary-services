@@ -5,6 +5,9 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import { LandingPage } from "./pages/landing.js";
 import { Towns } from "./pages/towns.js";
 
+import { SignupForm } from "./components/auth/signup.js";
+import { LoginForm } from "./components/auth/login.js";
+
 import { AppProviders } from "./providers";
 
 function App() {
@@ -22,7 +25,12 @@ function App() {
             </ul>
           </div>
           <div className="uk-navbar-right">
-            <div className="btn blocky rev">Sign In</div>
+            <div
+              className="btn blocky rev"
+              data-uk-toggle="target: #login-form"
+            >
+              Sign In
+            </div>
           </div>
         </nav>
       </header>
@@ -34,6 +42,11 @@ function App() {
             <Route path="/towns/ma/:slug" element={<Towns />} />
           </Routes>
         </BrowserRouter>
+      </div>
+
+      <div id="modals">
+        <SignupForm />
+        <LoginForm />
       </div>
     </AppProviders>
   );
