@@ -6,6 +6,8 @@
 		- if a table is being dropped, ignore all the dropped column/constraints
  */
 
+import { Sequelize } from "sequelize";
+
 const queries = {
 	up: [],
 	down: [],
@@ -17,7 +19,11 @@ const formatDefaultValue = (value) => {
 	}
 
 	if (value === null) {
-		return null;
+		return `defaultValue: null`;
+	}
+
+	if (value instanceof Sequelize.NOW) {
+		return `defaultValue: Sequelize.fn('NOW')`;
 	}
 
 	if (typeof value === "number") {
@@ -135,7 +141,7 @@ const addConstraints = (dir, constraints) => {
 				await queryInterface.addConstraint('${c.table}', {
 					fields: [${formatFields(c.definition.fields)}],
 					type: "unique",
-					name: ${c.key},
+					name: "${c.key}",
 				})`
 					.replace(/\s{2,}/g, " ")
 					.trim(),
