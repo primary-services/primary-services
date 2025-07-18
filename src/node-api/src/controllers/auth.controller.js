@@ -1,10 +1,11 @@
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 
 import User from "../models/user.model.js";
 
 const cookieConfig = {
   path: "/",
-  sameSite: "Strict",
+  sameSite: process.env["NODE_ENV"] === "local" ? "None" : "Strict",
   secure: true,
 };
 
@@ -43,102 +44,124 @@ const validPassword = (password) => {
 };
 
 export default {
+  authorize: async (req, res) => {
+    if (!!req.jwt) {
+      return res.status(200).json(req.jwt.user);
+    } else {
+      return res.status(401).json({ success: false });
+    }
+  },
+
   signup: async (req, res) => {
     let requiredFields = [
-      "first_name",
-      "last_name",
+      "identities.0.first_name",
+      "identities.0.last_name",
       "email",
       "password",
       "password_confirmation",
     ];
 
-    let {
-      first_name,
-      last_name,
-      email,
-      password,
-      password_confirmation,
-      pword,
-    } = req.body;
+    let data = req.body;
 
-    console.log("Signing Up:", email);
-    if (pword !== "") {
+    console.log("Signing Up:", data.email);
+    if (data.pword !== "") {
       console.log("Bot Check Failed:", req.body);
-      return res.status(200).json({ error: null, fields: [] });
+      return res.status(200).json({ success: true, error: null, fields: [] });
     }
 
     let missing_fields = [];
     requiredFields.map((field) => {
-      if (!req.body[field]) {
-        missing_fields.push(field);
+      let path = field.split(".");
+
+      let obj = data;
+      for (var i = 0; i < path.length - 1; i++) {
+        obj = obj[path[i]];
+      }
+      console.log(obj);
+      if (!obj[path[path.length - 1]]) {
+        missing_fields.push(path[path.length - 1]);
       }
     });
 
     if (missing_fields.length > 0) {
       console.log("Missing Fields", missing_fields);
       return res.status(422).json({
+        success: false,
         error: "Missing Required Fields",
         fields: missing_fields,
       });
     }
 
-    if (password !== password_confirmation) {
+    if (data.password !== data.password_confirmation) {
       console.log("Password Mismatch", password, password_confirmation);
       return res.status(422).json({
+        success: false,
         error: "Mismatched Password",
-        fields: ["password", "verify_password"],
+        fields: ["password", "password_confirmation"],
       });
     }
 
-    if (!validPassword(password)) {
-      console.log("Invalid Password", password);
+    if (!validPassword(data.password)) {
+      console.log("Invalid Password", data.password);
       return res.status(422).json({
+        success: false,
         error: "Invalid Password",
-        fields: ["password", "verify_password"],
+        fields: ["password", "password_confirmation"],
       });
     }
 
     let existing = await User.findOne({
       where: {
-        email: email.trim().toLowerCase(),
+        email: data.email.trim().toLowerCase(),
       },
     });
 
     if (!!existing) {
-      console.log("User Exists", email.toLowerCase());
+      console.log("User Exists", data.email.toLowerCase());
       return res.status(422).json({
+        success: false,
         error: "An account with this email has already been registered",
         fields: ["email"],
       });
     }
 
+    let user = null;
     try {
-      let user = new User({
-        email: email,
-        password: password,
-      });
-
-      await user.save();
+      user = await User.prototype.upsertAll(data);
     } catch (e) {
-      console.log(e, e.message);
-      if (e.message === "INVALID_PASSWORD") {
-      }
+      console.log("Error creating user:", e, data);
+      return res.status(500).json({
+        success: false,
+        error:
+          "An error has occured creating your account, please contact the dev team",
+        fields: [],
+      });
     }
 
     let token = jwt.sign(
       {
-        user_id: +user.id,
+        user: {
+          id: user.id,
+          email: user.email,
+        },
       },
       process.env["SERVER_JWT_SECRET"],
-      { expiresIn: process.env["SERVER_JWT_TIMEOUT"] },
+      {
+        expiresIn: new Date().getTime() + process.env["SERVER_JWT_TIMEOUT"],
+      },
     );
 
-    res.cookie("api_token", token, cookieConfig);
-    return res.status(200).json({ success: true });
+    res.cookie("auth_token", token, cookieConfig);
+    return res.status(200).json({
+      success: true,
+      user: {
+        id: user.id,
+        email: user.email,
+      },
+    });
   },
 
   login: async (req, res) => {
-    let queries = getQueries();
     let { email, password } = req.body;
 
     let user = await User.findOne({
@@ -150,25 +173,44 @@ export default {
     if (!user) {
       console.log("Couldn't find user for", email);
       return res.status(401).json({
-        error: "Unauthorized",
+        success: false,
+        error: "Invalid Credentials",
+        fields: ["email", "password"],
       });
     }
 
     let validPassword = bcrypt.compareSync(password, user.password);
+
     if (!validPassword) {
-      return res.status(401).json({ error: "Unauthorized" });
+      console.log("Invalid password");
+      return res.status(401).json({
+        success: false,
+        error: "Invalid Credentials",
+        fields: ["email", "password"],
+      });
     }
 
     let token = jwt.sign(
       {
-        user_id: +user.id,
+        user: {
+          id: user.id,
+          email: user.email,
+        },
       },
       process.env["SERVER_JWT_SECRET"],
-      { expiresIn: process.env["SERVER_JWT_TIMEOUT"] },
+      {
+        expiresIn: new Date().getTime() + process.env["SERVER_JWT_TIMEOUT"],
+      },
     );
 
-    res.cookie("api_token", token, cookieConfig);
-    return res.status(200).json({ success: true });
+    res.cookie("auth_token", token, cookieConfig);
+    return res.status(200).json({
+      success: true,
+      user: {
+        id: user.id,
+        email: user.email,
+      },
+    });
   },
 
   logout: (req, res) => {
