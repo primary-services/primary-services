@@ -4,36 +4,6 @@ import crypto from "crypto";
 
 import Model from "../lib/base-model.js";
 
-const validatePassword = (password) => {
-  let hasMinLen = false;
-  let hasUpper = false;
-  let hasLower = false;
-  let hasNumber = false;
-  let hasSpecial = false;
-
-  if (password.length >= 8) {
-    hasMinLen = true;
-  }
-
-  if (/[!|@|#\$|%|\^|&|_]+/g.test(password)) {
-    hasSpecial = true;
-  }
-
-  if (/[A-Z]+/g.test(password)) {
-    hasUpper = true;
-  }
-
-  if (/[a-z]+/g.test(password)) {
-    hasLower = true;
-  }
-
-  if (/[0-9]+/g.test(password)) {
-    hasNumber = true;
-  }
-
-  return hasMinLen && hasUpper && hasLower && hasNumber && hasSpecial;
-};
-
 class User extends Model {
   static init(sequelize) {
     super.init(
@@ -72,10 +42,6 @@ class User extends Model {
         timestamps: false,
         hooks: {
           beforeCreate: async (instance, options) => {
-            if (!validatePassword(instance.password)) {
-              throw "INVALID_PASSWORD";
-            }
-
             const salt = await bcrypt.genSalt(10);
 
             instance.email = instance.email.trim().toLowerCase();
@@ -117,9 +83,13 @@ class User extends Model {
       through: {
         model: models.IdentityParent,
         unique: false,
+        scope: {
+          parent_type: "USER",
+        },
       },
-      foreignKey: "identity_id",
+      foreignKey: "parent_id",
       constraints: false,
+      as: "identities",
     });
   }
 }
