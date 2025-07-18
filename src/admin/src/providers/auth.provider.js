@@ -1,0 +1,116 @@
+import { apiRoot } from "../constants.js";
+import { getCookie, clearCookie } from "../utils.js";
+import { createContext, useState } from "react";
+
+export const AuthContext = createContext();
+export const AuthProvider = ({ children }) => {
+  const [loading, setLoading] = useState(true);
+  const [pending, setPending] = useState(false);
+  const [user, setUser] = useState(null);
+
+  const authContext = {
+    loading,
+    user,
+
+    authorize: async () => {
+      setPending(true);
+
+      let token = getCookie("auth_token");
+
+      console.log(token);
+
+      let resp = await fetch(`${apiRoot}/authorize`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((resp) => {
+        return resp.json();
+      });
+
+      if (!resp.id) {
+        setUser(null);
+      } else {
+        setUser(resp);
+      }
+
+      setPending(false);
+      setLoading(false);
+    },
+
+    login: async (data) => {
+      setPending(true);
+
+      let resp = await fetch(`${apiRoot}/login`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }).then((resp) => {
+        return resp.json();
+      });
+
+      setPending(false);
+      setLoading(false);
+
+      if (!resp.success) {
+        setUser(null);
+        return { success: false };
+      } else {
+        setUser(resp.user);
+        return { success: true };
+      }
+    },
+
+    signup: async (data) => {
+      setPending(true);
+
+      let resp = await fetch(`${apiRoot}/signup`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }).then((resp) => {
+        return resp.json();
+      });
+
+      console.log(resp);
+
+      setPending(false);
+      setLoading(false);
+
+      if (!resp.success) {
+        setUser(null);
+        return { success: false };
+      } else {
+        setUser(resp.user);
+        return { success: true };
+      }
+    },
+
+    logout: async () => {
+      await clearCookie("auth_token");
+      window.location.assign("/login");
+    },
+
+    request_password_reset: (data) => {
+      // Stub
+    },
+
+    reset_password: (data) => {
+      // Stub
+    },
+  };
+
+  return (
+    <AuthContext.Provider value={authContext}>{children}</AuthContext.Provider>
+  );
+};
