@@ -191,7 +191,12 @@ export const SignupPage = () => {
                   <div className="validation">
                     <div className="input-wrapper checkbox">
                       <input type="checkbox" checked={isValid("length")} />
-                      <label>At least 8 characters</label>
+                      <label>Between 10 and 128 characters</label>
+                    </div>
+
+                    <div className="input-wrapper checkbox">
+                      <input type="checkbox" checked={isValid("repeating")} />
+                      <label>No repeating character sequences</label>
                     </div>
 
                     <div className="input-wrapper checkbox">
