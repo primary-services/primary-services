@@ -1,3 +1,9 @@
+import owasp from "owasp-password-strength-test";
+
+owasp.config({
+  allowPassphrases: false,
+});
+
 export const cleanDateString = (dateString) =>
   dateString ? dateString.replace(" 00:00:00 GMT", "") : dateString;
 
@@ -13,44 +19,26 @@ export const clearCookie = (name) => {
 };
 
 export const validPassword = (password, confirmation) => {
-  let hasMinLen = false;
-  let hasUpper = false;
-  let hasLower = false;
-  let hasNumber = false;
-  let hasSpecial = false;
-  let hasConfirmation = false;
+  let tested = owasp.test(password);
+  let { failedTests: failures } = tested;
 
-  if (!!password && !!confirmation && password === confirmation) {
-    hasConfirmation = true;
-  }
-
-  if (password.length >= 8) {
-    hasMinLen = true;
-  }
-
-  if (/[!|@|#\$|%|\^|&|_]+/g.test(password)) {
-    hasSpecial = true;
-  }
-
-  if (/[A-Z]+/g.test(password)) {
-    hasUpper = true;
-  }
-
-  if (/[a-z]+/g.test(password)) {
-    hasLower = true;
-  }
-
-  if (/[0-9]+/g.test(password)) {
-    hasNumber = true;
-  }
+  let hasLen = !failures.includes(0) && !failures.includes(1);
+  let noRepeat = password.length >= 3 && !failures.includes(2);
+  let hasLower = !failures.includes(3);
+  let hasUpper = !failures.includes(4);
+  let hasNumber = !failures.includes(5);
+  let hasSpecial = !failures.includes(6);
+  let hasConfirmation =
+    !!password && !!confirmation && password === confirmation;
 
   return [
-    hasMinLen ? null : "length",
+    hasLen ? null : "length",
     hasUpper ? null : "upper",
     hasLower ? null : "lower",
     hasNumber ? null : "number",
     hasSpecial ? null : "special",
     hasConfirmation ? null : "confirmation",
+    noRepeat ? null : "repeating",
   ].filter((e) => !!e);
 };
 
