@@ -2377,6 +2377,11 @@ ee-first@1.1.1:
   resolved "https://registry.npmjs.org/ee-first/-/ee-first-1.1.1.tgz"
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
+email-validator@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.npmjs.org/email-validator/-/email-validator-2.0.4.tgz"
+  integrity sha512-gYCwo7kh5S3IDyZPLZf6hSS0MnZT8QmJFqYvbqlDZSbwdZlY6QZWxJ4i/6UhITOJ4XzyI647Bm2MXKCLqnJ4nQ==
+
 emoji-regex@^8.0.0:
   version "8.0.0"
   resolved "https://registry.npmjs.org/emoji-regex/-/emoji-regex-8.0.0.tgz"
@@ -3134,6 +3139,11 @@ once@^1.3.0:
   integrity sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==
   dependencies:
     wrappy "1"
+
+owasp-password-strength-test@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.npmjs.org/owasp-password-strength-test/-/owasp-password-strength-test-1.3.0.tgz"
+  integrity sha512-33/Z+vyjlFaVZsT7aAFe3SkQZdU6su59XNkYdU5o2Fssz0D9dt6uiFaMm62M7dFQSKogULq8UYvdKnHkeqNB2w==
 
 package-json-from-dist@^1.0.0:
   version "1.0.1"

@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import owasp from "owasp-password-strength-test";
+import emailValidator from "email-validator";
 
 import User from "../models/user.model.js";
 
@@ -9,39 +11,18 @@ const cookieConfig = {
   secure: true,
 };
 
+// TODO should to real email validation
+const emailTransform = (email) => {
+  return email.trim().toLowerCase();
+};
+
 if (process.env["NODE_ENV"] !== "local") {
   cookieConfig.domain = ".deadlykitten.com";
 }
 
-const validPassword = (password) => {
-  let hasMinLen = false;
-  let hasUpper = false;
-  let hasLower = false;
-  let hasNumber = false;
-  let hasSpecial = false;
-
-  if (password.length >= 8) {
-    hasMinLen = true;
-  }
-
-  if (/[!|@|#\$|%|\^|&|_]+/g.test(password)) {
-    hasSpecial = true;
-  }
-
-  if (/[A-Z]+/g.test(password)) {
-    hasUpper = true;
-  }
-
-  if (/[a-z]+/g.test(password)) {
-    hasLower = true;
-  }
-
-  if (/[0-9]+/g.test(password)) {
-    hasNumber = true;
-  }
-
-  return hasMinLen && hasUpper && hasLower && hasNumber && hasSpecial;
-};
+owasp.config({
+  allowPassphrases: false,
+});
 
 export default {
   authorize: async (req, res) => {
@@ -66,6 +47,8 @@ export default {
     console.log("Signing Up:", data.email);
     if (data.pword !== "") {
       console.log("Bot Check Failed:", req.body);
+
+      // TODO: Maybe track bot emails if this every becomes a problem?
       return res.status(200).json({ success: true, error: null, fields: [] });
     }
 
@@ -77,47 +60,51 @@ export default {
       for (var i = 0; i < path.length - 1; i++) {
         obj = obj[path[i]];
       }
-      console.log(obj);
+
       if (!obj[path[path.length - 1]]) {
         missing_fields.push(path[path.length - 1]);
       }
     });
 
     if (missing_fields.length > 0) {
-      console.log("Missing Fields", missing_fields);
       return res.status(422).json({
         success: false,
-        error: "Missing Required Fields",
+        error: "Please fill out all required fields",
         fields: missing_fields,
       });
     }
 
-    if (data.password !== data.password_confirmation) {
-      console.log("Password Mismatch", password, password_confirmation);
+    if (!emailValidator.validate(emailTransform(data.email))) {
       return res.status(422).json({
         success: false,
-        error: "Mismatched Password",
-        fields: ["password", "password_confirmation"],
+        error: "Please use a valid email address",
+        fields: ["email"],
       });
     }
 
-    if (!validPassword(data.password)) {
-      console.log("Invalid Password", data.password);
+    if (data.password !== data.password_confirmation) {
       return res.status(422).json({
         success: false,
-        error: "Invalid Password",
+        error: "Mismatched password and password confirmation",
+        fields: ["password_confirmation"],
+      });
+    }
+
+    if (!owasp.test(data.password)) {
+      return res.status(422).json({
+        success: false,
+        error: "Password does not meet complexity requirements",
         fields: ["password", "password_confirmation"],
       });
     }
 
     let existing = await User.findOne({
       where: {
-        email: data.email.trim().toLowerCase(),
+        email: emailTransform(data.email),
       },
     });
 
     if (!!existing) {
-      console.log("User Exists", data.email.toLowerCase());
       return res.status(422).json({
         success: false,
         error: "An account with this email has already been registered",
@@ -127,7 +114,10 @@ export default {
 
     let user = null;
     try {
-      user = await User.prototype.upsertAll(data);
+      user = await User.prototype.upsertAll({
+        ...data,
+        email: emailTransform(data.email),
+      });
     } catch (e) {
       console.log("Error creating user:", e, data);
       return res.status(500).json({
@@ -166,7 +156,7 @@ export default {
 
     let user = await User.findOne({
       where: {
-        email: email.trim().toLowerCase(),
+        email: emailTransform(data.email),
       },
     });
 
