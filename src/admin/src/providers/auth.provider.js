@@ -16,11 +16,8 @@ export const AuthProvider = ({ children }) => {
       setPending(true);
 
       let token = getCookie("auth_token");
-
-      console.log(token);
-
       let resp = await fetch(`${apiRoot}/authorize`, {
-        method: "POST",
+        method: "GET",
         credentials: "include",
         headers: {
           Accept: "application/json",
@@ -60,10 +57,10 @@ export const AuthProvider = ({ children }) => {
 
       if (!resp.success) {
         setUser(null);
-        return { success: false };
+        return resp;
       } else {
         setUser(resp.user);
-        return { success: true };
+        return resp;
       }
     },
 
@@ -82,17 +79,15 @@ export const AuthProvider = ({ children }) => {
         return resp.json();
       });
 
-      console.log(resp);
-
       setPending(false);
       setLoading(false);
 
       if (!resp.success) {
         setUser(null);
-        return { success: false };
+        return resp;
       } else {
         setUser(resp.user);
-        return { success: true };
+        return resp;
       }
     },
 
