@@ -49,10 +49,6 @@ class User extends Model {
           },
         },
         instanceMethods: {
-          validPassword: async (password) => {
-            return await bcrypt.compare(password, this.password);
-          },
-
           generateResetToken: async () => {
             const token = crypto.randomBytes(32).toString("hex");
             this.resetToken = token;
