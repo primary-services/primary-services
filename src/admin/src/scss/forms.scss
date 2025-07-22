@@ -41,7 +41,8 @@ form {
 			box-sizing: border-box;
 		}
 
-		&.radio {
+		&.radio,
+		&.checkbox {
 			display: block;
 
 			input {
@@ -53,6 +54,23 @@ form {
 			label {
 				display: inline-block;
 				padding-left: 10px;
+			}
+		}
+
+		&.checkbox {
+			padding-left: 20px;
+
+			input {
+				margin-left: -20px;
+				vertical-align: top;
+			}
+		}
+
+		&.error {
+			input,
+			textarea,
+			select {
+				border: solid 1px var(--error-color);
 			}
 		}
 	}
@@ -110,6 +128,14 @@ form {
 	.override-width {
 		input {
 			width: calc(100% - 32px);
+		}
+	}
+
+	p.error {
+		color: var(--error-color);
+
+		&::after {
+			content: "\00a0";
 		}
 	}
 }

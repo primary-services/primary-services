@@ -142,7 +142,6 @@ class Migrator {
 					// Ignore the migrations table
 					return;
 				}
-
 				// There's got to be a safer way to do this, but I honestly doubt that any
 				// of our table names will ever be an SQL Injection risk
 				let query = `SELECT 'public.${tableInfo.show_tables}'::regclass::oid;`;
@@ -253,7 +252,7 @@ class Migrator {
 				return;
 			}
 
-			this.tables[table_from].contraints[conname] = contraint;
+			this.tables[table_from.replace(/"/g, "")].contraints[conname] = contraint;
 		});
 	}
 
@@ -418,6 +417,12 @@ class Migrator {
 				new Boolean(mDefault).toString() === dbDefault
 			) {
 				return updates;
+			}
+
+			if (mDefault instanceof Sequelize.NOW) {
+				if (dbDefault.toLowerCase() === "now()") {
+					return updates;
+				}
 			}
 
 			// It's an actual update
