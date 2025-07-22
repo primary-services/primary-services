@@ -258,9 +258,9 @@ export const Towns = () => {
     <section id="towns" className="page">
       <div className="sidebar">
         {townsLoading ? (
-          <p>Loading...</p>
+          <p className="loading">Loading...</p>
         ) : (
-          <div>
+          <>
             <div className="sidebar-header">
               <form className="uk-search uk-search-default">
                 <div className="input-wrapper">
@@ -296,7 +296,7 @@ export const Towns = () => {
                 );
               })}
             </ul>
-          </div>
+          </>
         )}
       </div>
 
