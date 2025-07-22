@@ -29,6 +29,7 @@ class Note extends Model {
 				},
 				created_at: {
 					type: DataTypes.DATE,
+					allowNull: true,
 					defaultValue: DataTypes.NOW,
 				},
 				created_by: {
