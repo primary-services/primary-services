@@ -27,6 +27,7 @@ module "node-api" {
   vpc_security_group_ids = [data.terraform_remote_state.vpc.outputs.default_security_group_id]
 
   db_creds_secret_name = "DevDBCredentials"
+  jwt_temp_secret = "REPLACE_THIS"
 
   aliases = ["api.deadlykitten.com"]
   use_default_certificate = false

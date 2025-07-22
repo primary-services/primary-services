@@ -36,6 +36,11 @@ variable "db_creds_secret_name" {
   type        = string
 }
 
+variable "jwt_temp_secret" {
+  description = "The DB Credentials Secret Name"
+  type        = string
+}
+
 # For custom domain setup
 variable "use_default_certificate" {
   description = "Set to false if using a custom domain"

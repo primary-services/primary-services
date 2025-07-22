@@ -15,22 +15,27 @@ export const AuthProvider = ({ children }) => {
     authorize: async () => {
       setPending(true);
 
-      let token = getCookie("auth_token");
-      let resp = await fetch(`${apiRoot}/authorize`, {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }).then((resp) => {
-        return resp.json();
-      });
+      let token = getCookie("auth_token") || "";
 
-      if (!resp.id) {
-        setUser(null);
-      } else {
-        setUser(resp);
+      try {
+        let resp = await fetch(`${apiRoot}/authorize`, {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }).then((resp) => {
+          return resp.json();
+        });
+
+        if (!resp.id) {
+          setUser(null);
+        } else {
+          setUser(resp);
+        }
+      } catch (e) {
+        console.log(e);
       }
 
       setPending(false);

@@ -156,7 +156,7 @@ export default {
 
     let user = await User.findOne({
       where: {
-        email: emailTransform(data.email),
+        email: emailTransform(email),
       },
     });
 
