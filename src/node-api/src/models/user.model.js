@@ -26,14 +26,6 @@ class User extends Model {
           type: DataTypes.TEXT,
           allowNull: false,
         },
-        resetToken: {
-          type: DataTypes.TEXT,
-          allowNull: true,
-        },
-        resetTokenExpiry: {
-          type: DataTypes.DATE,
-          allowNull: true,
-        },
       },
       {
         sequelize,
