@@ -21,32 +21,65 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 	});
 
 	useEffect(() => {
-		let newSeats = [...(selected.seats || [])].sort((a, b) => {
+		// Leaving this here for a bit to make sure we like the new method
+		// can be removed when we're sure we're happy with it
+
+		// let newSeats = [...(selected.seats || [])].sort((a, b) => {
+		// 	let cA = currentTerm(a);
+		// 	let cB = currentTerm(b);
+
+		// 	return (cA?.start_year || 0) - (cB?.start_year || 0);
+		// });
+
+		// let newCount = (office.seat_count || 0) - newSeats.length;
+		// for (let i = 0; i < newCount; i++) {
+		// 	newSeats.push({
+		// 		name: "",
+		// 		terms: [
+		// 			{
+		// 				start: null,
+		// 				start_year: +moment().format("YYYY"),
+		// 				end: null,
+		// 				end_year: +moment().add(office.tenure, "years").format("YYYY"),
+		// 				official: {
+		// 					first_name: "",
+		// 					middle_name: "",
+		// 					last_name: "",
+		// 				},
+		// 			},
+		// 		],
+		// 	});
+		// }
+
+		let sorted = [...(selected.seats || [])].sort((a, b) => {
 			let cA = currentTerm(a);
 			let cB = currentTerm(b);
 
 			return (cA?.start_year || 0) - (cB?.start_year || 0);
 		});
 
-		let newCount = (office.seat_count || 0) - newSeats.length;
-		for (let i = 0; i < newCount; i++) {
-			newSeats.push({
-				name: "",
-				terms: [
-					{
-						start: null,
-						start_year: +moment().format("YYYY"),
-						end: null,
-						end_year: +moment().add(office.tenure, "years").format("YYYY"),
-						official: {
-							first_name: "",
-							middle_name: "",
-							last_name: "",
+		let newSeats = new Array(office.seat_count).fill(null).map((_, idx) => {
+			if (idx < sorted.length) {
+				return JSON.parse(JSON.stringify(sorted[idx]));
+			} else {
+				return {
+					name: "",
+					terms: [
+						{
+							start: null,
+							start_year: +moment().format("YYYY"),
+							end: null,
+							end_year: +moment().add(office.tenure, "years").format("YYYY"),
+							official: {
+								first_name: "",
+								middle_name: "",
+								last_name: "",
+							},
 						},
-					},
-				],
-			});
-		}
+					],
+				};
+			}
+		});
 
 		setOffice({ ...office, seats: newSeats });
 	}, [office.seat_count]);
@@ -201,7 +234,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 							<input
 								type="number"
 								value={+office.seat_count}
-								min={Math.max((selected?.seats || []).length, 0)}
+								min="0"
 								step="1"
 								onInput={(e) => {
 									update("seat_count", +e.target.value);
