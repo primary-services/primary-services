@@ -6,6 +6,8 @@ import { SeatForm } from "./seats.js";
 import { SeatList } from "../lists/seats.js";
 import { SubForm } from "./subform.js";
 
+import { arr } from "../../utils.js";
+
 export const OfficeForm = ({ selected, onSave, onCancel }) => {
 	let [office, setOffice] = useState({
 		id: null,
@@ -19,6 +21,8 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 		tenure: 1,
 		seats: [],
 	});
+
+	let [requiresConfirmation, setRequiresConfirmation] = useState(false);
 
 	useEffect(() => {
 		// Leaving this here for a bit to make sure we like the new method
@@ -51,7 +55,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 		// 	});
 		// }
 
-		let sorted = [...(selected.seats || [])].sort((a, b) => {
+		let sorted = [...arr(selected.seats)].sort((a, b) => {
 			let cA = currentTerm(a);
 			let cB = currentTerm(b);
 
@@ -144,7 +148,28 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 
 	const validateSeat = () => {};
 
+	const getDiff = () => {
+		return arr(selected.seats).length - arr(office.seats).length;
+	};
+
 	const save = async () => {
+		if (getDiff() > 0) {
+			return setRequiresConfirmation(true);
+		}
+
+		let resp = await onSave(office);
+
+		window.UIkit.notification({
+			message: `Saved ${office.title} successfully`,
+			status: "primary",
+			pos: "bottom-left",
+			timeout: 5000,
+		});
+
+		onCancel();
+	};
+
+	const confirm = async () => {
 		let resp = await onSave(office);
 
 		window.UIkit.notification({
@@ -326,11 +351,30 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 			)}
 
 			<section className="actions">
-				<div className="btn blocky clicky" onClick={save}>
-					Save
+				<div className={requiresConfirmation ? "" : "hidden"}>
+					<p className="error">
+						This will permanently delete {getDiff() > 0} seats Are you sure you
+						want to proceed?
+					</p>
+					<div className="btn blocky clicky" onClick={confirm}>
+						Confirm
+					</div>
+					<div
+						className="btn blocky clicky rev"
+						onClick={() => {
+							setRequiresConfirmation(false);
+						}}
+					>
+						Cancel
+					</div>
 				</div>
-				<div className="btn blocky clicky" onClick={cancel}>
-					Cancel
+				<div className={requiresConfirmation ? "hidden" : ""}>
+					<div className="btn blocky clicky" onClick={save}>
+						Save
+					</div>
+					<div className="btn blocky clicky rev" onClick={cancel}>
+						Cancel
+					</div>
 				</div>
 			</section>
 		</section>

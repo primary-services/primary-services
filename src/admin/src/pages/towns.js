@@ -574,35 +574,35 @@ export const Towns = () => {
             onSave={async (o) => {
               console.log(arr(o.seats), arr(office.seats));
 
-              if (arr(o.seats).length < arr(office.seats).length) {
-                let msg =
-                  "There are less seats than were previously saved, please confirm that this is what you wanted to do";
+              // if (arr(o.seats).length < arr(office.seats).length) {
+              //   let msg =
+              //     "There are less seats than were previously saved, please confirm that this is what you wanted to do";
 
-                let onSave = () => {
-                  saveOffice({
-                    municipality_id: town.id,
-                    office: o,
-                  }).then(() => {
-                    return refetchOffices();
-                  });
-                };
+              //   let onSave = () => {
+              //     saveOffice({
+              //       municipality_id: town.id,
+              //       office: o,
+              //     }).then(() => {
+              //       return refetchOffices();
+              //     });
+              //   };
 
-                let onCancel = () => {
-                  setOffice(false);
-                };
+              //   let onCancel = () => {
+              //     setOffice(false);
+              //   };
 
-                await confirm(msg, onSave, onCancel, {
-                  className: "office-confirm",
-                });
+              //   await confirm(msg, onSave, onCancel, {
+              //     className: "office-confirm",
+              //   });
 
-                return Promise.resolve();
-              } else {
-                return saveOffice({ municipality_id: town.id, office: o }).then(
-                  () => {
-                    return refetchOffices();
-                  },
-                );
-              }
+              //   return Promise.resolve();
+              // } else {
+              return saveOffice({ municipality_id: town.id, office: o }).then(
+                () => {
+                  return refetchOffices();
+                },
+              );
+              // }
             }}
             onCancel={() => {
               setOffice(false);
