@@ -157,16 +157,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 			return setRequiresConfirmation(true);
 		}
 
-		let resp = await onSave(office);
-
-		window.UIkit.notification({
-			message: `Saved ${office.title} successfully`,
-			status: "primary",
-			pos: "bottom-left",
-			timeout: 5000,
-		});
-
-		onCancel();
+		return confirm();
 	};
 
 	const confirm = async () => {
@@ -179,6 +170,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 			timeout: 5000,
 		});
 
+		setRequiresConfirmation(false);
 		onCancel();
 	};
 
