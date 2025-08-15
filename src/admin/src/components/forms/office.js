@@ -23,38 +23,9 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 	});
 
 	let [requiresConfirmation, setRequiresConfirmation] = useState(false);
+	let [pendingSave, setPendingSave] = useState(false);
 
 	useEffect(() => {
-		// Leaving this here for a bit to make sure we like the new method
-		// can be removed when we're sure we're happy with it
-
-		// let newSeats = [...(selected.seats || [])].sort((a, b) => {
-		// 	let cA = currentTerm(a);
-		// 	let cB = currentTerm(b);
-
-		// 	return (cA?.start_year || 0) - (cB?.start_year || 0);
-		// });
-
-		// let newCount = (office.seat_count || 0) - newSeats.length;
-		// for (let i = 0; i < newCount; i++) {
-		// 	newSeats.push({
-		// 		name: "",
-		// 		terms: [
-		// 			{
-		// 				start: null,
-		// 				start_year: +moment().format("YYYY"),
-		// 				end: null,
-		// 				end_year: +moment().add(office.tenure, "years").format("YYYY"),
-		// 				official: {
-		// 					first_name: "",
-		// 					middle_name: "",
-		// 					last_name: "",
-		// 				},
-		// 			},
-		// 		],
-		// 	});
-		// }
-
 		let sorted = [...arr(selected.seats)].sort((a, b) => {
 			let cA = currentTerm(a);
 			let cB = currentTerm(b);
@@ -161,7 +132,13 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 	};
 
 	const confirm = async () => {
+		if (pendingSave) {
+			return;
+		}
+
+		setPendingSave(true);
 		let resp = await onSave(office);
+		setPendingSave(false);
 
 		window.UIkit.notification({
 			message: `Saved ${office.title} successfully`,
@@ -349,7 +326,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 						want to proceed?
 					</p>
 					<div className="btn blocky clicky" onClick={confirm}>
-						Confirm
+						{pendingSave ? <div data-uk-spinner></div> : <div>Confirm</div>}
 					</div>
 					<div
 						className="btn blocky clicky rev"
@@ -362,7 +339,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 				</div>
 				<div className={requiresConfirmation ? "hidden" : ""}>
 					<div className="btn blocky clicky" onClick={save}>
-						Save
+						{pendingSave ? <div data-uk-spinner></div> : <div>Save</div>}
 					</div>
 					<div className="btn blocky clicky rev" onClick={cancel}>
 						Cancel
