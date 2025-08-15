@@ -1,0 +1,23 @@
+.dh-modal-confirmation {
+	position: fixed;
+  top: 300px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  z-index: 11;
+  padding: 30px;
+  width: 400px;
+  border: solid 1px;
+  box-shadow: 3px 5px 10px -3px;
+
+  .dh-close {
+  	position: absolute;
+    right: 10px;
+    top: 10px;
+  }
+
+  &.office-confirm {
+  	top: 200px;
+  	left: 32%;
+  }
+}

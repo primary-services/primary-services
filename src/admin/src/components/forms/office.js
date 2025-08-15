@@ -6,6 +6,8 @@ import { SeatForm } from "./seats.js";
 import { SeatList } from "../lists/seats.js";
 import { SubForm } from "./subform.js";
 
+import { arr } from "../../utils.js";
+
 export const OfficeForm = ({ selected, onSave, onCancel }) => {
 	let [office, setOffice] = useState({
 		id: null,
@@ -20,33 +22,68 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 		seats: [],
 	});
 
+	let [requiresConfirmation, setRequiresConfirmation] = useState(false);
+
 	useEffect(() => {
-		let newSeats = [...(selected.seats || [])].sort((a, b) => {
+		// Leaving this here for a bit to make sure we like the new method
+		// can be removed when we're sure we're happy with it
+
+		// let newSeats = [...(selected.seats || [])].sort((a, b) => {
+		// 	let cA = currentTerm(a);
+		// 	let cB = currentTerm(b);
+
+		// 	return (cA?.start_year || 0) - (cB?.start_year || 0);
+		// });
+
+		// let newCount = (office.seat_count || 0) - newSeats.length;
+		// for (let i = 0; i < newCount; i++) {
+		// 	newSeats.push({
+		// 		name: "",
+		// 		terms: [
+		// 			{
+		// 				start: null,
+		// 				start_year: +moment().format("YYYY"),
+		// 				end: null,
+		// 				end_year: +moment().add(office.tenure, "years").format("YYYY"),
+		// 				official: {
+		// 					first_name: "",
+		// 					middle_name: "",
+		// 					last_name: "",
+		// 				},
+		// 			},
+		// 		],
+		// 	});
+		// }
+
+		let sorted = [...arr(selected.seats)].sort((a, b) => {
 			let cA = currentTerm(a);
 			let cB = currentTerm(b);
 
 			return (cA?.start_year || 0) - (cB?.start_year || 0);
 		});
 
-		let newCount = (office.seat_count || 0) - newSeats.length;
-		for (let i = 0; i < newCount; i++) {
-			newSeats.push({
-				name: "",
-				terms: [
-					{
-						start: null,
-						start_year: +moment().format("YYYY"),
-						end: null,
-						end_year: +moment().add(office.tenure, "years").format("YYYY"),
-						official: {
-							first_name: "",
-							middle_name: "",
-							last_name: "",
+		let newSeats = new Array(office.seat_count).fill(null).map((_, idx) => {
+			if (idx < sorted.length) {
+				return JSON.parse(JSON.stringify(sorted[idx]));
+			} else {
+				return {
+					name: "",
+					terms: [
+						{
+							start: null,
+							start_year: +moment().format("YYYY"),
+							end: null,
+							end_year: +moment().add(office.tenure, "years").format("YYYY"),
+							official: {
+								first_name: "",
+								middle_name: "",
+								last_name: "",
+							},
 						},
-					},
-				],
-			});
-		}
+					],
+				};
+			}
+		});
 
 		setOffice({ ...office, seats: newSeats });
 	}, [office.seat_count]);
@@ -111,7 +148,19 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 
 	const validateSeat = () => {};
 
+	const getDiff = () => {
+		return arr(selected.seats).length - arr(office.seats).length;
+	};
+
 	const save = async () => {
+		if (getDiff() > 0) {
+			return setRequiresConfirmation(true);
+		}
+
+		return confirm();
+	};
+
+	const confirm = async () => {
 		let resp = await onSave(office);
 
 		window.UIkit.notification({
@@ -121,6 +170,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 			timeout: 5000,
 		});
 
+		setRequiresConfirmation(false);
 		onCancel();
 	};
 
@@ -201,7 +251,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 							<input
 								type="number"
 								value={+office.seat_count}
-								min={Math.max((selected?.seats || []).length, 0)}
+								min="0"
 								step="1"
 								onInput={(e) => {
 									update("seat_count", +e.target.value);
@@ -293,11 +343,30 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 			)}
 
 			<section className="actions">
-				<div className="btn blocky clicky" onClick={save}>
-					Save
+				<div className={requiresConfirmation ? "" : "hidden"}>
+					<p className="error">
+						This will permanently delete {getDiff() > 0} seats Are you sure you
+						want to proceed?
+					</p>
+					<div className="btn blocky clicky" onClick={confirm}>
+						Confirm
+					</div>
+					<div
+						className="btn blocky clicky rev"
+						onClick={() => {
+							setRequiresConfirmation(false);
+						}}
+					>
+						Cancel
+					</div>
 				</div>
-				<div className="btn blocky clicky" onClick={cancel}>
-					Cancel
+				<div className={requiresConfirmation ? "hidden" : ""}>
+					<div className="btn blocky clicky" onClick={save}>
+						Save
+					</div>
+					<div className="btn blocky clicky rev" onClick={cancel}>
+						Cancel
+					</div>
 				</div>
 			</section>
 		</section>
