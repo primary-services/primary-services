@@ -230,8 +230,8 @@ resource "aws_iam_role_policy_attachment" "lambda_vpc_access_execution" {
 
 resource "aws_cloudfront_cache_policy" "api_cache_policy" {
   name        = "api-cache-policy"
-  default_ttl = 50
-  max_ttl     = 100
+  default_ttl = 1
+  max_ttl     = 1
   min_ttl     = 1
 
   parameters_in_cache_key_and_forwarded_to_origin {
