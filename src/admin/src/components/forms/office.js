@@ -17,7 +17,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 		elected: true,
 		min_hours: 0,
 		max_hours: 0,
-		seat_count: 1,
+		seat_count: 0,
 		tenure: 1,
 		seats: [],
 	});
@@ -46,9 +46,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 							end: null,
 							end_year: +moment().add(office.tenure, "years").format("YYYY"),
 							official: {
-								first_name: "",
-								middle_name: "",
-								last_name: "",
+								name: "",
 							},
 						},
 					],
@@ -64,6 +62,11 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 			setOffice((prev) => ({ ...prev, ...selected }));
 		}
 	}, [selected]);
+
+	// // TODO: Hacky fix to initial seat not showing up
+	// useEffect(() => {
+	// 	setOffice({ ...office, seat_count: 1 });
+	// }, []);
 
 	const currentTerm = (seat) => {
 		let currentYear = new Date().getFullYear();
@@ -96,9 +99,6 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 		if (!term.official) {
 			term.official = {
 				name: "",
-				first_name: "",
-				middle_name: "",
-				last_name: "",
 			};
 		}
 		term.official[field] = value;
@@ -260,23 +260,13 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 									<div className="input-wrapper">
 										<label>Incumbent</label>
 										<div className="grid">
-											<div className="width-1-2">
+											<div className="width-1-1">
 												<input
 													type="text"
-													value={term?.official?.first_name || ""}
-													placeholder="First Name"
+													value={term?.official?.name || ""}
+													placeholder="Name"
 													onInput={(e) => {
-														updateIncumbent(term, "first_name", e.target.value);
-													}}
-												/>
-											</div>
-											<div className="width-1-2">
-												<input
-													type="text"
-													value={term?.official?.last_name || ""}
-													placeHolder="Last Name"
-													onInput={(e) => {
-														updateIncumbent(term, "last_name", e.target.value);
+														updateIncumbent(term, "name", e.target.value);
 													}}
 												/>
 											</div>
