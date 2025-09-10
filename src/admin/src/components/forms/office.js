@@ -63,11 +63,6 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 		}
 	}, [selected]);
 
-	// // TODO: Hacky fix to initial seat not showing up
-	// useEffect(() => {
-	// 	setOffice({ ...office, seat_count: 1 });
-	// }, []);
-
 	const currentTerm = (seat) => {
 		let currentYear = new Date().getFullYear();
 
