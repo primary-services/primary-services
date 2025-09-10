@@ -11,15 +11,7 @@ class Official extends Model {
           allowNull: false,
           primaryKey: true,
         },
-        first_name: {
-          type: DataTypes.TEXT,
-          allowNull: true,
-        },
-        middle_name: {
-          type: DataTypes.TEXT,
-          allowNull: true,
-        },
-        last_name: {
+        name: {
           type: DataTypes.TEXT,
           allowNull: true,
         },
