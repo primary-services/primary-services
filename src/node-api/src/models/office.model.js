@@ -4,69 +4,76 @@ import Model from "../lib/base-model.js";
 class Office extends Model {
 	static init(sequelize) {
 		super.init(
-			{
-				id: {
-					autoIncrement: true,
-					type: DataTypes.INTEGER,
-					allowNull: false,
-					primaryKey: true,
-				},
-				title: {
-					type: DataTypes.STRING,
-					allowNull: true,
-				},
-				description: {
-					type: DataTypes.STRING,
-					allowNull: true,
-				},
-				elected: {
-					type: DataTypes.BOOLEAN,
-					allowNull: false,
-					defaultValue: true,
-				},
-				seat_count: {
-					type: DataTypes.INTEGER,
-					allowNull: true,
-				},
-				tenure: {
-					type: DataTypes.INTEGER,
-					allowNull: true,
-				},
-				salary: {
-					type: DataTypes.INTEGER,
-					allowNull: true,
-				},
-				min_hours: {
-					type: DataTypes.INTEGER,
-					allowNull: true,
-				},
-				max_hours: {
-					type: DataTypes.INTEGER,
-					allowNull: true,
-				},
-				municipality_id: {
-					type: DataTypes.INTEGER,
-					allowNull: false,
-					// references: {
-					// 	model: "municipality",
-					// 	key: "id",
-					// },
-				},
-			},
-			{
-				sequelize,
-				tableName: "office",
-				schema: "public",
-				timestamps: false,
-				indexes: [
-					{
-						name: "office_pkey",
-						unique: true,
-						fields: [{ name: "id" }],
-					},
-				],
-			},
-		);
+      {
+        id: {
+          autoIncrement: true,
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          primaryKey: true,
+        },
+		// True if the position is shared across municipalities
+        shared: {
+          autoIncrement: true,
+          type: DataTypes.BOOLEAN,
+          allowNull: true,
+        },
+        title: {
+          type: DataTypes.STRING,
+          allowNull: true,
+        },
+        description: {
+          type: DataTypes.STRING,
+          allowNull: true,
+        },
+        elected: {
+          type: DataTypes.BOOLEAN,
+          allowNull: false,
+          defaultValue: true,
+        },
+        seat_count: {
+          type: DataTypes.INTEGER,
+          allowNull: true,
+        },
+        tenure: {
+          type: DataTypes.INTEGER,
+          allowNull: true,
+        },
+        salary: {
+          type: DataTypes.INTEGER,
+          allowNull: true,
+        },
+        min_hours: {
+          type: DataTypes.INTEGER,
+          allowNull: true,
+        },
+        max_hours: {
+          type: DataTypes.INTEGER,
+          allowNull: true,
+        },
+        municipality_id: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          // references: {
+          // 	model: "municipality",
+          // 	key: "id",
+          // },
+        },
+      },
+      {
+        sequelize,
+        paranoid: true,
+        tableName: "office",
+        schema: "public",
+        timestamps: false,
+        indexes: [
+          {
+            name: "office_pkey",
+            unique: true,
+            fields: [{ name: "id" }],
+          },
+        ],
+      }
+    );
 	}
 
 	static associate(models) {
