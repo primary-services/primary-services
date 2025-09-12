@@ -13,7 +13,6 @@ class Office extends Model {
         },
 		// True if the position is shared across municipalities
         shared: {
-          autoIncrement: true,
           type: DataTypes.BOOLEAN,
           allowNull: true,
         },
