@@ -6,10 +6,12 @@
 @use "./grids.scss";
 @use "./notifications.scss";
 @use "./auth.scss";
+@use "./markdown.scss";
 
 @use "./confirmation.scss";
 
 @use "./pages/towns.scss";
+@use "./pages/landing.scss";
 
 :root {
 	--democrat-blue: #0044c9;
