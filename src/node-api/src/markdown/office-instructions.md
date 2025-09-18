@@ -21,8 +21,6 @@ You’ll search the internet (generally a city’s website) for information to a
 
 Sonya and Natalie are available to answer questions and listen to whatever comes up as you’re poking at this process, in the [group Signal chat](https://signal.group/#CjQKIAb9Re-KJ-wuN__Rx6QIboeJjtzhQ9Mtrwu9b361y9z1EhA_5v83A09RC8ypHfK6Xf_X) or via DM to Sonya.
 
-Quickstart: read the section on [how to take feedback notes as you go](#notes-section), then come right back here to #1.
-
 ## #1 How to fill in information for a city
 
 ### Choose a city
