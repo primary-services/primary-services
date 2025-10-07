@@ -69,9 +69,10 @@ It’s like catching Pokemon – they’re not easy to see, but once you start r
 - Save
 - Add your source(s) - maybe do this along the way, as you look about the area for the Pokemon city offices.
 
-#### Running into exceptions to the standards
+#### Running into exceptions
 Of *course* there was going to be exceptions. We're collecting them as they show up (if you find a new one, let us know!) and share what to do:
 - Vacant seat: sometimes there's an office, but it's vacant! Please add the seat, and in the Incumbent name field, write "vacancy".
+- At large vs ward seats for city councils: Please list ward seats as separate offices and then the at-large ones together. Check out Amherst if you want an example.
 
 *Need to edit? From the landing page for the city, select the pencil icon to the left of the office title. Once in that editing page, you can edit any of the information. Clicking on the city name should bring you back there, or go find it at the [city list page.](https://admin.deadlykitten.com/towns)*
 
