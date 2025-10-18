@@ -4,6 +4,8 @@ import owasp from "owasp-password-strength-test";
 import emailValidator from "email-validator";
 
 import User from "../models/user.model.js";
+import { sendEmail } from "../utils/aws.js";
+import { Op } from "sequelize";
 
 const cookieConfig = {
   path: "/",
@@ -206,43 +208,134 @@ export default {
   logout: (req, res) => {
     res.status(200).json({ success: true });
   },
+
+  requestPasswordReset: async (req, res) => {
+    const { email, pword } = req.body;
+
+    if (pword !== "") {
+      console.log("Bot Check Failed:", req.body);
+      // TODO: Maybe track bot emails if this every becomes a problem?
+      return res.status(200).json({ success: true, error: null, fields: [] });
+    }
+
+    try {
+      const user = await User.findOne({ where: { email } });
+      if (!user)
+        return res.status(400).json({ message: "No user with that email" });
+
+      const token = await user.generateResetToken();
+      await user.save();
+
+      let emailContent = `
+        Hi ${user.identity?.first_name || user.email}, 
+
+        A password reset has been inititated for you MADemocracy account. 
+
+        To reset your password please follow this link https://admin.deadlykitten.com/reset-password?token=${token}
+
+        If you did not request this password reset, please contact the administrator
+      `.replace(/[ ]{8}/g, "");
+
+      try {
+        await sendEmail(
+          user.email,
+          "no-reply@deadlykitten.com",
+          "MADemocracy Password Reset",
+          emailContent,
+        );
+      } catch (err) {
+        console.log(err);
+      }
+
+      // Normally you'd email the token, but here we'll just return it
+      res.status(200).json({ success: true, message: "Reset token generated" });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: err.message });
+    }
+  },
+
+  resetPassword: async (req, res) => {
+    let data = req.body;
+
+    let requiredFields = ["password", "password_confirmation", "token"];
+
+    let missing_fields = [];
+    requiredFields.map((field) => {
+      let path = field.split(".");
+
+      let obj = data;
+      for (var i = 0; i < path.length - 1; i++) {
+        obj = obj[path[i]];
+      }
+
+      if (!obj[path[path.length - 1]]) {
+        missing_fields.push(path[path.length - 1]);
+      }
+    });
+
+    if (missing_fields.length > 0) {
+      return res.status(422).json({
+        success: false,
+        error: "Please fill out all required fields",
+        fields: missing_fields,
+      });
+    }
+
+    if (data.password !== data.password_confirmation) {
+      return res.status(422).json({
+        success: false,
+        error: "Mismatched password and password confirmation",
+        fields: ["password_confirmation"],
+      });
+    }
+
+    if (!owasp.test(data.password)) {
+      return res.status(422).json({
+        success: false,
+        error: "Password does not meet complexity requirements",
+        fields: ["password", "password_confirmation"],
+      });
+    }
+
+    try {
+      const user = await User.findOne({
+        where: {
+          resetToken: data.token,
+          resetTokenExpiry: { [Op.gt]: new Date() },
+        },
+      });
+
+      if (!user)
+        return res.status(400).json({ message: "Invalid or expired token" });
+
+      await user.setNewPassword(data.password);
+      await user.save();
+
+      let token = jwt.sign(
+        {
+          user: {
+            id: user.id,
+            email: user.email,
+          },
+        },
+        process.env["SERVER_JWT_SECRET"],
+        {
+          expiresIn: new Date().getTime() + process.env["SERVER_JWT_TIMEOUT"],
+        },
+      );
+
+      res.cookie("auth_token", token, cookieConfig);
+      return res.status(200).json({
+        success: true,
+        user: {
+          id: user.id,
+          email: user.email,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: err.message });
+    }
+  },
 };
-//   requestPasswordReset: async (req, res) => {
-//     const { email } = req.body;
-//     try {
-//       const user = await User.findOne({ where: { email } });
-//       if (!user)
-//         return res.status(400).json({ message: "No user with that email" });
-
-//       const token = user.generateResetToken();
-//       await user.save();
-
-//       // Normally you'd email the token, but here we'll just return it
-//       res.json({ message: "Reset token generated", token });
-//     } catch (err) {
-//       res.status(500).json({ message: err.message });
-//     }
-//   },
-
-//   resetPassword: async (req, res) => {
-//     const { token, newPassword } = req.body;
-//     try {
-//       const user = await User.findOne({
-//         where: {
-//           resetToken: token,
-//           resetTokenExpiry: { [require("sequelize").Op.gt]: new Date() },
-//         },
-//       });
-
-//       if (!user)
-//         return res.status(400).json({ message: "Invalid or expired token" });
-
-//       await user.setNewPassword(newPassword);
-//       await user.save();
-
-//       res.json({ message: "Password has been reset" });
-//     } catch (err) {
-//       res.status(500).json({ message: err.message });
-//     }
-//   },
-// };
