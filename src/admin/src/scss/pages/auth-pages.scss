@@ -1,0 +1,30 @@
+#auth-page {
+	display: flex;
+	padding-top: 80px;
+	box-sizing: border-box;
+
+	& > div {
+		box-sizing: border-box;
+	}
+
+	.left-nav {
+		padding: 30px;
+		min-width: 300px;
+		margin-left: -300px;
+	}
+
+	.landing-content {
+		padding: 30px;
+		width: 100%;
+	}
+
+	@media (max-width: 575px) {
+		display: block;
+		padding-left: 0px;
+
+		.left-nav {
+			margin-left: 0px;
+			padding-bottom: 0px;
+		}
+	}
+}

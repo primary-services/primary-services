@@ -106,7 +106,7 @@ export const SignupPage = () => {
   };
 
   return (
-    <section id="landing-page" className="page">
+    <section id="auth-page" className="page">
       <div id="signup-form" className="auth">
         <div className="uk-modal-body">
           <h2 className="uk-modal-title">Sign Up</h2>

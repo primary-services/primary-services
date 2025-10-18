@@ -56,7 +56,7 @@ export const LoginPage = () => {
   };
 
   return (
-    <section id="landing-page" className="page">
+    <section id="auth-page" className="page">
       <div id="login-form" className="auth">
         <div className="uk-modal-body">
           <h2 className="uk-modal-title">Log In</h2>
@@ -112,7 +112,7 @@ export const LoginPage = () => {
 
           <p>
             Forgot your password?{" "}
-            <Link to="request-password-reset">Reset Password</Link>
+            <Link to="/request-password-reset">Reset Password</Link>
           </p>
 
           <a
