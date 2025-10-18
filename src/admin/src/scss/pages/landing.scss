@@ -18,4 +18,14 @@
 		padding: 30px;
 		width: 100%;
 	}
+
+	@media (max-width: 575px) {
+		display: block;
+		padding-left: 0px;
+
+		.left-nav {
+			margin-left: 0px;
+			padding-bottom: 0px;
+		}
+	}
 }
