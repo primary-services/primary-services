@@ -20,6 +20,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 		seat_count: 0,
 		tenure: 1,
 		seats: [],
+		shared: false,
 	});
 
 	let [requiresConfirmation, setRequiresConfirmation] = useState(false);
@@ -242,6 +243,22 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 									update("tenure", +e.target.value);
 								}}
 							/>
+						</div>
+
+						<div className="width-1-1">
+								<input
+									id="shared"
+									name="shared"
+									type="checkbox"
+									key={`shared-${!!office.shared}`}
+									checked={!!office.shared}
+									onChange={(ev) => {
+										update("shared", ev.target.checked);
+									}}
+								/>
+								<label htmlFor="shared">
+									{' '}Office is shared across municipalities (e.g. regional school board position)
+								</label>
 						</div>
 					</div>
 
