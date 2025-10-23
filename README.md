@@ -60,15 +60,17 @@ If they do ``terraform apply``
 **Installation And Running**
 ``cd /src/node-api``
 ``npm install``
-Get the DB Creds from another dev, and make a local copy of the DB
+Get the DB Creds from another dev, and make a local copy of the DB. If you have access to the AWS Console you can also get them via SecretsManager
 Copy the ``.env.example`` file to ``.env`` and fill in your local variables
+Modify `config/config.json` so that all placeholders are replaced
 Run ``npm run dev`` and the server should be started
 
 **DB Migrations** 
 - ``npx sequelize-cli migration:generate --name migration-example``
 - Then run ``npm run migration`` and copy the output to the migration file created above
 - Check it over, as that migration generator is still in development
-- When your confident the changes are accurate run ``npx sequelize-cli db:migrate --url={your_db_url}``
+- When your confident the changes are accurate run ``npx sequelize-cli db:migrate``
+- To run the migration in production, run ``NODE_ENV=production npx sequelize-cli db:migrate``
 
 **Deployment**
 ``cd /environments/dev/node-api``
