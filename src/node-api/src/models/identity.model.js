@@ -1,7 +1,7 @@
 import { Sequelize, DataTypes } from "sequelize";
 import Model from "../lib/base-model.js";
 
-class Official extends Model {
+class Identity extends Model {
   static init(sequelize) {
     super.init(
       {
@@ -11,31 +11,35 @@ class Official extends Model {
           allowNull: false,
           primaryKey: true,
         },
-        name: {
+        first_name: {
+          type: DataTypes.TEXT,
+          allowNull: false,
+        },
+        middle_name: {
           type: DataTypes.TEXT,
           allowNull: true,
         },
-        phone: {
-          type: DataTypes.STRING,
+        last_name: {
+          type: DataTypes.TEXT,
+          allowNull: false,
+        },
+        suffix: {
+          type: DataTypes.TEXT,
           allowNull: true,
         },
-        email: {
-          type: DataTypes.STRING,
-          allowNull: true,
-        },
-        contact_form: {
-          type: DataTypes.STRING,
+        nickname: {
+          type: DataTypes.TEXT,
           allowNull: true,
         },
       },
       {
         sequelize,
-        tableName: "official",
+        tableName: "identity",
         schema: "public",
         timestamps: false,
         indexes: [
           {
-            name: "official_pkey",
+            name: "identity_pkey",
             unique: true,
             fields: [{ name: "id" }],
           },
@@ -45,16 +49,15 @@ class Official extends Model {
   }
 
   static associate(models) {
-    // this.belongsTo(models.Office, {
-    //   foreignKey: "office_id",
-    //   onDelete: "CASCADE",
-    //   onUpdate: "CASCADE",
-    // });
-
-    this.hasMany(models.Term, {
-      foreignKey: "official_id",
+    this.belongsToMany(models.User, {
+      through: {
+        model: models.IdentityParent,
+        unique: false,
+      },
+      foreignKey: "identity_id",
+      constraints: false,
     });
   }
 }
 
-export default Official;
+export default Identity;

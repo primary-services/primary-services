@@ -1,0 +1,53 @@
+.auth {
+	.uk-modal-close {
+		position: absolute;
+		top: 20px;
+		right: 20px;
+	}
+
+	.bot-check {
+		position: absolute;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	form {
+		div.btn {
+			margin-top: 10px;
+		}
+	}
+
+	.password {
+		label {
+			display: inline-block;
+		}
+		a.uk-icon {
+			display: inline-block;
+			vertical-align: middle;
+			margin-left: 5px;
+		}
+	}
+}
+
+#login-form {
+	width: 600px;
+	margin: 0px auto;
+}
+
+#signup-form {
+	width: 700px;
+	margin: 0px auto;
+
+	.rules {
+		padding-left: 10px;
+	}
+
+	.validation {
+		.input-wrapper {
+			label {
+				font-weight: normal;
+				font-size: 14px;
+			}
+		}
+	}
+}

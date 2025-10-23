@@ -61,9 +61,10 @@ resource "aws_api_gateway_method_response" "options" {
     "application/json" = "Empty"
   }
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = true
-    "method.response.header.Access-Control-Allow-Methods" = true
-    "method.response.header.Access-Control-Allow-Origin"  = true
+    "method.response.header.Access-Control-Allow-Headers"       = true
+    "method.response.header.Access-Control-Allow-Methods"       = true
+    "method.response.header.Access-Control-Allow-Origin"        = true
+    "method.response.header.Access-Control-Allow-Credentials"   = true
   }
 }
 
@@ -85,9 +86,10 @@ resource "aws_api_gateway_integration_response" "options" {
   http_method = aws_api_gateway_integration.options.http_method
   status_code = "200"
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-    "method.response.header.Access-Control-Allow-Methods" = "'POST,OPTIONS'"
-    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
+    "method.response.header.Access-Control-Allow-Headers"     = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+    "method.response.header.Access-Control-Allow-Methods"     = "'POST,OPTIONS'"
+    "method.response.header.Access-Control-Allow-Origin"      = "'*'"
+    "method.response.header.Access-Control-Allow-Credentials" = "'true'"
   }
 }
 
@@ -132,6 +134,9 @@ resource "aws_lambda_function" "node_api" {
   environment {
     variables = {
       DBSecret = var.db_creds_secret_name
+      SERVER_JWT_SECRET = var.jwt_temp_secret
+      SERVER_JWT=true
+      SERVER_JWT_TIMEOUT=604800
     }
   }
 
@@ -219,12 +224,60 @@ resource "aws_iam_role_policy_attachment" "lambda_vpc_access_execution" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
-data "aws_cloudfront_cache_policy" "caching_disabled" {
-  name = "Managed-CachingDisabled"
+# data "aws_cloudfront_cache_policy" "caching_disabled" {
+#   name = "Managed-CachingDisabled"
+# }
+
+resource "aws_cloudfront_cache_policy" "api_cache_policy" {
+  name        = "api-cache-policy"
+  default_ttl = 1
+  max_ttl     = 1
+  min_ttl     = 1
+
+  parameters_in_cache_key_and_forwarded_to_origin {
+    cookies_config {
+      cookie_behavior = "all"
+    }
+    headers_config {
+      header_behavior = "whitelist"
+      headers {
+        items = ["Authorization"]
+      }
+    }
+    query_strings_config {
+      query_string_behavior = "all"
+    }
+  }
 }
 
 data "aws_cloudfront_origin_request_policy" "all_except_host" {
-  name = "Managed-AllViewerExceptHostHeader"
+  name = "Managed-CORS-CustomOrigin"
+}
+
+resource "aws_cloudfront_response_headers_policy" "allow_cors_with_credentials" {
+  name    = "allow-cors-with-credentials"
+
+  cors_config {
+    access_control_allow_credentials = true
+
+    access_control_allow_headers {
+      items = ["Access-Control-Allow-Origin", "Authorization", "Content-Type"]
+    }
+
+    access_control_allow_methods {
+      items = ["OPTIONS", "DELETE", "PATCH", "PUT", "POST", "GET", "HEAD"]
+    }
+
+    access_control_allow_origins {
+      items = ["deadlykitten.com", "admin.deadlykitten.com"]
+    }
+
+    access_control_expose_headers {
+      items = ["Access-Control-Allow-Origin", "Authorization", "Content-Type"]
+    }
+
+    origin_override = true
+  }
 }
 
 resource "aws_cloudfront_distribution" "api_gateway" {
@@ -246,13 +299,15 @@ resource "aws_cloudfront_distribution" "api_gateway" {
 
   default_cache_behavior {
     target_origin_id = "node_api"
-    cache_policy_id = data.aws_cloudfront_cache_policy.caching_disabled.id
+    cache_policy_id = aws_cloudfront_cache_policy.api_cache_policy.id
     origin_request_policy_id = data.aws_cloudfront_origin_request_policy.all_except_host.id
 
     allowed_methods = ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"]
     cached_methods = ["GET", "HEAD"]
     compress = true
     viewer_protocol_policy = "https-only"
+
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.allow_cors_with_credentials.id
   }
 
   price_class = "PriceClass_100"

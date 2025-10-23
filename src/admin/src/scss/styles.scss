@@ -5,13 +5,19 @@
 @use "./icons.scss";
 @use "./grids.scss";
 @use "./notifications.scss";
+@use "./auth.scss";
+@use "./markdown.scss";
+
+@use "./confirmation.scss";
 
 @use "./pages/towns.scss";
+@use "./pages/landing.scss";
 
 :root {
 	--democrat-blue: #0044c9;
 	--democrat-blue-light: #2a5fc6;
 	--light-blue: #c2cbdb;
+	--error-color: #d03214;
 	--page-width: 1280px;
 }
 
@@ -42,7 +48,10 @@ header {
 	background-color: var(--democrat-blue);
 	box-shadow: 0px 0px 13px 4px var(--democrat-blue);
 	padding: 0px 20px;
-	position: relative;
+	position: fixed;
+	width: 100%;
+	top: 0px;
+	box-sizing: border-box;
 	z-index: 10;
 
 	nav {
@@ -59,6 +68,14 @@ header {
 				display: inline-block;
 				color: white;
 				margin: 0;
+			}
+		}
+
+		.uk-navbar-right {
+			span {
+				a {
+					margin-left: 10px;
+				}
 			}
 		}
 	}
@@ -86,6 +103,10 @@ header {
 	.aligned-left {
 		flex: 1;
 	}
+}
+
+.hidden {
+	display: none;
 }
 
 .parenthetical {

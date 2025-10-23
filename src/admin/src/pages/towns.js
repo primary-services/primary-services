@@ -24,7 +24,7 @@ import {
 import { useCreateNote, useDeleteNote } from "../api/hooks/note.hooks.js";
 import { useCreateSource, useDeleteSource } from "../api/hooks/source.hooks.js";
 
-import { cleanDateString } from "../utils.js";
+import { cleanDateString, arr, obj, confirm } from "../utils.js";
 
 const Clerk = ({ official }) => {
   if (!official) {
@@ -258,9 +258,9 @@ export const Towns = () => {
     <section id="towns" className="page">
       <div className="sidebar">
         {townsLoading ? (
-          <p>Loading...</p>
+          <p className="loading">Loading...</p>
         ) : (
-          <div>
+          <>
             <div className="sidebar-header">
               <form className="uk-search uk-search-default">
                 <div className="input-wrapper">
@@ -296,7 +296,7 @@ export const Towns = () => {
                 );
               })}
             </ul>
-          </div>
+          </>
         )}
       </div>
 
@@ -571,12 +571,38 @@ export const Towns = () => {
           <OfficeForm
             municipality={town}
             selected={office}
-            onSave={(o) => {
+            onSave={async (o) => {
+              console.log(arr(o.seats), arr(office.seats));
+
+              // if (arr(o.seats).length < arr(office.seats).length) {
+              //   let msg =
+              //     "There are less seats than were previously saved, please confirm that this is what you wanted to do";
+
+              //   let onSave = () => {
+              //     saveOffice({
+              //       municipality_id: town.id,
+              //       office: o,
+              //     }).then(() => {
+              //       return refetchOffices();
+              //     });
+              //   };
+
+              //   let onCancel = () => {
+              //     setOffice(false);
+              //   };
+
+              //   await confirm(msg, onSave, onCancel, {
+              //     className: "office-confirm",
+              //   });
+
+              //   return Promise.resolve();
+              // } else {
               return saveOffice({ municipality_id: town.id, office: o }).then(
                 () => {
                   return refetchOffices();
                 },
               );
+              // }
             }}
             onCancel={() => {
               setOffice(false);

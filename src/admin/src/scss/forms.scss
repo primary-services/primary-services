@@ -41,7 +41,8 @@ form {
 			box-sizing: border-box;
 		}
 
-		&.radio {
+		&.radio,
+		&.checkbox {
 			display: block;
 
 			input {
@@ -55,10 +56,35 @@ form {
 				padding-left: 10px;
 			}
 		}
+
+		&.checkbox {
+			padding-left: 20px;
+
+			input {
+				margin-left: -20px;
+				vertical-align: top;
+			}
+		}
+
+		&.error {
+			input,
+			textarea,
+			select {
+				border: solid 1px var(--error-color);
+			}
+		}
 	}
 
 	.actions {
 		margin-top: 30px;
+
+		.btn {
+			margin-right: 10px;
+
+			svg {
+				height: 24px;
+			}
+		}
 	}
 
 	.autocomplete-box {
@@ -110,6 +136,14 @@ form {
 	.override-width {
 		input {
 			width: calc(100% - 32px);
+		}
+	}
+
+	p.error {
+		color: var(--error-color);
+
+		&::after {
+			content: "\00a0";
 		}
 	}
 }
