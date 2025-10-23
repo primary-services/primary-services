@@ -361,7 +361,14 @@ export const Towns = () => {
                 <div className="grid-list offices uk-width-1-1">
                   <div className="grid header">
                     <div className="width-1-12"></div>
-                    <div className="width-10-12">Office</div>
+                    <div className="width-8-12">Office</div>
+                    <div className="width-2-12">
+                      Shared{" "}
+                      <span
+                        uk-icon="icon: info; ratio: 0.9"
+                        uk-tooltip="This office is shared across municipalities, e.g. regional school board position"
+                      ></span>
+                    </div>
                     <div className="width-1-12"># Seats</div>
                   </div>
                   {offices
@@ -376,8 +383,8 @@ export const Towns = () => {
                             }}
                           ></span>
                         </div>
-                        <div className="width-10-12">{o.title}</div>
-
+                        <div className="width-8-12">{o.title}</div>
+                        <div className="width-2-12">{o.shared ? <span uk-icon="check"></span> : undefined}</div>
                         <div className="width-1-12">
                           {(o.seats || []).length}
                         </div>
