@@ -8,7 +8,7 @@ module "static-website" {
 
   bucket_name = "ma-elections-website"
   source_files = "../../../src/website/dist"
-  aliases = ["deadlykitten.com", "www.deadlykitten.com"]
+  aliases = ["deadlykitten.com", "www.deadlykitten.com", "mademocracy.com", "www.mademocracy.com"]
   
   # These are required when using a custom domain
   use_default_certificate = false

@@ -269,7 +269,7 @@ resource "aws_cloudfront_response_headers_policy" "allow_cors_with_credentials" 
     }
 
     access_control_allow_origins {
-      items = ["deadlykitten.com", "admin.deadlykitten.com"]
+      items = ["deadlykitten.com", "admin.deadlykitten.com", "mademocracy.com", "admin.mademocracy.com"]
     }
 
     access_control_expose_headers {
