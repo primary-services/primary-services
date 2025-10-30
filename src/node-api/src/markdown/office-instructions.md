@@ -33,11 +33,11 @@ Sonya and Natalie are available to answer questions and listen to whatever comes
 
 ### Go to the Hub 
 
-1. Go to the [Democracy Hub city list](https://admin.deadlykitten.com/towns)
+1. Go to the [Democracy Hub city list](https://admin.mademocracy.com/towns)
 2. On the left, select the city you chose
 3. You are now on the landing page for that city! This is where the magic happens.
 
-*Yes, the domain is currently hosted at [deadlykitten.com](https://deadlykitten.com), at least for right meow.*
+*Yes, the domain is currently hosted at [deadlykitten.com](https://mademocracy.com), at least for right meow.*
 
 ### Add that sexy municipal information 
 
@@ -74,7 +74,7 @@ Of *course* there was going to be exceptions. We're collecting them as they show
 - Vacant seat: sometimes there's an office, but it's vacant! Please add the seat, and in the Incumbent name field, write "vacancy".
 - At large vs ward seats for city councils: Please list ward seats as separate offices and then the at-large ones together. Check out Amherst if you want an example.
 
-*Need to edit? From the landing page for the city, select the pencil icon to the left of the office title. Once in that editing page, you can edit any of the information. Clicking on the city name should bring you back there, or go find it at the [city list page.](https://admin.deadlykitten.com/towns)*
+*Need to edit? From the landing page for the city, select the pencil icon to the left of the office title. Once in that editing page, you can edit any of the information. Clicking on the city name should bring you back there, or go find it at the [city list page.](https://admin.mademocracy.com/towns)*
 
 ### To add Sources
 
@@ -85,13 +85,13 @@ We’re tracking where exactly (like, the exact URL) where we find the office in
 - Under URL: paste the URL to that website/document
 - When you’re done, click on the blue checkmark
 
-*As an example, for [Abington MA](https://admin.deadlykitten.com/towns/ma/abington), the information was found in their town charter, and the 2021 Annual Report.*
+*As an example, for [Abington MA](https://admin.mademocracy.com/towns/ma/abington), the information was found in their town charter, and the 2021 Annual Report.*
 
 ### To add Notes
 
 This is a place to add anything you encountered that was confusing, incomplete for a reason beyond your control, or anything else you’d like to leave for the next volunteer who is double checking or updating the page. These are admin-only notes, they will not be made public.
 
-*Here’s an example of notes for [Adams, MA].(https://admin.deadlykitten.com/towns/ma/adams)*
+*Here’s an example of notes for [Adams, MA].(https://admin.mademocracy.com/towns/ma/adams)*
 
 One type of information that we need to add here is because some offices span multiple municipalities (like school committees for a district). For now, our system requires you to enter manually for each city. If you do run into this, please add a note in the notes section.
 
