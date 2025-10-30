@@ -30,7 +30,10 @@ export const Loader = () => {
                 <ul className="uk-navbar-nav">
                   <li className="uk-active">
                     <a href="/" className="logo">
-                      <h2>Democracy Hub Admin</h2>
+                      <h2>
+                        <span>MA</span>
+                        <span>Democracy</span>
+                      </h2>
                     </a>
                   </li>
                 </ul>
