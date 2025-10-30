@@ -59,7 +59,9 @@ let officeController = {
   save: async (req, res, next) => {
     let data = req.body;
 
-    let office = await Office.prototype.upsertAll(data);
+    let [office, diff] = await Office.prototype.upsertAllAndDiff(data);
+
+    console.log(diff);
 
     return res.status(200).json(office);
   },
