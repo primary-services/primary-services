@@ -28,6 +28,10 @@ class Municipality extends Model {
           type: DataTypes.TEXT,
           allowNull: true,
         },
+        completionStatus: {
+          type: DataTypes.ENUM("IN_PROGRESS", "DONE"),
+          allowNull: true,
+        }
       },
       {
         sequelize,
