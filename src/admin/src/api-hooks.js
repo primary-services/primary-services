@@ -1,4 +1,4 @@
-import { QueryClient, useQuery, useMutation } from "@tanstack/react-query";
+import { QueryClient, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   /////// Create Routes ///////
   createOffice,
@@ -9,6 +9,7 @@ import {
   getTownOffices,
   getTownRequirements,
   getTowns,
+  updateTown,
   /////// Seat Schema ///////
   getMunicipality,
   getMunicipalityOffices,
@@ -42,13 +43,6 @@ export const useTownRequirements = (town_id) =>
     queryFn: () => getTownRequirements(town_id),
     enabled: !!town_id,
   });
-
-export const invalidateTown = (town_id) => {
-  const queryClient = new QueryClient();
-  return queryClient.invalidateQueries({
-    queryKey: ["towns", town_id],
-  });
-};
 
 export const invalidateTownOffices = (town_id) => {
   const queryClient = new QueryClient();
@@ -92,6 +86,20 @@ export const useCreateRequirement = () =>
       invalidateTownRequirements(office.municipality_id);
     },
   });
+
+export const useUpdateTown = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["town"],
+    mutationFn: (args) => updateTown(args),
+    onSuccess: (town) => {
+      queryClient.invalidateQueries({
+        queryKey: ["towns"],
+      });
+    },
+  });
+}
+ 
 
 ////////////// Seat Schema ///////////////
 

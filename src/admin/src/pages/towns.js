@@ -19,12 +19,47 @@ import {
   useMunicipalityOffices,
   useMunicipalityElections,
   useMunicipalityCollections,
+  useUpdateTown,
 } from "../api-hooks.js";
 
 import { useCreateNote, useDeleteNote } from "../api/hooks/note.hooks.js";
 import { useCreateSource, useDeleteSource } from "../api/hooks/source.hooks.js";
 
 import { cleanDateString, arr, obj, confirm } from "../utils.js";
+import { updateMunicipality } from "../api.js";
+
+const getCompletionStatusClass = (status) => {
+  switch (status) {
+    case "IN_PROGRESS":
+      return "in-progress";
+    case "DONE":
+      return "done";
+    default:
+      return "";
+  }
+};
+
+const getCompletionStatusLabel = (status) => {
+  switch (status) {
+    case "IN_PROGRESS":
+      return "In Progress";
+    case "DONE":
+      return "Done";
+    default:
+      return "Not Started";
+  }
+}
+
+const getNextCompletionStatus = (status) => {
+  switch (status) {
+    case "IN_PROGRESS":
+      return "DONE";
+    case "DONE":
+      return null;
+    default:
+      return "IN_PROGRESS";
+  }
+}
 
 const Clerk = ({ official }) => {
   if (!official) {
@@ -121,6 +156,7 @@ export const Towns = () => {
   const { mutateAsync: deleteNote } = useDeleteNote();
   const { mutateAsync: saveSource } = useCreateSource();
   const { mutateAsync: deleteSource } = useDeleteSource();
+  const { mutateAsync: saveTown } = useUpdateTown();
 
   const removeElection = (e) => {
     console.log(e);
@@ -284,12 +320,16 @@ export const Towns = () => {
                 return (
                   <li key={t.name}>
                     <span
-                      uk-icon="icon: check"
+                      className={getCompletionStatusClass(t.completionStatus)}
+                      uk-icon={t.completionStatus === "IN_PROGRESS" ? "icon: refresh" : "icon: check"}
                       uk-tooltip={
-                        !!t.completed
-                          ? `title: Completed`
-                          : `title: Mark Completed`
+                        `title: ${getCompletionStatusLabel(t.completionStatus)}`
                       }
+                      onClick={() => {
+                        const update = { ...t, completionStatus: getNextCompletionStatus(t.completionStatus) };
+                        saveTown(update);
+                      }}
+                      key={`${t.name}-${t.completionStatus}`}
                     ></span>
                     <Link to={`/towns/ma/${t.slug}`}>{t.name}</Link>
                   </li>

@@ -58,6 +58,18 @@ export const createRequirement = (town, requirement) =>
     return resp.json();
   });
 
+export const updateTown = (town) =>
+  fetch(`${apiRoot}/municipalities/${town.id}`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ ...town }),
+  }).then((resp) => {
+    return resp.json();
+  });
+
 //////////// Seat Separation /////////////
 
 export const getMunicipality = (municipality_id) =>
