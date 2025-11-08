@@ -19,7 +19,7 @@ You’ll search the internet (generally a city’s website) for information to a
 
 ### What do I do if I get stuck?
 
-Sonya and Natalie are available to answer questions and listen to whatever comes up as you’re poking at this process, in the [group Signal chat](https://signal.group/#CjQKIAb9Re-KJ-wuN__Rx6QIboeJjtzhQ9Mtrwu9b361y9z1EhA_5v83A09RC8ypHfK6Xf_X).
+Melissa and Natalie are available to answer questions and listen to whatever comes up as you’re poking at this process, in the [group Signal chat](https://signal.group/#CjQKIAb9Re-KJ-wuN__Rx6QIboeJjtzhQ9Mtrwu9b361y9z1EhA_5v83A09RC8ypHfK6Xf_X).
 
 ## #1 How to fill in information for a city
 
@@ -127,7 +127,7 @@ We want to absorb as much information as we can from your experience, so we can 
 - “I felt frustrated when …”
 - “I couldn’t figure out how to …”
 
-You could write these down and either share them privately (DM Sonya in Signal) or add them to the Democracy Hub volunteer Signal group. Sonya and Natalie will be there, helping with anything that you get stuck on. You’re welcome to chat with each other about the experience if you’d like to. You’re the few rad souls to be joining in doing this work, before we open the gates!
+You could write these down and either share them privately or add them to the Democracy Hub volunteer Signal group. Melissa and Natalie will be there, helping with anything that you get stuck on. You’re welcome to chat with each other about the experience if you’d like to. You’re the few rad souls to be joining in doing this work, before we open the gates!
 
 ### Encountering Bugs
 
