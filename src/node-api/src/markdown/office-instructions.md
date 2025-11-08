@@ -15,11 +15,11 @@ Wait, does this already exist? No, there is no one place to look up all elected 
 You’ll search the internet (generally a city’s website) for information to add to the hub. You, our brave beta testers, have two jobs: 
 
 1. Fill in the information for a city in MA.
-2. Give us feedback on the process of #1, so we can make this process smooth enough		for a cadre of volunteers to gather ALL the office information from across the state. 
+2. Give us feedback on the process of #1, so we can make this process smooth enough	for a cadre of volunteers to gather ALL the office information from across the state. 
 
 ### What do I do if I get stuck?
 
-Sonya and Natalie are available to answer questions and listen to whatever comes up as you’re poking at this process, in the [group Signal chat](https://signal.group/#CjQKIAb9Re-KJ-wuN__Rx6QIboeJjtzhQ9Mtrwu9b361y9z1EhA_5v83A09RC8ypHfK6Xf_X) or via DM to Sonya.
+Sonya and Natalie are available to answer questions and listen to whatever comes up as you’re poking at this process, in the [group Signal chat](https://signal.group/#CjQKIAb9Re-KJ-wuN__Rx6QIboeJjtzhQ9Mtrwu9b361y9z1EhA_5v83A09RC8ypHfK6Xf_X).
 
 ## #1 How to fill in information for a city
 
@@ -31,13 +31,13 @@ Sonya and Natalie are available to answer questions and listen to whatever comes
 
 *If you don’t complete all the data for a city, that’s OK. If you plan on coming back to it, make a note to say that. If you decide you’re done volunteering for the time being, keep your name in the Updater column, and add a note saying the entry needs finishing.*
 
+We're working on modifying the system so that all you need to do is log in, no spreadsheet updating required, but in the meantime we'd appreciate if you update the spreadsheet so we know who's working on what!
+
 ### Go to the Hub 
 
 1. Go to the [Democracy Hub city list](https://admin.mademocracy.com/towns)
-2. On the left, select the city you chose
+2. On the left, select the city you chose, and click on the checkbox to the left to mark it as 'In progress'
 3. You are now on the landing page for that city! This is where the magic happens.
-
-*Yes, the domain is currently hosted at [deadlykitten.com](https://mademocracy.com), at least for right meow.*
 
 ### Add that sexy municipal information 
 
@@ -104,6 +104,8 @@ If you encounter bugs that mean the site won’t save or show the correct inform
 
 You’ve added stuff! This is great! You’ve added offices, the sources you found the information, and any notes for Future Volunteer.
 
+Mark the city is done via the checkbox next to the town name.
+
 Go back to our [checklist of cities](https://docs.google.com/spreadsheets/d/1d4eHMwQLlPJGJvA7URVZ9ZICRqVVCny_uu6mj2j5a4Q/edit?usp=sharing). 
 
 If you’ve found and entered all of the offices for your city, great! Click the **Done** checkbox (column A).
@@ -134,4 +136,4 @@ If you encounter a bug (the website working different than you thought it is sup
 - You’re an “Admin”
 - You can also find this link when you’re within a city’s landing page under the “Report a Bug” link at the top right
 
-If you’re new to bug reports, and have questions how to fill this out, ask in the [Signal cha](https://signal.group/#CjQKIAb9Re-KJ-wuN__Rx6QIboeJjtzhQ9Mtrwu9b361y9z1EhA_5v83A09RC8ypHfK6Xf_X) t or DM Sonya in Signal, your choice.
+If you’re new to bug reports, and have questions how to fill this out, ask in the [Signal chat](https://signal.group/#CjQKIAb9Re-KJ-wuN__Rx6QIboeJjtzhQ9Mtrwu9b361y9z1EhA_5v83A09RC8ypHfK6Xf_X) or DM Sonya in Signal, your choice.
