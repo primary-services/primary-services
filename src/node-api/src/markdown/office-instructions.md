@@ -136,4 +136,4 @@ If you encounter a bug (the website working different than you thought it is sup
 - You’re an “Admin”
 - You can also find this link when you’re within a city’s landing page under the “Report a Bug” link at the top right
 
-If you’re new to bug reports, and have questions how to fill this out, ask in the [Signal chat](https://signal.group/#CjQKIAb9Re-KJ-wuN__Rx6QIboeJjtzhQ9Mtrwu9b361y9z1EhA_5v83A09RC8ypHfK6Xf_X) or DM Sonya in Signal, your choice.
+If you’re new to bug reports, and have questions how to fill this out, ask in the [Signal chat](https://signal.group/#CjQKIAb9Re-KJ-wuN__Rx6QIboeJjtzhQ9Mtrwu9b361y9z1EhA_5v83A09RC8ypHfK6Xf_X).
