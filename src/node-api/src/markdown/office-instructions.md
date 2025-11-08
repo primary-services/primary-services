@@ -104,7 +104,7 @@ If you encounter bugs that mean the site won’t save or show the correct inform
 
 You’ve added stuff! This is great! You’ve added offices, the sources you found the information, and any notes for Future Volunteer.
 
-Mark the city is done via the checkbox next to the town name.
+Mark the city as done via the checkbox next to the town name.
 
 Go back to our [checklist of cities](https://docs.google.com/spreadsheets/d/1d4eHMwQLlPJGJvA7URVZ9ZICRqVVCny_uu6mj2j5a4Q/edit?usp=sharing). 
 
