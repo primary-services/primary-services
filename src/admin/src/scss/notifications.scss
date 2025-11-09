@@ -1,10 +1,28 @@
 .uk-notification {
 	.uk-notification-message {
-		color: white;
-		background-color: var(--democrat-blue);
-		border-radius: 40px;
-		box-shadow: -2px 4px 17px 5px #999;
+		color: var(--democrat-blue);
+		background-color: var(--democrat-yellow);
+		border-color: var(--democrat-blue);
+		border-radius: 5px;
+		// box-shadow: -2px 4px 17px 5px #737373;
 		text-align: center;
 		font-size: 16px;
+	}
+
+	.uk-notification-message-danger {
+		color: var(--democrat-blue);
+		background-color: var(--error-color);
+		border-color: var(--democrat-blue);
+		border-radius: 5px;
+		// box-shadow: -2px 4px 17px 5px #737373;
+		text-align: center;
+		font-size: 16px;
+	}
+
+	.uk-notification-close {
+		color: var(--democrat-blue-light);
+		:hover {
+			color: var(--democrat-blue);
+		}
 	}
 }
