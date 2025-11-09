@@ -4,10 +4,13 @@ import Official from "../models/official.model.js";
 import Office from "../models/office.model.js";
 import Seat from "../models/seat.model.js";
 import Term from "../models/term.model.js";
+import Version from "../models/version.model.js";
 
 import Requirement from "../models/requirement.model.js";
 import Deadline from "../models/deadline.model.js";
 import Form from "../models/form.model.js";
+
+import { error_codes } from "../utils/error_codes.js";
 
 let officeController = {
   list: async (req, res, next) => {
@@ -58,12 +61,38 @@ let officeController = {
 
   save: async (req, res, next) => {
     let data = req.body;
+    let user = req.jwt?.user || null;
 
-    let [office, diff] = await Office.prototype.upsertAllAndDiff(data);
+    if (!user) {
+      return res.status(401).json({
+        error_code: "UNAUTHORIZED",
+        error_msg: error_codes["UNAUTHORIZED"],
+      });
+    }
 
-    console.log(diff);
+    try {
+      let [office, diff] = await Office.prototype.upsertAllAndDiff(data);
 
-    return res.status(200).json(office);
+      if (diff !== null) {
+        let version = Version.build({
+          user_id: user.id,
+          item_id: office.id,
+          item_type: "Office",
+          fields: diff,
+        });
+
+        await version.save();
+      }
+
+      return res.status(200).json(office);
+    } catch (e) {
+      console.log("ERROR: ", e);
+
+      return res.status(500).json({
+        error_code: "UNKNOWN_ERROR",
+        error_msg: error_codes["UNKNOWN_ERROR"],
+      });
+    }
   },
 };
 
