@@ -6,7 +6,7 @@ import { SeatForm } from "./seats.js";
 import { SeatList } from "../lists/seats.js";
 import { SubForm } from "./subform.js";
 
-import { arr } from "../../utils.js";
+import { arr, showNotification } from "../../utils.js";
 
 export const OfficeForm = ({ selected, onSave, onCancel }) => {
 	let [office, setOffice] = useState({
@@ -136,11 +136,8 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 		let resp = await onSave(office);
 		setPendingSave(false);
 
-		window.UIkit.notification({
-			message: `Saved ${office.title} successfully`,
-			status: "primary",
-			pos: "bottom-left",
-			timeout: 5000,
+		showNotification({
+			message: `Saved office successfully`,
 		});
 
 		setRequiresConfirmation(false);

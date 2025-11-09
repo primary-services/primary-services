@@ -31,6 +31,18 @@ export const createOffice = (args) => {
   });
 };
 
+export const deleteOffice = (office_id) => {
+  return fetch(`${apiRoot}/office/${office_id}`, {
+    method: "DELETE",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  }).then((resp) => {
+    return resp.json();
+  });
+};
+
 export const createElection = (args) => {
   let { municipality_id, election } = args;
 

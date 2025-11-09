@@ -17,6 +17,8 @@ import {
 	useMunicipalityCollections,
 } from "../../api-hooks.js";
 
+import { showNotification } from "../../utils.js";
+
 export const ElectionForm = ({ selected, municipality, onSave, onCancel }) => {
 	const { data: offices } = useMunicipalityOffices(municipality?.id);
 	const { data: collections } = useMunicipalityCollections(municipality?.id);
@@ -132,11 +134,8 @@ export const ElectionForm = ({ selected, municipality, onSave, onCancel }) => {
 	const save = async () => {
 		let resp = await onSave(election);
 
-		window.UIkit.notification({
+		showNotification({
 			message: `Saved election successfully`,
-			status: "primary",
-			pos: "bottom-left",
-			timeout: 5000,
 		});
 
 		onCancel();

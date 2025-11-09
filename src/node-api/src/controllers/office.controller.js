@@ -63,6 +63,18 @@ let officeController = {
 
     return res.status(200).json(office);
   },
+
+  delete: async (req, res, next) => {
+    let { id } = req.params;
+
+    if (!!id) {
+      await Office.destroy({
+        where: { id  },
+      });
+    }
+
+    return res.status(200).json({ success: true });
+  },
 };
 
 export default officeController;

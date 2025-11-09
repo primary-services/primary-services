@@ -154,3 +154,18 @@ export const confirm = (
 
   return promise;
 };
+
+// status is one of "primary", "success", "warning", "danger"
+export const showNotification = ({message, status = "primary", timeout = 1500}) => {
+  window.UIkit.notification({
+    message,
+    status,
+    timeout,
+  });
+}
+
+export const confirmDeleteThen = (callbackFn) => {
+  if (window.confirm("Are you sure you want to delete this item?")) {
+    callbackFn();
+  }
+}

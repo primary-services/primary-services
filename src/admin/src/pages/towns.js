@@ -20,12 +20,13 @@ import {
   useMunicipalityElections,
   useMunicipalityCollections,
   useUpdateTown,
+  useDeleteOffice
 } from "../api-hooks.js";
 
 import { useCreateNote, useDeleteNote } from "../api/hooks/note.hooks.js";
 import { useCreateSource, useDeleteSource } from "../api/hooks/source.hooks.js";
 
-import { cleanDateString, arr, obj, confirm } from "../utils.js";
+import { cleanDateString, arr, obj, confirm, showNotification, confirmDeleteThen } from "../utils.js";
 import { updateMunicipality } from "../api.js";
 
 const getCompletionStatusClass = (status) => {
@@ -156,6 +157,7 @@ export const Towns = () => {
   const { mutateAsync: deleteNote } = useDeleteNote();
   const { mutateAsync: saveSource } = useCreateSource();
   const { mutateAsync: deleteSource } = useDeleteSource();
+  const { mutateAsync: deleteOffice } = useDeleteOffice();
   const { mutateAsync: saveTown } = useUpdateTown();
 
   const removeElection = (e) => {
@@ -392,6 +394,7 @@ export const Towns = () => {
                       elected: true,
                       min_hours: 0,
                       max_hours: 0,
+                      seat_count: 0,
                       seats: [],
                     });
                   }}
@@ -414,12 +417,28 @@ export const Towns = () => {
                   {offices
                     .filter((o) => o.elected)
                     .map((o) => (
-                      <div className="grid row">
+                      <div className="grid row" key={o.id}>
                         <div className="width-1-12">
                           <span
+                            className="icon clickable left-aligned"
                             uk-icon="pencil"
                             onClick={() => {
                               setOffice((prev) => (prev ? false : o));
+                            }}
+                          ></span>
+                          <span
+                            className="icon clickable left-aligned"
+                            uk-icon="trash"
+                            onClick={() => {
+                              confirmDeleteThen(() => 
+                                deleteOffice(o.id).then(() => {
+                                  setOffice(false);
+                                  refetchOffices();
+                                  showNotification({
+                                    message: `Deleted office successfully`,
+                                  });
+                                })
+                              );
                             }}
                           ></span>
                         </div>
@@ -524,14 +543,16 @@ export const Towns = () => {
                           className="icon clickable left-aligned"
                           uk-icon="trash"
                           onClick={() => {
-                            deleteSource({
-                              item_id: town.id,
-                              item_type: "municipality",
-                              source: { ...s },
-                            }).then(() => {
-                              setSource(null);
-                              refetchCollections();
-                            });
+                            confirmDeleteThen(() =>
+                              deleteSource({
+                                item_id: town.id,
+                                item_type: "municipality",
+                                source: { ...s },
+                              }).then(() => {
+                                setSource(null);
+                                refetchCollections();
+                              })
+                            );
                           }}
                         ></span>
                       </div>
@@ -584,14 +605,16 @@ export const Towns = () => {
                             className="icon clickable left-aligned"
                             uk-icon="trash"
                             onClick={() => {
-                              deleteNote({
-                                item_id: town.id,
-                                item_type: "municipality",
-                                note: { ...n },
-                              }).then(() => {
-                                setNote(null);
-                                refetchCollections();
-                              });
+                              confirmDeleteThen(() =>
+                                deleteNote({
+                                  item_id: town.id,
+                                  item_type: "municipality",
+                                  note: { ...n },
+                                }).then(() => {
+                                  setNote(null);
+                                  refetchCollections();
+                                })
+                              );
                             }}
                           ></span>
                         </div>
