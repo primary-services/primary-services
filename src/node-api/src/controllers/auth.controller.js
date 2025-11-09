@@ -17,7 +17,8 @@ const emailTransform = (email) => {
 };
 
 if (process.env["NODE_ENV"] !== "local") {
-  cookieConfig.domain = ".deadlykitten.com";
+  // cookieConfig.domain = ".deadlykitten.com";
+  cookieConfig.domain = ".mademocracy.com";
 }
 
 owasp.config({

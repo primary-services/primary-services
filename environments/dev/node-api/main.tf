@@ -29,9 +29,9 @@ module "node-api" {
   db_creds_secret_name = "DevDBCredentials"
   jwt_temp_secret = "REPLACE_THIS"
 
-  aliases = ["api.deadlykitten.com"]
+  aliases = ["api.deadlykitten.com", "api.mademocracy.com"]
   use_default_certificate = false
-  certificate_arn = "arn:aws:acm:us-east-1:173549513063:certificate/00b49dab-5581-4afc-a417-13a32b1380b4"
+  certificate_arn = "arn:aws:acm:us-east-1:173549513063:certificate/8b19d368-ceb4-47b8-b6a7-a9da903dec22"
   certificate_minimum_protocol_version = "TLSv1.2_2021"
   certificate_ssl_support_method = "sni-only"
 }

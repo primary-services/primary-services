@@ -68,6 +68,12 @@ header {
 				display: inline-block;
 				color: white;
 				margin: 0;
+
+				span {
+					&:first-child {
+						color: red;
+					}
+				}
 			}
 		}
 

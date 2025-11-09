@@ -111,6 +111,17 @@ let municipalityController = {
     return res.status(200).json(municipality);
   },
 
+  save: async (req, res, next) => {
+    let data = req.body;
+    console.log("Saving municipality:", data);
+    let municipality = await Municipality.findByPk(data.id);
+    if (!municipality) {
+      return res.status(404).json({ error: "Municipality not found" });
+    }
+    municipality = await municipality.update(data);
+    return res.status(200).json(municipality);
+  },
+
   createSource: async (req, res, next) => {
     let data = req.body;
     let source = await Source.prototype.upsertAll(data);

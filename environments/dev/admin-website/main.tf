@@ -8,11 +8,11 @@ module "static-website" {
 
   bucket_name = "ma-elections-admin"
   source_files = "../../../src/admin/build"
-  aliases = ["admin.deadlykitten.com"]
+  aliases = ["admin.deadlykitten.com", "admin.mademocracy.com"]
   
   # These are required when using a custom domain
   use_default_certificate = false
-  certificate_arn = "arn:aws:acm:us-east-1:173549513063:certificate/00b49dab-5581-4afc-a417-13a32b1380b4"
+  certificate_arn = "arn:aws:acm:us-east-1:173549513063:certificate/8b19d368-ceb4-47b8-b6a7-a9da903dec22"
   certificate_minimum_protocol_version = "TLSv1.2_2021"
   certificate_ssl_support_method = "sni-only"
 

@@ -18,6 +18,9 @@ var corsOptions = {
     "https://deadlykitten.com",
     "https://www.deadlykitten.com",
     "https://admin.deadlykitten.com",
+    "https://www.mademocracy.com",
+    "https://mademocracy.com",
+    "https://admin.mademocracy.com",
   ],
   credentials: true,
 };

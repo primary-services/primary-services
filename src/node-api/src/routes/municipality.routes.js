@@ -37,4 +37,6 @@ municipalityRoutes.delete(
 municipalityRoutes.post("/municipalities/:municipality_id/source");
 municipalityRoutes.delete("/municipalities/:municipality_id/source/:source_id");
 
+municipalityRoutes.post("/municipalities/:municipality_id", municipalityController.save);
+
 export { municipalityRoutes };

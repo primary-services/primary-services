@@ -12,6 +12,7 @@
 		height: 100%;
 		box-sizing: border-box;
 		padding-top: 110px;
+		padding-left: 30px;
 
 		p.loading {
 			margin-top: -50px;
@@ -33,8 +34,19 @@
 				}
 
 				span {
-					border: solid 1px;
+					border: solid 1px #666;
 					background-color: white;
+					color: white;
+				}
+
+				.in-progress {
+					background-color: yellow;
+					color: yellow;
+				}
+
+				.done {
+					background-color: lightgreen;
+					color: #666;
 				}
 			}
 		}
