@@ -264,10 +264,14 @@ Sequelize.Model.prototype.upsertAllAndDiff = function async(data) {
             {},
           );
 
-          tracking.push(updates);
+          if (Object.keys(updates.fields).length !== 0) {
+            tracking.push(updates);
+          }
         }
 
-        diff.fields[x] = tracking;
+        if (tracking.length > 0) {
+          diff.fields[x] = tracking;
+        }
       } else {
         if (!!data[x]) {
           let [updated, updates] = await parse(
@@ -278,7 +282,9 @@ Sequelize.Model.prototype.upsertAllAndDiff = function async(data) {
             {},
           );
 
-          diff[x] = updates;
+          if (Object.keys(updates.fields).length !== 0) {
+            diff.fields[x] = updates;
+          }
         }
       }
     }
