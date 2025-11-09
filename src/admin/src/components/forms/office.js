@@ -143,7 +143,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 		} else {
 			showNotification({
 				message: resp.error_msg,
-				status: danger,
+				status: "danger",
 			});
 		}
 
