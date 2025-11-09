@@ -15,6 +15,8 @@ import {
   getMunicipalityOffices,
   getMunicipalityElections,
   getMunicipalityCollections,
+  /////// Delete Routes ///////
+  deleteOffice,
 } from "./api";
 
 export const useTowns = () =>
@@ -99,6 +101,17 @@ export const useUpdateTown = () => {
     },
   });
 }
+
+/////////////// Delete Hooks ///////////////
+
+export const useDeleteOffice = () =>
+  useMutation({
+    mutationKey: ["office"],
+    mutationFn: deleteOffice,
+    onSuccess: (office) => {
+      invalidateMunicipalityOffices(office.municipality_id);
+    },
+  });
  
 
 ////////////// Seat Schema ///////////////

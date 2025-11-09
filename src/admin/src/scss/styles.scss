@@ -14,9 +14,11 @@
 @use "./pages/landing.scss";
 
 :root {
-	--democrat-blue: #0044c9;
-	--democrat-blue-light: #2a5fc6;
+	--democrat-blue: #15008e;
+	--democrat-blue-light: #0044c9;
+	--democrat-blue-lighter: #456bb6;
 	--light-blue: #c2cbdb;
+	--democrat-yellow: #f4ab00;
 	--error-color: #d03214;
 	--page-width: 1280px;
 }
@@ -24,6 +26,13 @@
 html {
 	min-height: 100vh;
 	width: 100%;
+
+	a { 
+		color: var(--democrat-blue); 
+		:hover {
+			color: var(--democrat-blue-light);
+		}
+	}
 }
 
 body {
