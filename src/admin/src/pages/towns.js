@@ -48,7 +48,7 @@ const getCompletionStatusLabel = (status) => {
     default:
       return "Not Started";
   }
-}
+};
 
 const getNextCompletionStatus = (status) => {
   switch (status) {
@@ -59,7 +59,7 @@ const getNextCompletionStatus = (status) => {
     default:
       return "IN_PROGRESS";
   }
-}
+};
 
 const Clerk = ({ official }) => {
   if (!official) {
@@ -321,12 +321,19 @@ export const Towns = () => {
                   <li key={t.name}>
                     <span
                       className={getCompletionStatusClass(t.completionStatus)}
-                      uk-icon={t.completionStatus === "IN_PROGRESS" ? "icon: refresh" : "icon: check"}
-                      uk-tooltip={
-                        `title: ${getCompletionStatusLabel(t.completionStatus)}`
+                      uk-icon={
+                        t.completionStatus === "IN_PROGRESS"
+                          ? "icon: refresh"
+                          : "icon: check"
                       }
+                      uk-tooltip={`title: ${getCompletionStatusLabel(t.completionStatus)}`}
                       onClick={() => {
-                        const update = { ...t, completionStatus: getNextCompletionStatus(t.completionStatus) };
+                        const update = {
+                          ...t,
+                          completionStatus: getNextCompletionStatus(
+                            t.completionStatus,
+                          ),
+                        };
                         saveTown(update);
                       }}
                       key={`${t.name}-${t.completionStatus}`}
@@ -424,7 +431,9 @@ export const Towns = () => {
                           ></span>
                         </div>
                         <div className="width-8-12">{o.title}</div>
-                        <div className="width-2-12">{o.shared ? <span uk-icon="check"></span> : undefined}</div>
+                        <div className="width-2-12">
+                          {o.shared ? <span uk-icon="check"></span> : undefined}
+                        </div>
                         <div className="width-1-12">
                           {(o.seats || []).length}
                         </div>
@@ -619,37 +628,15 @@ export const Towns = () => {
             municipality={town}
             selected={office}
             onSave={async (o) => {
-              console.log(arr(o.seats), arr(office.seats));
-
-              // if (arr(o.seats).length < arr(office.seats).length) {
-              //   let msg =
-              //     "There are less seats than were previously saved, please confirm that this is what you wanted to do";
-
-              //   let onSave = () => {
-              //     saveOffice({
-              //       municipality_id: town.id,
-              //       office: o,
-              //     }).then(() => {
-              //       return refetchOffices();
-              //     });
-              //   };
-
-              //   let onCancel = () => {
-              //     setOffice(false);
-              //   };
-
-              //   await confirm(msg, onSave, onCancel, {
-              //     className: "office-confirm",
-              //   });
-
-              //   return Promise.resolve();
-              // } else {
               return saveOffice({ municipality_id: town.id, office: o }).then(
-                () => {
-                  return refetchOffices();
+                async (resp) => {
+                  if (!resp.error_code) {
+                    await refetchOffices();
+                  }
+
+                  return resp;
                 },
               );
-              // }
             }}
             onCancel={() => {
               setOffice(false);

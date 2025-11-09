@@ -1,4 +1,5 @@
 import { apiRoot } from "./constants.js";
+import { getCookie } from "./utils.js";
 
 export const getTowns = () =>
   fetch(`${apiRoot}/municipalities/towns`).then((response) => response.json());
@@ -17,12 +18,16 @@ export const getTownRequirements = (town_id) =>
   );
 
 export const createOffice = (args) => {
+  let token = getCookie("auth_token") || "";
+
   let { municipality_id, office } = args;
   // return fetch(`http://127.0.0.1:5000/municipality/${municipality_id}/office`, {
   return fetch(`${apiRoot}/office`, {
     method: "POST",
+    credentials: "include",
     headers: {
       Accept: "application/json",
+      Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ ...office, municipality_id: municipality_id }),

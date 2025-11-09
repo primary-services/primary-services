@@ -136,12 +136,21 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 		let resp = await onSave(office);
 		setPendingSave(false);
 
-		window.UIkit.notification({
-			message: `Saved ${office.title} successfully`,
-			status: "primary",
-			pos: "bottom-left",
-			timeout: 5000,
-		});
+		if (!resp.error_code) {
+			window.UIkit.notification({
+				message: `Saved ${office.title} successfully`,
+				status: "primary",
+				pos: "bottom-left",
+				timeout: 5000,
+			});
+		} else {
+			window.UIkit.notification({
+				message: `Error: ${resp.error_msg}`,
+				status: "danger",
+				pos: "bottom-left",
+				timeout: 5000,
+			});
+		}
 
 		setRequiresConfirmation(false);
 		onCancel();
@@ -246,19 +255,21 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 						</div>
 
 						<div className="width-1-1">
-								<input
-									id="shared"
-									name="shared"
-									type="checkbox"
-									key={`shared-${!!office.shared}`}
-									checked={!!office.shared}
-									onChange={(ev) => {
-										update("shared", ev.target.checked);
-									}}
-								/>
-								<label htmlFor="shared">
-									{' '}Office is shared across municipalities (e.g. regional school board position)
-								</label>
+							<input
+								id="shared"
+								name="shared"
+								type="checkbox"
+								key={`shared-${!!office.shared}`}
+								checked={!!office.shared}
+								onChange={(ev) => {
+									update("shared", ev.target.checked);
+								}}
+							/>
+							<label htmlFor="shared">
+								{" "}
+								Office is shared across municipalities (e.g. regional school
+								board position)
+							</label>
 						</div>
 					</div>
 
