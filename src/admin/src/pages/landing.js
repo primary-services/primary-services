@@ -30,6 +30,22 @@ export const LandingPage = () => {
           <li>
             <Link to="/towns">Update Town Data</Link>
           </li>
+          <li>
+            <a
+              href="https://docs.google.com/spreadsheets/d/1d4eHMwQLlPJGJvA7URVZ9ZICRqVVCny_uu6mj2j5a4Q/edit"
+              target="_blank"
+            >
+              Town Assignments
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSekaJ1HUhgOj8M8gf6WsTKzslsCQXw7R8wGQh-swqlHv1QSww/viewform"
+              target="_blank"
+            >
+              Report a Bug
+            </a>
+          </li>
         </ul>
       </div>
       <div className="landing-content">

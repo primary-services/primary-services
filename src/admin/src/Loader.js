@@ -45,7 +45,7 @@ export const Loader = () => {
                       Welcome <a href="#">{user.email}</a>
                     </div>
                     <div>
-                      <a href="#" onClick={logout}>
+                      <a href="#" onClick={logout} className="logout">
                         Logout
                       </a>
                     </div>
