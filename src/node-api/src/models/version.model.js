@@ -1,7 +1,7 @@
 import { Sequelize, DataTypes } from "sequelize";
 import Model from "../lib/base-model.js";
 
-class Source extends Model {
+class Version extends Model {
 	static init(sequelize) {
 		super.init(
 			{
@@ -11,44 +11,36 @@ class Source extends Model {
 					allowNull: false,
 					primaryKey: true,
 				},
+				user_id: {
+					type: DataTypes.INTEGER,
+					allowNull: false,
+				},
 				item_id: {
 					type: DataTypes.INTEGER,
 					allowNull: false,
 				},
 				item_type: {
-					type: DataTypes.TEXT,
+					type: DataTypes.STRING,
 					allowNull: false,
 				},
-				summary: {
-					type: DataTypes.TEXT,
-					allowNull: true,
-				},
-				url: {
-					type: DataTypes.TEXT,
-					allowNull: true,
+				fields: {
+					type: DataTypes.JSONB,
+					allowNull: false,
 				},
 				created_at: {
 					type: DataTypes.DATE,
 					allowNull: true,
 					defaultValue: DataTypes.NOW,
 				},
-				created_by: {
-					type: DataTypes.INTEGER,
-					allowNull: true,
-				},
-				deleted: {
-					type: DataTypes.BOOLEAN,
-					defaultValue: false,
-				},
 			},
 			{
 				sequelize,
-				tableName: "source",
+				tableName: "versions",
 				schema: "public",
 				timestamps: false,
 				indexes: [
 					{
-						name: "source_pkey",
+						name: "versions_pkey",
 						unique: true,
 						fields: [{ name: "id" }],
 					},
@@ -58,16 +50,11 @@ class Source extends Model {
 	}
 
 	static associate(models) {
-		this.belongsTo(models.Municipality, {
-			foreignKey: "item_id",
-			constraints: false,
-		});
-
-		this.belongsTo(models.Note, {
-			foreignKey: "item_id",
+		this.belongsTo(models.Office, {
+			foreignKey: "office_id",
 			constraints: false,
 		});
 	}
 }
 
-export default Source;
+export default Version;
