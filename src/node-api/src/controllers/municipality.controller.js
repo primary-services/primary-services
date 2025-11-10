@@ -5,6 +5,7 @@ import Contact from "../models/contact.model.js";
 import Office from "../models/office.model.js";
 import Seat from "../models/seat.model.js";
 import Term from "../models/term.model.js";
+import Version from "../models/version.model.js";
 
 import Requirement from "../models/requirement.model.js";
 import Deadline from "../models/deadline.model.js";
@@ -17,9 +18,7 @@ let municipalityController = {
   list: async (req, res, next) => {
     const municipalities = await Municipality.findAll({
       include: [{ model: Contact, as: "contacts" }],
-      order: [
-        ["id", "ASC"],
-      ],
+      order: [["id", "ASC"]],
     });
 
     return res.status(200).json(municipalities);
@@ -32,6 +31,7 @@ let municipalityController = {
     const offices = await Office.findAll({
       where: {
         municipality_id: municipality_id,
+        deleted: false,
       },
       include: [
         {

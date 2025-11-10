@@ -37,10 +37,14 @@ export const createOffice = (args) => {
 };
 
 export const deleteOffice = (office_id) => {
+  let token = getCookie("auth_token") || "";
+
   return fetch(`${apiRoot}/office/${office_id}`, {
     method: "DELETE",
+    credentials: "include",
     headers: {
       Accept: "application/json",
+      Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
   }).then((resp) => {

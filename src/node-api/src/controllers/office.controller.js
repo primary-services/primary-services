@@ -26,7 +26,11 @@ let officeController = {
 
     // Might want a view here
     let offices = await Office.findAll({
-      where: { municipality_id: municipality.id, elected: true },
+      where: {
+        municipality_id: municipality.id,
+        elected: true,
+        deleted: false,
+      },
       include: [
         {
           model: Seat,
@@ -98,10 +102,48 @@ let officeController = {
   delete: async (req, res, next) => {
     let { id } = req.params;
 
-    if (!!id) {
-      await Office.destroy({
-        where: { id  },
+    let user = req.jwt?.user || null;
+
+    if (!user) {
+      return res.status(401).json({
+        error_code: "UNAUTHORIZED",
+        error_msg: error_codes["UNAUTHORIZED"],
       });
+    }
+
+    if (!!id) {
+      try {
+        const orginal = await Office.findByPk(id);
+        orginal.deleted = true;
+
+        let [office, diff] = await Office.prototype.upsertAllAndDiff(
+          orginal.dataValues,
+        );
+
+        if (diff !== null) {
+          let version = Version.build({
+            user_id: user.id,
+            item_id: office.id,
+            item_type: "Office",
+            fields: diff,
+          });
+
+          await version.save();
+        }
+      } catch (e) {
+        console.log(e);
+      }
+
+      // if (diff !== null) {
+      //   let version = Version.build({
+      //     user_id: user.id,
+      //     item_id: office.id,
+      //     item_type: "Office",
+      //     fields: diff,
+      //   });
+
+      //   await version.save();
+      // }
     }
 
     return res.status(200).json({ success: true });
