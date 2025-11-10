@@ -86,11 +86,26 @@ header {
 			}
 		}
 
+		.logout {
+			color: #b1adad;
+		}
+
+		.logout:hover {
+			color: #0f6ecd;
+		}
+
 		.uk-navbar-right {
 			span {
 				a {
 					margin-left: 10px;
 				}
+			}
+		}
+
+		a { 
+			color: white; 
+			:hover {
+				color: var(--democrat-blue-light);
 			}
 		}
 	}
@@ -103,7 +118,7 @@ header {
 
 .page {
 	display: block;
-	margin: 0px auto;
+	margin: 0px 30px;
 	padding: 60px;
 	width: var(--page-width);
 	@media (max-width: 767px) {
