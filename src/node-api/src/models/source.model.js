@@ -36,6 +36,10 @@ class Source extends Model {
 					type: DataTypes.INTEGER,
 					allowNull: true,
 				},
+				deleted: {
+					type: DataTypes.BOOLEAN,
+					defaultValue: false,
+				},
 			},
 			{
 				sequelize,

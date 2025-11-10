@@ -57,6 +57,10 @@ class Office extends Model {
           //  key: "id",
           // },
         },
+        deleted: {
+          type: DataTypes.BOOLEAN,
+          defaultValue: false,
+        },
       },
       {
         sequelize,
