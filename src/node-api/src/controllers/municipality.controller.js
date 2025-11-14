@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import Municipality from "../models/municipality.model.js";
 import Election from "../models/election.model.js";
 import Official from "../models/official.model.js";
@@ -6,6 +7,7 @@ import Office from "../models/office.model.js";
 import Seat from "../models/seat.model.js";
 import Term from "../models/term.model.js";
 import Version from "../models/version.model.js";
+import User from "../models/user.model.js";
 
 import Requirement from "../models/requirement.model.js";
 import Deadline from "../models/deadline.model.js";
@@ -109,6 +111,57 @@ let municipalityController = {
     });
 
     return res.status(200).json(municipality);
+  },
+
+  history: async (req, res, next) => {
+    const { municipality_id } = req.params;
+
+    const municipality = await Municipality.findByPk(municipality_id, {
+      include: [
+        // When we want more item types included in the history response, add it here
+        { model: Source, as: "sources" },
+        { model: Note, as: "notes" },
+        { model: Office, as: "offices" },
+      ],
+    });
+    const sourceIds = municipality.sources.map((s) => s.id);
+    const noteIds = municipality.notes.map((n) => n.id);
+    const officeIds = municipality.offices.map((o) => o.id);
+
+    const versions = await Version.findAll({
+      where: {
+        [Op.or]: [
+          {
+            item_type: "Municipality",
+            item_id: municipality.id,
+          },
+          {
+            item_type: "Source",
+            item_id: {
+              [Op.in]: sourceIds,
+            },
+          },
+          {
+            item_type: "Note",
+            item_id: {
+              [Op.in]: noteIds,
+            },
+          },
+          {
+            item_type: "Office",
+            item_id: {
+              [Op.in]: officeIds,
+            },
+          },
+        ],
+      },
+      include: [
+        { model: User, as: "user" },
+      ],
+      order: [["created_at", "DESC"]],
+    });
+
+    return res.status(200).json(versions);
   },
 
   save: async (req, res, next) => {

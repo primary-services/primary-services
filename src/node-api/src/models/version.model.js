@@ -54,6 +54,13 @@ class Version extends Model {
 			foreignKey: "office_id",
 			constraints: false,
 		});
+
+		this.hasOne(models.User, {
+			foreignKey: "id",
+			sourceKey: "user_id",
+			as: "user",
+			constraints: false,
+		});
 	}
 }
 

@@ -1,22 +1,30 @@
 import {
-  useTownHistory,
+  useMunicipalityHistory,
 } from "../api-hooks.js";
+import { convertKeyToLabel } from "../utils.js";
 
-export const TownHistory = ({ close, town }) => {
-    const history = useTownHistory(town.id);
-    return <div>
+const labelMap = {
+  create: "Created",
+  update: "Updated",
+  delete: "Deleted",
+};
+
+export const MunicipalityHistory = ({ close, municipality }) => {
+    const { data: history = [] } = useMunicipalityHistory(municipality?.id);
+    return <div className="municipality-history">
         <p className="disclaimer">Records not available for changes before X/X/X</p>
         {
             history.length === 0 ? <h4>No history available.</h4> : history.map((entry, idx) => (
                 <div key={idx} className="history-entry">
-                    <div className="history-meta">
-                        <span className="history-date">{new Date(entry.date).toLocaleString()}</span>
-                        <span className="history-user">by {entry.user?.name || 'Unknown User'}</span>
-                    </div>
+                    <p className="history-date">{new Date(entry.created_at).toLocaleString()}</p>
+                    <p className="history-user">{entry.user?.email || 'Unknown User'}</p>
                     <div className="history-changes">
-                        {entry.changes.map((change, cidx) => (
-                            <div key={cidx} className="history-change">
-                                <strong>{change.field}:</strong> "{change.oldValue}" &rarr; "{change.newValue}"
+                        <div className="history-create">
+                            <strong>{labelMap[entry.fields.action]} {entry.item_type.toLowerCase()}</strong>
+                        </div>
+                        {Object.entries(entry.fields.fields).map(([f, change], changeIdx) => (
+                            <div key={changeIdx} className="history-update">
+                                <strong>{convertKeyToLabel(f)}:</strong> "{change.from}" &rarr; "{change.to}"
                             </div>
                         ))}
                     </div>

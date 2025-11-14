@@ -10,14 +10,15 @@ import {
   getTownRequirements,
   getTowns,
   updateTown,
+
   /////// Seat Schema ///////
   getMunicipality,
   getMunicipalityOffices,
   getMunicipalityElections,
   getMunicipalityCollections,
+  getMunicipalityHistory,
   /////// Delete Routes ///////
   deleteOffice,
-  getTownHistory,
 } from "./api";
 
 export const useTowns = () =>
@@ -47,13 +48,6 @@ export const useTownRequirements = (town_id) =>
     enabled: !!town_id,
   });
 
-export const useTownHistory = (town_id) =>
-  useQuery({
-    queryKey: ["towns", town_id, "history"],
-    queryFn: () => getTownHistory(town_id),
-    enabled: !!town_id,
-  });
-
 export const invalidateTownOffices = (town_id) => {
   const queryClient = new QueryClient();
   return queryClient.invalidateQueries({
@@ -76,6 +70,7 @@ export const useCreateOffice = () =>
     mutationFn: createOffice,
     onSuccess: (office) => {
       invalidateMunicipalityOffices(office.municipality_id);
+      invalidateMunicipalityHistory(office.municipality_id);
     },
   });
 
@@ -85,6 +80,7 @@ export const useCreateElection = () =>
     mutationFn: (args) => createElection(args),
     onSuccess: (election) => {
       invalidateMunicipalityElections(election.municipality_id);
+      invalidateMunicipalityHistory(election.municipality_id);
     },
   });
 
@@ -94,18 +90,16 @@ export const useCreateRequirement = () =>
     mutationFn: (args) => createRequirement(args),
     onSuccess: (office) => {
       invalidateTownRequirements(office.municipality_id);
+      invalidateMunicipalityHistory(office.municipality_id);
     },
   });
 
 export const useUpdateTown = () => {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["town"],
     mutationFn: (args) => updateTown(args),
     onSuccess: (town) => {
-      queryClient.invalidateQueries({
-        queryKey: ["towns"],
-      });
+      invalidateMunicipalityHistory(town.id);
     },
   });
 }
@@ -152,6 +146,13 @@ export const useMunicipalityCollections = (municipality_id) =>
     enabled: municipality_id !== undefined,
   });
 
+export const useMunicipalityHistory = (municipality_id) =>
+  useQuery({
+    queryKey: ["municipalities", municipality_id, "history"],
+    queryFn: () => getMunicipalityHistory(municipality_id),
+    enabled: municipality_id !== undefined,
+  });
+
 export const invalidateMunicipality = (municipality_id) => {
   const queryClient = new QueryClient();
   return queryClient.invalidateQueries({
@@ -179,3 +180,10 @@ export const invalidateMunicipalityCollections = (municipality_id) => {
     queryKey: ["municipalities", municipality_id, "collections"],
   });
 };
+
+export const invalidateMunicipalityHistory = (municipality_id) => {
+  const queryClient = new QueryClient();
+  return queryClient.invalidateQueries({
+    queryKey: ["municipalities", municipality_id, "history"],
+  });
+}

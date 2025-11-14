@@ -7,7 +7,7 @@ import { AppContexts } from "../providers";
 import { OfficeForm } from "../components/forms/office.js";
 import { ElectionForm } from "../components/forms/election.js";
 import { Slideout } from "../components/slideout.js";
-import { TownHistory } from "../components/history.js";
+import { MunicipalityHistory } from "../components/history.js";
 import { RequirementForm } from "../components/forms/requirements.js";
 import {
   useTownOffices,
@@ -715,7 +715,7 @@ export const Towns = () => {
         </form>
       </Slideout>
       <Slideout active={showHistory} setActive={setShowHistory}>
-        <TownHistory town={town} close={() => setShowHistory(false)} />
+        <MunicipalityHistory municipality={town} close={() => setShowHistory(false)} />
       </Slideout>
     </section>
   );

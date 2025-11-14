@@ -17,11 +17,6 @@ export const getTownRequirements = (town_id) =>
     response.json(),
   );
 
-export const getTownHistory = (town_id) =>
-  fetchWithAuth(`${apiRoot}/town/${town_id}/history`).then((response) =>
-    response.json(),
-  );
-
 export const createOffice = (args) => {
   let { municipality_id, office } = args;
   // return fetch(`http://127.0.0.1:5000/municipality/${municipality_id}/office`, {
@@ -88,5 +83,10 @@ export const getMunicipalityElections = (municipality_id) =>
 
 export const getMunicipalityCollections = (municipality_id) =>
   fetchWithAuth(`${apiRoot}/municipalities/${municipality_id}/collections`).then(
+    (response) => response.json(),
+  );
+
+export const getMunicipalityHistory = (municipality_id) =>
+  fetchWithAuth(`${apiRoot}/municipalities/${municipality_id}/history`).then(
     (response) => response.json(),
   );

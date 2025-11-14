@@ -1,6 +1,6 @@
 import { QueryClient, useQuery, useMutation } from "@tanstack/react-query";
 
-import { invalidateMunicipalityCollections } from "../../api-hooks.js";
+import { invalidateMunicipalityCollections, invalidateMunicipalityHistory } from "../../api-hooks.js";
 
 import { createNote, deleteNote } from "../routes/note.routes.js";
 
@@ -11,6 +11,7 @@ export const useCreateNote = () =>
     onSuccess: (note) => {
       if (note.item_type === "municipality") {
         invalidateMunicipalityCollections(note.item_id);
+        invalidateMunicipalityHistory(note.municipality_id);
       }
     },
   });
@@ -22,6 +23,7 @@ export const useDeleteNote = () =>
     onSuccess: (note) => {
       if (note.item_type === "municipality") {
         invalidateMunicipalityCollections(note.item_id);
+        invalidateMunicipalityHistory(note.municipality_id);
       }
     },
   });
