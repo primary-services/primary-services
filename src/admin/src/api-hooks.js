@@ -17,6 +17,7 @@ import {
   getMunicipalityCollections,
   /////// Delete Routes ///////
   deleteOffice,
+  getTownHistory,
 } from "./api";
 
 export const useTowns = () =>
@@ -43,6 +44,13 @@ export const useTownRequirements = (town_id) =>
   useQuery({
     queryKey: ["towns", town_id, "requirements"],
     queryFn: () => getTownRequirements(town_id),
+    enabled: !!town_id,
+  });
+
+export const useTownHistory = (town_id) =>
+  useQuery({
+    queryKey: ["towns", town_id, "history"],
+    queryFn: () => getTownHistory(town_id),
     enabled: !!town_id,
   });
 

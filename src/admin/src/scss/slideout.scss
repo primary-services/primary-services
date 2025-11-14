@@ -35,6 +35,23 @@
 
     .slideout-content {
       padding: 30px 30px;
+
+      .close-header {
+        text-align: right;
+        margin-bottom: 10px;
+        align-content: end;
+        span {
+          color: var(--error-color);
+          cursor: pointer;
+        }
+      }
+
+      .disclaimer {
+        font-size: 0.9em;
+        color: #666;
+        margin-top: 10px;
+        font-style: italic;
+      }
     }
   }
 }
