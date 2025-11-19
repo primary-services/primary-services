@@ -4,7 +4,7 @@ import Official from "../models/official.model.js";
 import Office from "../models/office.model.js";
 import Seat from "../models/seat.model.js";
 import Term from "../models/term.model.js";
-import Version from "../models/version.model.js";
+import Version, { createNewVersion } from "../models/version.model.js";
 
 import Requirement from "../models/requirement.model.js";
 import Deadline from "../models/deadline.model.js";
@@ -75,19 +75,7 @@ let officeController = {
     }
 
     try {
-      let [office, diff] = await Office.prototype.upsertAllAndDiff(data);
-
-      if (diff !== null) {
-        let version = Version.build({
-          user_id: user.id,
-          item_id: office.id,
-          item_type: "Office",
-          fields: diff,
-        });
-
-        await version.save();
-      }
-
+      await createNewVersion(Office, user, data)
       return res.status(200).json(office);
     } catch (e) {
       console.log("ERROR: ", e);
@@ -115,21 +103,7 @@ let officeController = {
       try {
         const orginal = await Office.findByPk(id);
         orginal.deleted = true;
-
-        let [office, diff] = await Office.prototype.upsertAllAndDiff(
-          orginal.dataValues,
-        );
-
-        if (diff !== null) {
-          let version = Version.build({
-            user_id: user.id,
-            item_id: office.id,
-            item_type: "Office",
-            fields: diff,
-          });
-
-          await version.save();
-        }
+        await createNewVersion(Office, user, orginal.dataValues);
       } catch (e) {
         console.log(e);
       }

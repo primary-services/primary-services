@@ -22,9 +22,9 @@ export const MunicipalityHistory = ({ close, municipality }) => {
                         <div className="history-create">
                             <strong>{labelMap[entry.fields.action]} {entry.item_type.toLowerCase()}</strong>
                         </div>
-                        {Object.entries(entry.fields.fields).map(([f, change], changeIdx) => (
+                        {Object.entries(entry.fields.fields).map(([key, val], changeIdx) => (
                             <div key={changeIdx} className="history-update">
-                                <strong>{convertKeyToLabel(f)}:</strong> "{change.from}" &rarr; "{change.to}"
+                                <strong>{convertKeyToLabel(key)}:</strong> {val.toString()}
                             </div>
                         ))}
                     </div>

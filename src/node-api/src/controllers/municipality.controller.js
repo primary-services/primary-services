@@ -6,7 +6,7 @@ import Contact from "../models/contact.model.js";
 import Office from "../models/office.model.js";
 import Seat from "../models/seat.model.js";
 import Term from "../models/term.model.js";
-import Version from "../models/version.model.js";
+import Version, { createNewVersion } from "../models/version.model.js";
 import User from "../models/user.model.js";
 
 import Requirement from "../models/requirement.model.js";
@@ -166,23 +166,49 @@ let municipalityController = {
 
   save: async (req, res, next) => {
     let data = req.body;
-    console.log("Saving municipality:", data);
+    let user = req.jwt?.user || null;
+
+    if (!user) {
+      return res.status(401).json({
+        error_code: "UNAUTHORIZED",
+        error_msg: error_codes["UNAUTHORIZED"],
+      });
+    }
     let municipality = await Municipality.findByPk(data.id);
     if (!municipality) {
       return res.status(404).json({ error: "Municipality not found" });
     }
     municipality = await municipality.update(data);
+    await createNewVersion(Municipality, user, data);
     return res.status(200).json(municipality);
   },
 
   createSource: async (req, res, next) => {
     let data = req.body;
+    let user = req.jwt?.user || null;
+
+    if (!user) {
+      return res.status(401).json({
+        error_code: "UNAUTHORIZED",
+        error_msg: error_codes["UNAUTHORIZED"],
+      });
+    }
+
     let source = await Source.prototype.upsertAll(data);
+    await createNewVersion(Source, user, data)
     return res.status(200).json(source);
   },
 
   deleteSource: async (req, res, next) => {
     let { source_id } = req.params;
+    let user = req.jwt?.user || null;
+
+    if (!user) {
+      return res.status(401).json({
+        error_code: "UNAUTHORIZED",
+        error_msg: error_codes["UNAUTHORIZED"],
+      });
+    }
 
     if (!!source_id) {
       await Source.destroy({
@@ -191,18 +217,35 @@ let municipalityController = {
         },
       });
     }
-
+    await createNewVersion(Source, user, data); 
     return res.status(200).json({ success: true });
   },
 
   createNote: async (req, res, next) => {
     let data = req.body;
+    let user = req.jwt?.user || null;
+
+    if (!user) {
+      return res.status(401).json({
+        error_code: "UNAUTHORIZED",
+        error_msg: error_codes["UNAUTHORIZED"],
+      });
+    }
     let note = await Note.prototype.upsertAll(data);
+    await createNewVersion(Note, user, data);
     return res.status(200).json(note);
   },
 
   deleteNote: async (req, res, next) => {
     let { note_id } = req.params;
+    let user = req.jwt?.user || null;
+
+    if (!user) {
+      return res.status(401).json({
+        error_code: "UNAUTHORIZED",
+        error_msg: error_codes["UNAUTHORIZED"],
+      });
+    }
 
     if (!!note_id) {
       await Note.destroy({
@@ -211,7 +254,7 @@ let municipalityController = {
         },
       });
     }
-
+    await createNewVersion(Note, user, data);
     return res.status(200).json({ success: true });
   },
 };

@@ -64,4 +64,19 @@ class Version extends Model {
 	}
 }
 
+export const createNewVersion = async (model, user, data) => {
+	let [item, diff] = await model.prototype.upsertAllAndDiff(data);
+
+	if (diff !== null) {
+		let version = Version.build({
+			user_id: user.id,
+			item_id: item.id,
+			item_type: model.name,
+			fields: diff,
+		});
+
+		await version.save();
+	}
+}
+
 export default Version;
