@@ -17,9 +17,7 @@ let municipalityController = {
   list: async (req, res, next) => {
     const municipalities = await Municipality.findAll({
       include: [{ model: Contact, as: "contacts" }],
-      order: [
-        ["id", "ASC"],
-      ],
+      order: [["id", "ASC"]],
     });
 
     return res.status(200).json(municipalities);
@@ -54,6 +52,24 @@ let municipalityController = {
     });
 
     return res.status(200).json(offices);
+  },
+
+  completetion: async (req, res, next) => {
+    const done = await Municipality.count({
+      col: "*",
+      where: { completionStatus: "DONE" },
+    });
+    const in_progress = await Municipality.count({
+      col: "*",
+      where: { completionStatus: "IN_PROGRESS" },
+    });
+
+    console.log("STATUS:", done);
+
+    return res.status(200).json({
+      done,
+      in_progress,
+    });
   },
 
   elections: async (req, res, next) => {

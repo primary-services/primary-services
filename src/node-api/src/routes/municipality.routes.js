@@ -33,10 +33,17 @@ municipalityRoutes.delete(
 	"/municipalities/:municipality_id/source/:source_id",
 	municipalityController.deleteSource,
 );
+municipalityRoutes.get(
+	"/municipalities/completion",
+	municipalityController.completetion,
+);
 
 municipalityRoutes.post("/municipalities/:municipality_id/source");
 municipalityRoutes.delete("/municipalities/:municipality_id/source/:source_id");
 
-municipalityRoutes.post("/municipalities/:municipality_id", municipalityController.save);
+municipalityRoutes.post(
+	"/municipalities/:municipality_id",
+	municipalityController.save,
+);
 
 export { municipalityRoutes };
