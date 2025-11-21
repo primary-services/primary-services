@@ -48,21 +48,6 @@ class User extends Model {
             instance.password = await bcrypt.hash(instance.password, salt);
           },
         },
-        instanceMethods: {
-          generateResetToken: async () => {
-            const token = crypto.randomBytes(32).toString("hex");
-            this.resetToken = token;
-            this.resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour
-            return token;
-          },
-
-          setNewPassword: async (newPassword) => {
-            const salt = await bcrypt.genSalt(10);
-            this.password = await bcrypt.hash(newPassword, salt);
-            this.resetToken = null;
-            this.resetTokenExpiry = null;
-          },
-        },
         indexes: [
           {
             name: "user_pkey",
@@ -89,5 +74,19 @@ class User extends Model {
     });
   }
 }
+
+User.prototype.generateResetToken = async function () {
+  const token = crypto.randomBytes(32).toString("hex");
+  this.resetToken = token;
+  this.resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour
+  return token;
+};
+
+User.prototype.setNewPassword = async function (newPassword) {
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(newPassword, salt);
+  this.resetToken = null;
+  this.resetTokenExpiry = null;
+};
 
 export default User;

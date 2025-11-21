@@ -4,10 +4,9 @@ import { Link } from "react-router";
 import { AppContexts } from "../../providers";
 import { checkRequired } from "../../utils.js";
 
-export const LoginPage = () => {
+export const RequestPage = () => {
   let [user, setUser] = useState({
     email: "",
-    password: "",
     pword: "", // bot check, this field will be invisible. Bots will fill it, people will not
   });
 
@@ -16,7 +15,7 @@ export const LoginPage = () => {
   let [errors, setErrors] = useState([]);
   let [pending, setPending] = useState(false);
 
-  const { login } = useContext(AppContexts.AuthContext);
+  const { request_password_reset } = useContext(AppContexts.AuthContext);
 
   const update = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
@@ -32,10 +31,10 @@ export const LoginPage = () => {
     return errors.includes(field) ? "error" : "";
   };
 
-  const handleLogin = async (e) => {
+  const handleRequest = async (e) => {
     e.preventDefault();
 
-    let requiredFields = ["email", "password"];
+    let requiredFields = ["email"];
     let missing_fields = checkRequired(requiredFields, user);
 
     if (missing_fields.length > 0) {
@@ -45,13 +44,25 @@ export const LoginPage = () => {
       return;
     }
 
-    let resp = await login(user);
+    let resp = await request_password_reset(user);
 
     if (resp.success === true) {
-      window.location.assign("/");
+      window.UIkit.notification({
+        message: `An Email has been sent to the address you requested. Please follow the instructions there`,
+        status: "primary",
+        pos: "bottom-left",
+        timeout: 5000,
+      });
     } else {
       setError(resp.error);
-      setErrors(resp.fields || ["email", "password"]);
+      setErrors(resp.fields || ["email"]);
+
+      window.UIkit.notification({
+        message: `An error has occurred`,
+        status: "danger",
+        pos: "bottom-left",
+        timeout: 5000,
+      });
     }
   };
 
@@ -59,7 +70,7 @@ export const LoginPage = () => {
     <section id="auth-page" className="page">
       <div id="login-form" className="auth">
         <div className="uk-modal-body">
-          <h2 className="uk-modal-title">Log In</h2>
+          <h2 className="uk-modal-title">Request Password Reset</h2>
 
           <form>
             <p className="error">{error}</p>
@@ -69,24 +80,6 @@ export const LoginPage = () => {
                 type="text"
                 name="email"
                 value={user?.email || ""}
-                onInput={update}
-              />
-            </div>
-
-            <div className={`input-wrapper password ${errorClass("password")}`}>
-              <label>Password</label>
-              <a
-                href="#"
-                uk-icon="icon: eye"
-                aria-label="View/Hide Password"
-                onClick={() => {
-                  setVisible(!visible);
-                }}
-              ></a>
-              <input
-                type={visible ? "text" : "password"}
-                name="password"
-                value={user?.password || ""}
                 onInput={update}
               />
             </div>
@@ -101,8 +94,8 @@ export const LoginPage = () => {
               />
             </div>
 
-            <div className="btn blocky clicky" onClick={handleLogin}>
-              {pending ? "Logging In..." : "Login"}
+            <div className="btn blocky clicky" onClick={handleRequest}>
+              {pending ? "Requsting..." : "Request"}
             </div>
           </form>
 
@@ -112,7 +105,7 @@ export const LoginPage = () => {
 
           <p>
             Forgot your password?{" "}
-            <Link to="/request-password-reset">Reset Password</Link>
+            <Link to="request-password-reset">Reset Password</Link>
           </p>
 
           <a
