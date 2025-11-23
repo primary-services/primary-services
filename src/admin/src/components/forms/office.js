@@ -136,9 +136,16 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 		let resp = await onSave(office);
 		setPendingSave(false);
 
-		showNotification({
-			message: `Saved office successfully`,
-		});
+		if (!resp.error_code) {
+			showNotification({
+				message: `Saved office successfully`,
+			});
+		} else {
+			showNotification({
+				message: resp.error_msg,
+				status: "danger",
+			});
+		}
 
 		setRequiresConfirmation(false);
 		onCancel();
@@ -243,19 +250,21 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 						</div>
 
 						<div className="width-1-1">
-								<input
-									id="shared"
-									name="shared"
-									type="checkbox"
-									key={`shared-${!!office.shared}`}
-									checked={!!office.shared}
-									onChange={(ev) => {
-										update("shared", ev.target.checked);
-									}}
-								/>
-								<label htmlFor="shared">
-									{' '}Office is shared across municipalities (e.g. regional school board position)
-								</label>
+							<input
+								id="shared"
+								name="shared"
+								type="checkbox"
+								key={`shared-${!!office.shared}`}
+								checked={!!office.shared}
+								onChange={(ev) => {
+									update("shared", ev.target.checked);
+								}}
+							/>
+							<label htmlFor="shared">
+								{" "}
+								Office is shared across municipalities (e.g. regional school
+								board position)
+							</label>
 						</div>
 					</div>
 
