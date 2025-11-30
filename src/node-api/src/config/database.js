@@ -1,18 +1,10 @@
 import { getSecret } from "../utils/aws.js";
+import { default as staticConfig } from "../../config/config.json" assert { type: "json" };
 
 export const config = async () => {
-  if (process.env["NODE_ENV"] === "local") {
+  if (!process.env["DBSecret"]) {
     return [
-      {
-        dialect: process.env.DB_DIALECT,
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASS,
-        database: process.env.DB_NAME,
-        define: {
-          timestamps: true,
-        },
-      },
+      staticConfig[process.env.NODE_ENV || "local"],
       null,
     ];
   }

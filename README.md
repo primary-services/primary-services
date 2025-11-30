@@ -60,9 +60,11 @@ If they do ``terraform apply``
 **Installation And Running**
 ``cd /src/node-api``
 ``npm install``
-Get the DB Creds from another dev, and make a local copy of the DB. If you have access to the AWS Console you can also get them via SecretsManager
-Copy the ``.env.example`` file to ``.env`` and fill in your local variables
-Modify `config/config.json` so that all placeholders are replaced
+Get JWT info & DB creds one of two ways:
+1. get AWS access from another dev & view them in SecretsManager, 
+1. get them from the .env file from another dev
+Copy the ``.env.example`` file to ``.env`` and fill in your local variables from the step above
+Copy  `config/config.template.json`, rename to `config/config.json`, and fill in all of the placeholders
 Run ``npm run dev`` and the server should be started
 
 **DB Migrations** 

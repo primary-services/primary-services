@@ -25,6 +25,8 @@ var corsOptions = {
   credentials: true,
 };
 
+const DEFAULT_PORT = 5000;
+
 const routeFiles = fs
   .readdirSync(__dirname + "/src/routes/")
   .filter((file) => file.endsWith(".js"));
@@ -50,10 +52,10 @@ const expressService = {
       server.use(routes);
 
       if (process.env["NODE_ENV"] === "local") {
-        server.listen(process.env.SERVER_PORT);
+        server.listen(process.env.SERVER_PORT || DEFAULT_PORT);
         console.log(
           "[EXPRESS] Express initialized on ",
-          process.env.SERVER_PORT,
+          process.env.SERVER_PORT || DEFAULT_PORT,
         );
       }
     } catch (error) {
