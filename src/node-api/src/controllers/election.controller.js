@@ -17,7 +17,6 @@ let officeController = {
         error_msg: error_codes["UNAUTHORIZED"],
       });
     }
-    
 
     // Save the incoming election data
     let election = await Election.prototype.upsertAll(data);
@@ -89,6 +88,7 @@ let officeController = {
         { model: Form, as: "forms" },
       ],
     });
+    
     // TODO add versioning
     return res.status(200).json(reloaded);
   },

@@ -231,6 +231,7 @@ let municipalityController = {
         error_msg: error_codes["UNAUTHORIZED"],
       });
     }
+    
     let note = await Note.prototype.upsertAll(data);
     await createNewVersion(Note, user, data);
     return res.status(200).json(note);
