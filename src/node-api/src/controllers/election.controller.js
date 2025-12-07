@@ -9,6 +9,14 @@ import Form from "../models/form.model.js";
 let officeController = {
   save: async (req, res, next) => {
     let data = req.body;
+    let user = req.jwt?.user || null;
+
+    if (!user) {
+      return res.status(401).json({
+        error_code: "UNAUTHORIZED",
+        error_msg: error_codes["UNAUTHORIZED"],
+      });
+    }
 
     // Save the incoming election data
     let election = await Election.prototype.upsertAll(data);
@@ -81,6 +89,7 @@ let officeController = {
       ],
     });
 
+    // TODO add versioning
     return res.status(200).json(reloaded);
   },
 };
