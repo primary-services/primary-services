@@ -292,6 +292,19 @@ export const Towns = () => {
     );
   };
 
+  const authContext = useContext(AppContexts.AuthContext);
+  const loadingAuth = authContext.loading;
+  const authed = !!authContext.user;
+
+  useEffect(() => {
+    const root = document.getElementById("root");
+    if (!authed) {
+      root.classList.add("disable-clicks");
+    } else {
+      root.classList.remove("disable-clicks");
+    }
+  }, [authed]);
+
   return (
     <section id="towns" className="page">
       <div className="sidebar">
@@ -300,6 +313,9 @@ export const Towns = () => {
         ) : (
           <>
             <div className="sidebar-header">
+              {!loadingAuth && !authed && (
+                <div className="not-authed"><p>Please log in to manage towns</p></div>
+              )}
               <form className="uk-search uk-search-default">
                 <div className="input-wrapper">
                   <input
@@ -322,7 +338,7 @@ export const Towns = () => {
                 return (
                   <li key={t.name}>
                     <span
-                      className={getCompletionStatusClass(t.completionStatus)}
+                      className={`${getCompletionStatusClass(t.completionStatus)} icon clickable`}
                       uk-icon={
                         t.completionStatus === "IN_PROGRESS"
                           ? "icon: refresh"

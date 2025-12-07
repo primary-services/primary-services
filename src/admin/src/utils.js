@@ -169,3 +169,18 @@ export const confirmDeleteThen = (callbackFn) => {
     callbackFn();
   }
 }
+
+export const fetchWithAuth = (url, options = {}) => {
+  let token = getCookie("auth_token") || "";
+
+  return fetch(url, {
+      ...options,
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        ...options.headers,
+      },
+  });
+};

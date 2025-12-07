@@ -58,9 +58,23 @@
 			position: relative;
 			padding-right: 30px;
 			box-sizing: border-box;
-			margin-top: -50px;
+			margin-top: -25%;
 			background-color: white;
 			z-index: 1;
+
+			.not-authed {
+				background-color: #ffdddd;
+				border: solid 1px #ffaaaa;
+				padding: 10px;
+				margin-bottom: 30px;
+				border-radius: 5px;
+
+				p {
+					margin: 0;
+					color: #aa0000;
+					font-weight: bold;
+				}
+			}
 		}
 	}
 

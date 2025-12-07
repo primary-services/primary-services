@@ -113,7 +113,14 @@ let municipalityController = {
 
   save: async (req, res, next) => {
     let data = req.body;
-    console.log("Saving municipality:", data);
+    let user = req.jwt?.user || null;
+
+    if (!user) {
+      return res.status(401).json({
+        error_code: "UNAUTHORIZED",
+        error_msg: error_codes["UNAUTHORIZED"],
+      });
+    }
     let municipality = await Municipality.findByPk(data.id);
     if (!municipality) {
       return res.status(404).json({ error: "Municipality not found" });
@@ -124,12 +131,29 @@ let municipalityController = {
 
   createSource: async (req, res, next) => {
     let data = req.body;
+    let user = req.jwt?.user || null;
+
+    if (!user) {
+      return res.status(401).json({
+        error_code: "UNAUTHORIZED",
+        error_msg: error_codes["UNAUTHORIZED"],
+      });
+    }
+
     let source = await Source.prototype.upsertAll(data);
     return res.status(200).json(source);
   },
 
   deleteSource: async (req, res, next) => {
     let { source_id } = req.params;
+    let user = req.jwt?.user || null;
+
+    if (!user) {
+      return res.status(401).json({
+        error_code: "UNAUTHORIZED",
+        error_msg: error_codes["UNAUTHORIZED"],
+      });
+    }
 
     if (!!source_id) {
       await Source.destroy({
@@ -144,12 +168,29 @@ let municipalityController = {
 
   createNote: async (req, res, next) => {
     let data = req.body;
+    let user = req.jwt?.user || null;
+
+    if (!user) {
+      return res.status(401).json({
+        error_code: "UNAUTHORIZED",
+        error_msg: error_codes["UNAUTHORIZED"],
+      });
+    }
+
     let note = await Note.prototype.upsertAll(data);
     return res.status(200).json(note);
   },
 
   deleteNote: async (req, res, next) => {
     let { note_id } = req.params;
+    let user = req.jwt?.user || null;
+
+    if (!user) {
+      return res.status(401).json({
+        error_code: "UNAUTHORIZED",
+        error_msg: error_codes["UNAUTHORIZED"],
+      });
+    }
 
     if (!!note_id) {
       await Note.destroy({

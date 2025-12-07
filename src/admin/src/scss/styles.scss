@@ -157,3 +157,9 @@ input[type="radio"] {
 		}
 	}
 }
+
+.disable-clicks {
+	.clickable {
+		pointer-events: none;
+	}
+}

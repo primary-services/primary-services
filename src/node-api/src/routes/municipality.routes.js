@@ -18,25 +18,29 @@ municipalityRoutes.get(
 	municipalityController.collections,
 );
 municipalityRoutes.post(
+	"/municipalities/:municipality_id", 
+	auth, 
+	municipalityController.save
+);
+municipalityRoutes.post(
 	"/municipalities/:municipality_id/note",
+	auth,
 	municipalityController.createNote,
 );
 municipalityRoutes.delete(
 	"/municipalities/:municipality_id/note/:note_id",
+	auth,
 	municipalityController.deleteNote,
 );
 municipalityRoutes.post(
 	"/municipalities/:municipality_id/source/",
+	auth,
 	municipalityController.createSource,
 );
 municipalityRoutes.delete(
 	"/municipalities/:municipality_id/source/:source_id",
+	auth,
 	municipalityController.deleteSource,
 );
-
-municipalityRoutes.post("/municipalities/:municipality_id/source");
-municipalityRoutes.delete("/municipalities/:municipality_id/source/:source_id");
-
-municipalityRoutes.post("/municipalities/:municipality_id", municipalityController.save);
 
 export { municipalityRoutes };

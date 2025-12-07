@@ -4,6 +4,6 @@ import electionController from "../controllers/election.controller.js";
 
 const electionRoutes = Router();
 
-electionRoutes.post("/election", electionController.save);
+electionRoutes.post("/election", auth, electionController.save);
 
 export { electionRoutes };
