@@ -90,13 +90,27 @@
 
 		.town-header {
 			align-items: center;
+			margin-bottom: 20px;
 
 			h2 {
+				margin: 0;
 				margin-right: auto;
 			}
 
 			a {
 				display: block;
+			}
+
+			> :nth-child(2) {
+				margin-right: 20px;
+				text-align: right;
+			}
+
+			.historyIcon {
+				padding-top: 3px;
+				width: 35px;
+				height: 35px;
+				cursor: pointer;
 			}
 		}
 

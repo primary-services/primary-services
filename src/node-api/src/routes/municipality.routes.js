@@ -17,6 +17,10 @@ municipalityRoutes.get(
 	"/municipalities/:municipality_id/collections",
 	municipalityController.collections,
 );
+municipalityRoutes.get(
+	"/municipalities/:municipality_id/history",
+	municipalityController.history,
+);
 municipalityRoutes.post(
 	"/municipalities/:municipality_id", 
 	auth, 

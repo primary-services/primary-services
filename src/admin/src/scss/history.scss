@@ -1,0 +1,26 @@
+.municipality-history {
+    padding-top: 10px;
+
+    > :not(:last-child) {
+        border-bottom: 1px solid #ddd;
+        margin-bottom: 5px;
+        padding: 10px 0;
+    }
+
+    > :last-child {
+        margin-top: 20px;
+    }
+
+    .disclaimer {
+        font-size: 0.9em;
+        color: #666;
+        font-style: italic;
+    }
+
+    .history-entry {
+        p {
+            margin: 5px 0;
+        }
+    }
+
+}

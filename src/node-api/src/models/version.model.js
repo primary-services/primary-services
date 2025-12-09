@@ -54,6 +54,28 @@ class Version extends Model {
 			foreignKey: "office_id",
 			constraints: false,
 		});
+
+		this.hasOne(models.User, {
+			foreignKey: "id",
+			sourceKey: "user_id",
+			as: "user",
+			constraints: false,
+		});
+	}
+}
+
+export const createNewVersion = async (model, user, data) => {
+	let [item, diff] = await model.prototype.upsertAllAndDiff(data);
+
+	if (diff !== null) {
+		let version = Version.build({
+			user_id: user.id,
+			item_id: item.id,
+			item_type: model.name,
+			fields: diff,
+		});
+
+		await version.save();
 	}
 }
 

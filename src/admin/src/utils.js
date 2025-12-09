@@ -184,3 +184,21 @@ export const fetchWithAuth = (url, options = {}) => {
       },
   });
 };
+
+export const capitalizeFirstLetter = (str) => {
+  if (str.length === 0) {
+    return "";
+  }
+  return str.replace(/^./, char => char.toUpperCase());
+}
+
+export const convertKeyToLabel = (inputString) => {
+  // Replace underscores with spaces
+  const spacedString = inputString.replace(/_/g, ' ');
+
+  // Split the string into words
+  const words = spacedString.split(' ');
+
+  // Join the words back together with spaces & capitalize first letter
+  return capitalizeFirstLetter(words.join(' '));
+}
