@@ -50,10 +50,16 @@ class Version extends Model {
 	}
 
 	static associate(models) {
-		this.belongsTo(models.Office, {
-			foreignKey: "office_id",
-			constraints: false,
-		});
+		// Dynamically associate to all models that have versionItemType defined
+		for (const modelName of Object.keys(models)) {
+			const model = models[modelName];
+			if (Object.hasOwn(model, "versionItemType") && !!model.versionItemType) {
+				this.belongsTo(model, {
+					foreignKey: "item_id",
+					constraints: false,
+				});
+			}
+		}
 
 		this.hasOne(models.User, {
 			foreignKey: "id",
@@ -77,6 +83,8 @@ export const createNewVersion = async (model, user, data) => {
 
 		await version.save();
 	}
+
+	return item;
 }
 
 export default Version;

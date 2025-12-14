@@ -56,8 +56,14 @@ class Municipality extends Model {
         ],
       },
     );
+    this.humanReadableIdentifier = "name";
+    this.versionItemType = "Municipality";
   }
+
   static associate(models) {
+
+		this.prototype.setUpVersioning(models, this.versionItemType);
+
     // TODO: this is super annoying
     this.hasMany(models.Office, {
       foreignKey: "municipality_id",

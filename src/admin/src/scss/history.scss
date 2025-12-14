@@ -3,8 +3,7 @@
 
     > :not(:last-child) {
         border-bottom: 1px solid #ddd;
-        margin-bottom: 5px;
-        padding: 10px 0;
+        padding: 15px 0px;
     }
 
     > :last-child {
@@ -15,12 +14,28 @@
         font-size: 0.9em;
         color: #666;
         font-style: italic;
+        margin-bottom: 0px;
+        padding-top: 0px;
     }
 
     .history-entry {
         p {
             margin: 5px 0;
         }
+    }
+
+    .history-date, .history-user {
+        font-weight: bold;
+    }
+
+    .history-diff {
+        padding: 12px;
+        border-radius: 4px;
+        background-color: #ecf1f6;
+    }
+
+    .history-changes-properties {
+        margin-left: 1.5em;
     }
 
 }

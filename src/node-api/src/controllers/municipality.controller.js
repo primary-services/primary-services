@@ -105,8 +105,8 @@ let municipalityController = {
         },
         { model: Deadline, as: "deadlines" },
         { model: Form, as: "forms" },
-        { model: Source, as: "sources" },
-        { model: Note, as: "notes" },
+        { model: Source, as: "sources", where: { deleted: false } },
+        { model: Note, as: "notes", where: { deleted: false } },
       ],
     });
 
@@ -178,8 +178,7 @@ let municipalityController = {
     if (!municipality) {
       return res.status(404).json({ error: "Municipality not found" });
     }
-    municipality = await municipality.update(data);
-    await createNewVersion(Municipality, user, data);
+    municipality = await createNewVersion(Municipality, user, data);
     return res.status(200).json(municipality);
   },
 
@@ -194,8 +193,7 @@ let municipalityController = {
       });
     }
 
-    let source = await Source.prototype.upsertAll(data);
-    await createNewVersion(Source, user, data)
+    const source = await createNewVersion(Source, user, data)
     return res.status(200).json(source);
   },
 
@@ -211,13 +209,11 @@ let municipalityController = {
     }
 
     if (!!source_id) {
-      await Source.destroy({
-        where: {
-          id: source_id,
-        },
-      });
+      const original = await Source.findByPk(source_id);
+      original.deleted = true;
+      await createNewVersion(Source, user, original.dataValues);
     }
-    await createNewVersion(Source, user, data); 
+
     return res.status(200).json({ success: true });
   },
 
@@ -232,8 +228,7 @@ let municipalityController = {
       });
     }
     
-    let note = await Note.prototype.upsertAll(data);
-    await createNewVersion(Note, user, data);
+    const note = await createNewVersion(Note, user, data);
     return res.status(200).json(note);
   },
 
@@ -249,13 +244,10 @@ let municipalityController = {
     }
 
     if (!!note_id) {
-      await Note.destroy({
-        where: {
-          id: note_id,
-        },
-      });
+       const original = await Note.findByPk(note_id);
+       original.deleted = true;
+       await createNewVersion(Note, user, original.dataValues);
     }
-    await createNewVersion(Note, user, data);
     return res.status(200).json({ success: true });
   },
 };

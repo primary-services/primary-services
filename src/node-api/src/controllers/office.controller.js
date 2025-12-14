@@ -75,7 +75,7 @@ let officeController = {
     }
 
     try {
-      await createNewVersion(Office, user, data)
+      const office = await createNewVersion(Office, user, data)
       return res.status(200).json(office);
     } catch (e) {
       console.log("ERROR: ", e);

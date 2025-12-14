@@ -55,9 +55,13 @@ class Source extends Model {
 				],
 			},
 		);
+		this.humanReadableIdentifier = "summary";
+		this.versionItemType = "Source";
 	}
 
 	static associate(models) {
+		this.prototype.setUpVersioning(models, this.versionItemType);
+
 		this.belongsTo(models.Municipality, {
 			foreignKey: "item_id",
 			constraints: false,
