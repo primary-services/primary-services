@@ -1,6 +1,15 @@
 .municipality-history {
     padding-top: 10px;
 
+    // Class name twice for specificity to override other styles
+    .municipality-history-header.municipality-history-header  {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 0px;
+        padding-bottom: 25px;
+    }
+
     > :not(:last-child) {
         border-bottom: 1px solid #ddd;
         padding: 15px 0px;

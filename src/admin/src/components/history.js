@@ -82,7 +82,12 @@ const getHistoryChanges = (entry, item_type) => {
 export const MunicipalityHistory = ({ close, municipality }) => {
     const { data: history = [] } = useMunicipalityHistory(municipality?.id);
     return <div className="municipality-history">
-        <p className="disclaimer">Records not available for changes before X/X/X</p>
+        <div className="municipality-history-header">
+          <p className="disclaimer">Records not available before X/X/X</p>
+          <div className="btn blocky clicky rev" onClick={close}>
+						Close
+				  </div>
+        </div>
         {
             history.length === 0 ? <h4>No history available.</h4> : history.map((entry, idx) => (
                 <div key={idx} className="history-entry">
