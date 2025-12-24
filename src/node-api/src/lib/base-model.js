@@ -420,7 +420,7 @@ Sequelize.Model.prototype.upsertAllAndDiff = function async(data) {
 };
 
 Sequelize.Model.prototype.setUpVersioning = function (models, versionItemType) {
-  if (versionItemType) {
+  if (this.versionItemType) {
     this.hasMany(models.Version, {
       foreignKey: "item_id",
       as: "version",
