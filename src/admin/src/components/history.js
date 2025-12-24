@@ -83,7 +83,7 @@ export const MunicipalityHistory = ({ close, municipality }) => {
     const { data: history = [] } = useMunicipalityHistory(municipality?.id);
     return <div className="municipality-history">
         <div className="municipality-history-header">
-          <p className="disclaimer">Records not available before X/X/X</p>
+          <p className="disclaimer">Records not available before 12/23/2025</p>
           <div className="btn blocky clicky rev" onClick={close}>
 						Close
 				  </div>
