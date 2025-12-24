@@ -101,9 +101,10 @@ let officeController = {
 
     if (!!id) {
       try {
-        const orginal = await Office.findByPk(id);
-        orginal.deleted = true;
-        await createNewVersion(Office, user, orginal.dataValues);
+        const original = await Office.findByPk(id);
+        original.deleted = true;
+        await createNewVersion(Office, user, original.dataValues);
+        return res.status(200).json({ success: true, ...original.dataValues });
       } catch (e) {
         console.log(e);
       }

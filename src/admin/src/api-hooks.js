@@ -114,15 +114,17 @@ export const useUpdateTown = () => {
 
 /////////////// Delete Hooks ///////////////
 
-export const useDeleteOffice = () =>
-  useMutation({
+export const useDeleteOffice = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationKey: ["office"],
     mutationFn: deleteOffice,
     onSuccess: (office) => {
-      invalidateMunicipalityOffices(office.municipality_id);
+      invalidateMunicipalityOffices(queryClient, office.municipality_id);
+      invalidateMunicipalityHistory(queryClient, office.municipality_id);
     },
   });
- 
+};
 
 ////////////// Seat Schema ///////////////
 

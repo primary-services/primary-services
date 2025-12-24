@@ -212,6 +212,7 @@ let municipalityController = {
       const original = await Source.findByPk(source_id);
       original.deleted = true;
       await createNewVersion(Source, user, original.dataValues);
+      return res.status(200).json({ success: true, ...original.dataValues });
     }
 
     return res.status(200).json({ success: true });
@@ -247,6 +248,7 @@ let municipalityController = {
        const original = await Note.findByPk(note_id);
        original.deleted = true;
        await createNewVersion(Note, user, original.dataValues);
+       return res.status(200).json({ success: true, ...original.dataValues });
     }
     return res.status(200).json({ success: true });
   },
