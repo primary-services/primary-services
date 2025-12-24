@@ -1,6 +1,6 @@
 import moment from "moment";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 import { SeatForm } from "./seats.js";
 import { SeatList } from "../lists/seats.js";
@@ -26,6 +26,9 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 	let [requiresConfirmation, setRequiresConfirmation] = useState(false);
 	let [pendingSave, setPendingSave] = useState(false);
 
+	// If less than 30 days until new year, consider it next year
+	const currentYear = useMemo(() => +moment().add(30, "days").format("YYYY"), []);
+
 	useEffect(() => {
 		let sorted = [...arr(selected.seats)].sort((a, b) => {
 			let cA = currentTerm(a);
@@ -43,9 +46,9 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 					terms: [
 						{
 							start: null,
-							start_year: +moment().format("YYYY"),
+							start_year: currentYear,
 							end: null,
-							end_year: +moment().add(office.tenure, "years").format("YYYY"),
+							end_year: currentYear + office.tenure,
 							official: {
 								name: "",
 							},
@@ -65,8 +68,6 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 	}, [selected]);
 
 	const currentTerm = (seat) => {
-		let currentYear = new Date().getFullYear();
-
 		return (seat.terms || [])
 			.filter((t) => {
 				return t.start_year <= currentYear && t.end_year >= currentYear;
@@ -271,7 +272,7 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 					<h3>Seats/Terms</h3>
 					<ul className="uk-list uk-list-striped">
 						{office.seats.map((seat, index) => {
-							let term = currentTerm(seat);
+							let term = currentTerm(seat) || seat.terms[0];
 
 							return (
 								<li className="term">
@@ -302,9 +303,8 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 													}}
 												>
 													{new Array(10).fill(null).map((_, idx) => {
-														let year = new Date().getFullYear();
 														return (
-															<option value={year - idx}>{year - idx}</option>
+															<option value={currentYear - idx}>{currentYear - idx}</option>
 														);
 													})}
 												</select>
