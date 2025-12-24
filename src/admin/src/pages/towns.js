@@ -318,7 +318,7 @@ export const Towns = () => {
           <>
             <div className="sidebar-header">
               {!loadingAuth && !authed && (
-                <div className="not-authed"><p>Please log in to manage towns</p></div>
+                <div className="not-authed"><p>Please sign in or sign up to edit towns</p></div>
               )}
               <form className="uk-search uk-search-default">
                 <div className="input-wrapper">
