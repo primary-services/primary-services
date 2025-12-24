@@ -36,6 +36,10 @@ class Note extends Model {
 					type: DataTypes.INTEGER,
 					allowNull: true,
 				},
+				deleted: {
+					type: DataTypes.BOOLEAN,
+					defaultValue: false,
+				},
 			},
 			{
 				sequelize,
@@ -51,9 +55,13 @@ class Note extends Model {
 				],
 			},
 		);
+		this.humanReadableIdentifier = "summary";
+		this.versionItemType = "Note";
 	}
 
 	static associate(models) {
+		this.prototype.setUpVersioning(models, this.versionItemType);
+
 		this.belongsTo(models.Municipality, {
 			foreignKey: "item_id",
 			constraints: false,

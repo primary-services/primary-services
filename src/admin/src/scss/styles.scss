@@ -7,6 +7,7 @@
 @use "./notifications.scss";
 @use "./auth.scss";
 @use "./markdown.scss";
+@use "./history.scss";
 
 @use "./confirmation.scss";
 
@@ -170,5 +171,11 @@ input[type="radio"] {
 		&:first-child {
 			padding-left: 0px;
 		}
+	}
+}
+
+.disable-clicks {
+	.clickable {
+		pointer-events: none;
 	}
 }

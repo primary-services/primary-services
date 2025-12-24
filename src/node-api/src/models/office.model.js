@@ -2,8 +2,8 @@ import { Sequelize, DataTypes } from "sequelize";
 import Model from "../lib/base-model.js";
 
 class Office extends Model {
-	static init(sequelize) {
-		super.init(
+  static init(sequelize) {
+    super.init(
       {
         id: {
           autoIncrement: true,
@@ -11,7 +11,7 @@ class Office extends Model {
           allowNull: false,
           primaryKey: true,
         },
-		// True if the position is shared across municipalities
+        // True if the position is shared across municipalities
         shared: {
           type: DataTypes.BOOLEAN,
           allowNull: true,
@@ -53,9 +53,13 @@ class Office extends Model {
           type: DataTypes.INTEGER,
           allowNull: false,
           // references: {
-          // 	model: "municipality",
-          // 	key: "id",
+          //  model: "municipality",
+          //  key: "id",
           // },
+        },
+        deleted: {
+          type: DataTypes.BOOLEAN,
+          defaultValue: false,
         },
       },
       {
@@ -71,30 +75,34 @@ class Office extends Model {
             fields: [{ name: "id" }],
           },
         ],
-      }
+      },
     );
-	}
+    this.humanReadableIdentifier = "title";
+    this.versionItemType = "Office";
+  }
 
-	static associate(models) {
-		// this.hasMany(models.Official, {
-		// 	foreignKey: "office_id",
-		// 	as: "officials",
-		// 	onRemove: "DELETE", // Custom action for upsertAll
-		// });
+  static associate(models) {
+    // this.hasMany(models.Official, {
+    //  foreignKey: "office_id",
+    //  as: "officials",
+    //  onRemove: "DELETE", // Custom action for upsertAll
+    // });
 
-		this.hasMany(models.Seat, {
-			foreignKey: "office_id",
-			as: "seats",
-			onRemove: "DELETE", // Custom action for upsertAll
-		});
+    this.prototype.setUpVersioning(models, this.versionItemType);
 
-		this.belongsTo(models.Municipality, {
-			foreignKey: "municipality_id",
-			as: "municipality",
-			onDelete: "NO ACTION",
-			onUpdate: "NO ACTION",
-		});
-	}
+    this.hasMany(models.Seat, {
+      foreignKey: "office_id",
+      as: "seats",
+      onRemove: "DELETE", // Custom action for upsertAll
+    });
+
+    this.belongsTo(models.Municipality, {
+      foreignKey: "municipality_id",
+      as: "municipality",
+      onDelete: "NO ACTION",
+      onUpdate: "NO ACTION",
+    });
+  }
 }
 
 export default Office;

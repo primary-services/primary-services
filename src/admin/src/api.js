@@ -1,30 +1,27 @@
 import { apiRoot } from "./constants.js";
+import { getCookie, fetchWithAuth } from "./utils.js";
 
 export const getTowns = () =>
-  fetch(`${apiRoot}/municipalities/towns`).then((response) => response.json());
+  fetchWithAuth(`${apiRoot}/municipalities/towns`).then((response) => response.json());
 
 export const getTown = (town_id) =>
-  fetch(`${apiRoot}/town/${town_id}`).then((response) => response.json());
+  fetchWithAuth(`${apiRoot}/town/${town_id}`).then((response) => response.json());
 
 export const getTownOffices = (town_id) =>
-  fetch(`${apiRoot}/town/${town_id}/offices`).then((response) =>
+  fetchWithAuth(`${apiRoot}/town/${town_id}/offices`).then((response) =>
     response.json(),
   );
 
 export const getTownRequirements = (town_id) =>
-  fetch(`${apiRoot}/town/${town_id}/requirements`).then((response) =>
+  fetchWithAuth(`${apiRoot}/town/${town_id}/requirements`).then((response) =>
     response.json(),
   );
 
 export const createOffice = (args) => {
   let { municipality_id, office } = args;
   // return fetch(`http://127.0.0.1:5000/municipality/${municipality_id}/office`, {
-  return fetch(`${apiRoot}/office`, {
+  return fetchWithAuth(`${apiRoot}/office`, {
     method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify({ ...office, municipality_id: municipality_id }),
   }).then((resp) => {
     return resp.json();
@@ -32,12 +29,9 @@ export const createOffice = (args) => {
 };
 
 export const deleteOffice = (office_id) => {
-  return fetch(`${apiRoot}/office/${office_id}`, {
+
+  return fetchWithAuth(`${apiRoot}/office/${office_id}`, {
     method: "DELETE",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
   }).then((resp) => {
     return resp.json();
   });
@@ -46,12 +40,8 @@ export const deleteOffice = (office_id) => {
 export const createElection = (args) => {
   let { municipality_id, election } = args;
 
-  return fetch(`${apiRoot}/election`, {
+  return fetchWithAuth(`${apiRoot}/election`, {
     method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify({ ...election, municipality_id: municipality_id }),
   }).then((resp) => {
     return resp.json();
@@ -59,24 +49,16 @@ export const createElection = (args) => {
 };
 
 export const createRequirement = (town, requirement) =>
-  fetch(`${apiRoot}/requirement`, {
+  fetchWithAuth(`${apiRoot}/requirement`, {
     method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify({ ...requirement, municipality_id: town.id }),
   }).then((resp) => {
     return resp.json();
   });
 
 export const updateTown = (town) =>
-  fetch(`${apiRoot}/municipalities/${town.id}`, {
+  fetchWithAuth(`${apiRoot}/municipalities/${town.id}`, {
     method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify({ ...town }),
   }).then((resp) => {
     return resp.json();
@@ -85,21 +67,26 @@ export const updateTown = (town) =>
 //////////// Seat Separation /////////////
 
 export const getMunicipality = (municipality_id) =>
-  fetch(`${apiRoot}/municipality/${municipality_id}`).then((response) =>
+  fetchWithAuth(`${apiRoot}/municipality/${municipality_id}`).then((response) =>
     response.json(),
   );
 
 export const getMunicipalityOffices = (municipality_id) =>
-  fetch(`${apiRoot}/municipalities/${municipality_id}/offices`).then(
+  fetchWithAuth(`${apiRoot}/municipalities/${municipality_id}/offices`).then(
     (response) => response.json(),
   );
 
 export const getMunicipalityElections = (municipality_id) =>
-  fetch(`${apiRoot}/municipalities/${municipality_id}/elections`).then(
+  fetchWithAuth(`${apiRoot}/municipalities/${municipality_id}/elections`).then(
     (response) => response.json(),
   );
 
 export const getMunicipalityCollections = (municipality_id) =>
-  fetch(`${apiRoot}/municipalities/${municipality_id}/collections`).then(
+  fetchWithAuth(`${apiRoot}/municipalities/${municipality_id}/collections`).then(
+    (response) => response.json(),
+  );
+
+export const getMunicipalityHistory = (municipality_id) =>
+  fetchWithAuth(`${apiRoot}/municipalities/${municipality_id}/history`).then(
     (response) => response.json(),
   );

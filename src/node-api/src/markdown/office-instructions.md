@@ -23,21 +23,18 @@ Melissa and Natalie are available to answer questions and listen to whatever com
 
 ## #1 How to fill in information for a city
 
+### Sign in
+
+Sign in via the button in the top right! If you haven't made an account yet, sign up.
+
+***You won't be able to make changes if you're not signed in!!***
+
 ### Choose a city
 
-1. First, choose a city from our [checklist of cities](https://docs.google.com/spreadsheets/d/1d4eHMwQLlPJGJvA7URVZ9ZICRqVVCny_uu6mj2j5a4Q/edit?usp=sharing) and change the status (column A) to started. 
-2. Add your name to the _Updater_ column (column B).
-3. Fill in data about the city.
-
-*If you don’t complete all the data for a city, that’s OK. If you plan on coming back to it, make a note to say that. If you decide you’re done volunteering for the time being, keep your name in the Updater column, and add a note saying the entry needs finishing.*
-
-We're working on modifying the system so that all you need to do is log in, no spreadsheet updating required, but in the meantime we'd appreciate if you update the spreadsheet so we know who's working on what!
-
-### Go to the Hub 
-
 1. Go to the [Democracy Hub city list](https://admin.mademocracy.com/towns)
-2. On the left, select the city you chose, and click on the checkbox to the left to mark it as 'In progress'
+2. On the left, select a city
 3. You are now on the landing page for that city! This is where the magic happens.
+4. Click on the checkbox to the left to mark it as 'In progress'. It should become yellow!
 
 ### Add that sexy municipal information 
 
@@ -104,18 +101,11 @@ If you encounter bugs that mean the site won’t save or show the correct inform
 
 You’ve added stuff! This is great! You’ve added offices, the sources you found the information, and any notes for Future Volunteer.
 
-Mark the city as done via the checkbox next to the town name.
+Click the checkbox next to the town name again to mark it as done. It should be green now!
 
-Go back to our [checklist of cities](https://docs.google.com/spreadsheets/d/1d4eHMwQLlPJGJvA7URVZ9ZICRqVVCny_uu6mj2j5a4Q/edit?usp=sharing). 
+*If you accidentally mark it as done before you're ready, keep clicking the checkbox to cycle through states until you get the right status.*
 
-If you’ve found and entered all of the offices for your city, great! Click the **Done** checkbox (column A).
-
-If you haven’t entered all of the info for your city, that’s ok. Use the **Notes** line (column C) to say either:
-
-- Not completed, I’ll come back to it
-- Needs completing by someone
-
-And you’re done with that city! Also, can we also have your feedback??
+Now you’re done with that city! Also, can we also have your feedback??
 
 ## #2 How to give us feedback
 
@@ -131,7 +121,7 @@ You could write these down and either share them privately or add them to the De
 
 ### Encountering Bugs
 
-If you encounter a bug (the website working different than you thought it is supposed to), please report it using the Google form, so the people making the website can look at it: https://docs.google.com/forms/d/e/1FAIpQLSekaJ1HUhgOj8M8gf6WsTKzslsCQXw7R8wGQh-swqlHv1QSww/viewform
+If you encounter a bug (the website working different than you thought it is supposed to), please report it using the Google form, so the people making the website can look at it: [https://docs.google.com/forms/d/e/1FAIpQLSekaJ1HUhgOj8M8gf6WsTKzslsCQXw7R8wGQh-swqlHv1QSww/viewform](https://docs.google.com/forms/d/e/1FAIpQLSekaJ1HUhgOj8M8gf6WsTKzslsCQXw7R8wGQh-swqlHv1QSww/viewform)
 
 - You’re an “Admin”
 - You can also find this link when you’re within a city’s landing page under the “Report a Bug” link at the top right

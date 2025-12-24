@@ -4,10 +4,13 @@ import Official from "../models/official.model.js";
 import Office from "../models/office.model.js";
 import Seat from "../models/seat.model.js";
 import Term from "../models/term.model.js";
+import Version, { createNewVersion } from "../models/version.model.js";
 
 import Requirement from "../models/requirement.model.js";
 import Deadline from "../models/deadline.model.js";
 import Form from "../models/form.model.js";
+
+import { error_codes } from "../utils/error_codes.js";
 
 let officeController = {
   list: async (req, res, next) => {
@@ -23,7 +26,11 @@ let officeController = {
 
     // Might want a view here
     let offices = await Office.findAll({
-      where: { municipality_id: municipality.id, elected: true },
+      where: {
+        municipality_id: municipality.id,
+        elected: true,
+        deleted: false,
+      },
       include: [
         {
           model: Seat,
@@ -58,19 +65,60 @@ let officeController = {
 
   save: async (req, res, next) => {
     let data = req.body;
+    let user = req.jwt?.user || null;
 
-    let office = await Office.prototype.upsertAll(data);
+    if (!user) {
+      return res.status(401).json({
+        error_code: "UNAUTHORIZED",
+        error_msg: error_codes["UNAUTHORIZED"],
+      });
+    }
 
-    return res.status(200).json(office);
+    try {
+      const office = await createNewVersion(Office, user, data)
+      return res.status(200).json(office);
+    } catch (e) {
+      console.log("ERROR: ", e);
+
+      return res.status(500).json({
+        error_code: "UNKNOWN_ERROR",
+        error_msg: error_codes["UNKNOWN_ERROR"],
+      });
+    }
   },
 
   delete: async (req, res, next) => {
     let { id } = req.params;
 
-    if (!!id) {
-      await Office.destroy({
-        where: { id  },
+    let user = req.jwt?.user || null;
+
+    if (!user) {
+      return res.status(401).json({
+        error_code: "UNAUTHORIZED",
+        error_msg: error_codes["UNAUTHORIZED"],
       });
+    }
+
+    if (!!id) {
+      try {
+        const original = await Office.findByPk(id);
+        original.deleted = true;
+        await createNewVersion(Office, user, original.dataValues);
+        return res.status(200).json({ success: true, ...original.dataValues });
+      } catch (e) {
+        console.log(e);
+      }
+
+      // if (diff !== null) {
+      //   let version = Version.build({
+      //     user_id: user.id,
+      //     item_id: office.id,
+      //     item_type: "Office",
+      //     fields: diff,
+      //   });
+
+      //   await version.save();
+      // }
     }
 
     return res.status(200).json({ success: true });

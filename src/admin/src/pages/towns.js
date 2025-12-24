@@ -7,6 +7,7 @@ import { AppContexts } from "../providers";
 import { OfficeForm } from "../components/forms/office.js";
 import { ElectionForm } from "../components/forms/election.js";
 import { Slideout } from "../components/slideout.js";
+import { MunicipalityHistory } from "../components/history.js";
 import { RequirementForm } from "../components/forms/requirements.js";
 import {
   useTownOffices,
@@ -28,6 +29,7 @@ import { useCreateSource, useDeleteSource } from "../api/hooks/source.hooks.js";
 
 import { cleanDateString, arr, obj, confirm, showNotification, confirmDeleteThen } from "../utils.js";
 import { updateMunicipality } from "../api.js";
+import historyIcon from "../icons/history.svg";
 
 const getCompletionStatusClass = (status) => {
   switch (status) {
@@ -49,7 +51,7 @@ const getCompletionStatusLabel = (status) => {
     default:
       return "Not Started";
   }
-}
+};
 
 const getNextCompletionStatus = (status) => {
   switch (status) {
@@ -60,7 +62,7 @@ const getNextCompletionStatus = (status) => {
     default:
       return "IN_PROGRESS";
   }
-}
+};
 
 const Clerk = ({ official }) => {
   if (!official) {
@@ -109,6 +111,8 @@ export const Towns = () => {
   const [source, setSource] = useState(null);
   const [note, setNote] = useState(null);
   const [search, setSearch] = useState("");
+
+  const [showHistory, setShowHistory] = useState(false);
 
   const { data: offices, refetch: refetchOffices } = useMunicipalityOffices(
     town?.id,
@@ -292,6 +296,19 @@ export const Towns = () => {
     );
   };
 
+  const authContext = useContext(AppContexts.AuthContext);
+  const loadingAuth = authContext.loading;
+  const authed = !!authContext.user;
+
+  useEffect(() => {
+    const root = document.getElementById("root");
+    if (!authed) {
+      root.classList.add("disable-clicks");
+    } else {
+      root.classList.remove("disable-clicks");
+    }
+  }, [authed]);
+
   return (
     <section id="towns" className="page">
       <div className="sidebar">
@@ -300,6 +317,9 @@ export const Towns = () => {
         ) : (
           <>
             <div className="sidebar-header">
+              {!loadingAuth && !authed && (
+                <div className="not-authed"><p>Please sign in or sign up to edit towns</p></div>
+              )}
               <form className="uk-search uk-search-default">
                 <div className="input-wrapper">
                   <input
@@ -322,13 +342,20 @@ export const Towns = () => {
                 return (
                   <li key={t.name}>
                     <span
-                      className={getCompletionStatusClass(t.completionStatus)}
-                      uk-icon={t.completionStatus === "IN_PROGRESS" ? "icon: refresh" : "icon: check"}
-                      uk-tooltip={
-                        `title: ${getCompletionStatusLabel(t.completionStatus)}`
+                      className={`${getCompletionStatusClass(t.completionStatus)} icon clickable`}
+                      uk-icon={
+                        t.completionStatus === "IN_PROGRESS"
+                          ? "icon: refresh"
+                          : "icon: check"
                       }
+                      uk-tooltip={`title: ${getCompletionStatusLabel(t.completionStatus)}`}
                       onClick={() => {
-                        const update = { ...t, completionStatus: getNextCompletionStatus(t.completionStatus) };
+                        const update = {
+                          ...t,
+                          completionStatus: getNextCompletionStatus(
+                            t.completionStatus,
+                          ),
+                        };
                         saveTown(update);
                       }}
                       key={`${t.name}-${t.completionStatus}`}
@@ -365,6 +392,14 @@ export const Towns = () => {
                 >
                   Report a Bug
                 </a>
+              </div>
+              <div>
+                <img className="historyIcon" src={historyIcon} alt="History" 
+                  uk-tooltip="Show town edit history"
+                  onClick={() => {
+                    setShowHistory((prev) => !prev);
+                  }}
+                />
               </div>
             </div>
 
@@ -443,7 +478,9 @@ export const Towns = () => {
                           ></span>
                         </div>
                         <div className="width-8-12">{o.title}</div>
-                        <div className="width-2-12">{o.shared ? <span uk-icon="check"></span> : undefined}</div>
+                        <div className="width-2-12">
+                          {o.shared ? <span uk-icon="check"></span> : undefined}
+                        </div>
                         <div className="width-1-12">
                           {(o.seats || []).length}
                         </div>
@@ -642,37 +679,15 @@ export const Towns = () => {
             municipality={town}
             selected={office}
             onSave={async (o) => {
-              console.log(arr(o.seats), arr(office.seats));
-
-              // if (arr(o.seats).length < arr(office.seats).length) {
-              //   let msg =
-              //     "There are less seats than were previously saved, please confirm that this is what you wanted to do";
-
-              //   let onSave = () => {
-              //     saveOffice({
-              //       municipality_id: town.id,
-              //       office: o,
-              //     }).then(() => {
-              //       return refetchOffices();
-              //     });
-              //   };
-
-              //   let onCancel = () => {
-              //     setOffice(false);
-              //   };
-
-              //   await confirm(msg, onSave, onCancel, {
-              //     className: "office-confirm",
-              //   });
-
-              //   return Promise.resolve();
-              // } else {
               return saveOffice({ municipality_id: town.id, office: o }).then(
-                () => {
-                  return refetchOffices();
+                async (resp) => {
+                  if (!resp.error_code) {
+                    await refetchOffices();
+                  }
+
+                  return resp;
                 },
               );
-              // }
             }}
             onCancel={() => {
               setOffice(false);
@@ -698,6 +713,9 @@ export const Towns = () => {
             }}
           />
         </form>
+      </Slideout>
+      <Slideout active={showHistory} setActive={setShowHistory}>
+        <MunicipalityHistory municipality={town} close={() => setShowHistory(false)} />
       </Slideout>
     </section>
   );

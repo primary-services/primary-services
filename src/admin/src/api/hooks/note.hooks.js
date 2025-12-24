@@ -1,27 +1,33 @@
-import { QueryClient, useQuery, useMutation } from "@tanstack/react-query";
+import { QueryClient, useQueryClient, useMutation } from "@tanstack/react-query";
 
-import { invalidateMunicipalityCollections } from "../../api-hooks.js";
+import { invalidateMunicipalityCollections, invalidateMunicipalityHistory } from "../../api-hooks.js";
 
 import { createNote, deleteNote } from "../routes/note.routes.js";
 
-export const useCreateNote = () =>
-  useMutation({
+export const useCreateNote = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationKey: ["note"],
     mutationFn: (args) => createNote(args),
     onSuccess: (note) => {
       if (note.item_type === "municipality") {
-        invalidateMunicipalityCollections(note.item_id);
+        invalidateMunicipalityCollections(queryClient, note.item_id);
+        invalidateMunicipalityHistory(queryClient, note.item_id);
       }
     },
   });
+}
 
-export const useDeleteNote = () =>
-  useMutation({
+export const useDeleteNote = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationKey: ["note"],
     mutationFn: (args) => deleteNote(args),
     onSuccess: (note) => {
       if (note.item_type === "municipality") {
-        invalidateMunicipalityCollections(note.item_id);
+        invalidateMunicipalityCollections(queryClient, note.item_id);
+        invalidateMunicipalityHistory(queryClient, note.item_id);
       }
     },
   });
+}

@@ -31,7 +31,7 @@ const formatDefaultValue = (value) => {
 	}
 
 	if (typeof value === "boolean") {
-		return `defaultValue: ${!!value ? "TRUE" : "FALSE"}`;
+		return `defaultValue: ${!!value ? "true" : "false"}`;
 	}
 
 	return `defaultValue: "${value}"`;

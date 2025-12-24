@@ -1,4 +1,5 @@
 import JwtService from "../services/jwt.service.js";
+import { error_codes } from "../utils/error_codes.js";
 
 // TODO: check the DB to make sure the user still exists. If not expire the cookie
 
@@ -14,6 +15,9 @@ export const auth = async (req, res, next) => {
     return next();
   } catch (error) {
     console.log(error);
-    return res.status(401).json({ "error:": "Unauthorized" });
+    return res.status(401).json({
+      error_code: "UNAUTHORIZED",
+      error_msg: error_codes["UNAUTHORIZED"],
+    });
   }
 };
