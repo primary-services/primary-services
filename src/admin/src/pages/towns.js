@@ -394,12 +394,13 @@ export const Towns = () => {
                 </a>
               </div>
               <div>
-                <img className="historyIcon" src={historyIcon} alt="History" 
+                <span 
+                  uk-icon="icon: history; ratio: 1.5" 
                   uk-tooltip="Show town edit history"
+                  className="history-icon"
                   onClick={() => {
                     setShowHistory((prev) => !prev);
-                  }}
-                />
+                  }}></span>
               </div>
             </div>
 
