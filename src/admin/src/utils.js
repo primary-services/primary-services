@@ -30,7 +30,16 @@ export const getCookie = (name) => {
  * @return {Promise}
  */
 export const clearCookie = (name) => {
-  return window.cookieStore.delete(name);
+  const isLocal = window.location.hostname === "localhost";
+
+  if (isLocal) {
+    return window.cookieStore.delete(name);
+  } else {
+    return window.cookieStore.delete({
+      name: name,
+      domain: "mademocracy.com",
+    });
+  }
 };
 
 export const validPassword = (password, confirmation) => {
@@ -156,32 +165,36 @@ export const confirm = (
 };
 
 // status is one of "primary", "success", "warning", "danger"
-export const showNotification = ({message, status = "primary", timeout = 1500}) => {
+export const showNotification = ({
+  message,
+  status = "primary",
+  timeout = 1500,
+}) => {
   window.UIkit.notification({
     message,
     status,
     timeout,
   });
-}
+};
 
 export const confirmDeleteThen = (callbackFn) => {
   if (window.confirm("Are you sure you want to delete this item?")) {
     callbackFn();
   }
-}
+};
 
 export const fetchWithAuth = (url, options = {}) => {
   let token = getCookie("auth_token") || "";
 
   return fetch(url, {
-      ...options,
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-        ...options.headers,
-      },
+    ...options,
+    credentials: "include",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+      ...options.headers,
+    },
   });
 };
 
@@ -189,16 +202,16 @@ export const capitalizeFirstLetter = (str) => {
   if (str.length === 0) {
     return "";
   }
-  return str.replace(/^./, char => char.toUpperCase());
-}
+  return str.replace(/^./, (char) => char.toUpperCase());
+};
 
 export const convertKeyToLabel = (inputString) => {
   // Replace underscores with spaces
-  const spacedString = inputString.replace(/_/g, ' ');
+  const spacedString = inputString.replace(/_/g, " ");
 
   // Split the string into words
-  const words = spacedString.split(' ');
+  const words = spacedString.split(" ");
 
   // Join the words back together with spaces & capitalize first letter
-  return capitalizeFirstLetter(words.join(' '));
-}
+  return capitalizeFirstLetter(words.join(" "));
+};
