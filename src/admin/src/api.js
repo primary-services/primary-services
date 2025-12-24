@@ -85,3 +85,8 @@ export const getMunicipalityCollections = (municipality_id) =>
   fetchWithAuth(`${apiRoot}/municipalities/${municipality_id}/collections`).then(
     (response) => response.json(),
   );
+
+export const getMunicipalityHistory = (municipality_id) =>
+  fetchWithAuth(`${apiRoot}/municipalities/${municipality_id}/history`).then(
+    (response) => response.json(),
+  );

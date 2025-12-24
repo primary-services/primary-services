@@ -7,6 +7,7 @@ import { AppContexts } from "../providers";
 import { OfficeForm } from "../components/forms/office.js";
 import { ElectionForm } from "../components/forms/election.js";
 import { Slideout } from "../components/slideout.js";
+import { MunicipalityHistory } from "../components/history.js";
 import { RequirementForm } from "../components/forms/requirements.js";
 import {
   useTownOffices,
@@ -28,6 +29,7 @@ import { useCreateSource, useDeleteSource } from "../api/hooks/source.hooks.js";
 
 import { cleanDateString, arr, obj, confirm, showNotification, confirmDeleteThen } from "../utils.js";
 import { updateMunicipality } from "../api.js";
+import historyIcon from "../icons/history.svg";
 
 const getCompletionStatusClass = (status) => {
   switch (status) {
@@ -109,6 +111,8 @@ export const Towns = () => {
   const [source, setSource] = useState(null);
   const [note, setNote] = useState(null);
   const [search, setSearch] = useState("");
+
+  const [showHistory, setShowHistory] = useState(false);
 
   const { data: offices, refetch: refetchOffices } = useMunicipalityOffices(
     town?.id,
@@ -388,6 +392,14 @@ export const Towns = () => {
                 >
                   Report a Bug
                 </a>
+              </div>
+              <div>
+                <img className="historyIcon" src={historyIcon} alt="History" 
+                  uk-tooltip="Show town edit history"
+                  onClick={() => {
+                    setShowHistory((prev) => !prev);
+                  }}
+                />
               </div>
             </div>
 
@@ -701,6 +713,9 @@ export const Towns = () => {
             }}
           />
         </form>
+      </Slideout>
+      <Slideout active={showHistory} setActive={setShowHistory}>
+        <MunicipalityHistory municipality={town} close={() => setShowHistory(false)} />
       </Slideout>
     </section>
   );

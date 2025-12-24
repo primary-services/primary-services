@@ -207,11 +207,25 @@ Sequelize.Model.prototype.upsertAllAndDiff = function async(data) {
     if (instance.isNewRecord) {
       diff.action = "create";
     }
+    if (diff.deleted || data.deleted) {
+      diff.action = "delete";
+    }
 
     for (let x in attributes) {
       if (data.hasOwnProperty(x)) {
+        // For update, track all changes
         if (diff.action === "update" && instance[x] !== data[x]) {
-          diff.fields[x] = instance[x];
+          diff.fields[x] = data[x];
+        }
+
+        // For create, track all truthy fields
+        if (diff.action === "create" && !!data[x]) {
+          diff.fields[x] = data[x];
+        }
+
+        // Also store human readable identifier
+        if (model.humanReadableIdentifier == x) {
+          diff.fields["humanReadableIdentifier"] = instance[x] || data[x];
         }
 
         instance[x] = data[x];
@@ -301,7 +315,7 @@ Sequelize.Model.prototype.upsertAllAndDiff = function async(data) {
   const getInstance = async (transaction, model, data) => {
     let keys = getPrimaryKeys(model);
     let filters = keys.reduce((a, c) => {
-      a[c] = data[c] || null;
+      a[c] = data[c] ?? null;
       return a;
     }, {});
 
@@ -404,5 +418,18 @@ Sequelize.Model.prototype.upsertAllAndDiff = function async(data) {
     return parse(t, this.constructor, data, null, {});
   });
 };
+
+Sequelize.Model.prototype.setUpVersioning = function (models, versionItemType) {
+  if (this.versionItemType) {
+    this.hasMany(models.Version, {
+      foreignKey: "item_id",
+      as: "version",
+      scope: {
+        item_type: versionItemType,
+      },
+      onRemove: "DELETE", // Custom action for upsertAll
+    });
+  }
+}
 
 export default Sequelize.Model;

@@ -77,6 +77,8 @@ class Office extends Model {
         ],
       },
     );
+    this.humanReadableIdentifier = "title";
+    this.versionItemType = "Office";
   }
 
   static associate(models) {
@@ -86,18 +88,11 @@ class Office extends Model {
     //  onRemove: "DELETE", // Custom action for upsertAll
     // });
 
+    this.prototype.setUpVersioning(models, this.versionItemType);
+
     this.hasMany(models.Seat, {
       foreignKey: "office_id",
       as: "seats",
-      onRemove: "DELETE", // Custom action for upsertAll
-    });
-
-    this.hasMany(models.Version, {
-      foreignKey: "item_id",
-      as: "version",
-      scope: {
-        item_type: "Office",
-      },
       onRemove: "DELETE", // Custom action for upsertAll
     });
 
