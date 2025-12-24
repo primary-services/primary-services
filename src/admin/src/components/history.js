@@ -53,7 +53,7 @@ const getHistoryChangePropertyUpdate = (key, val, changeIdx) => {
   // Base case: simple property update
   return (
     <div key={changeIdx} className="history-update">
-      {convertKeyToLabel(key)}: {val.toString()}
+      {convertKeyToLabel(key)}: {val ? val.toString() : "null"}
     </div>
   );
 };

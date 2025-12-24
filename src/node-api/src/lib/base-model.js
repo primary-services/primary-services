@@ -215,7 +215,7 @@ Sequelize.Model.prototype.upsertAllAndDiff = function async(data) {
       if (data.hasOwnProperty(x)) {
         // For update, track all changes
         if (diff.action === "update" && instance[x] !== data[x]) {
-          diff.fields[x] = instance[x];
+          diff.fields[x] = data[x];
         }
 
         // For create, track all truthy fields
@@ -315,7 +315,7 @@ Sequelize.Model.prototype.upsertAllAndDiff = function async(data) {
   const getInstance = async (transaction, model, data) => {
     let keys = getPrimaryKeys(model);
     let filters = keys.reduce((a, c) => {
-      a[c] = data[c] || null;
+      a[c] = data[c] ?? null;
       return a;
     }, {});
 
