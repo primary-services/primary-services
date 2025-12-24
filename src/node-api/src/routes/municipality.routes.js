@@ -46,5 +46,9 @@ municipalityRoutes.delete(
 	auth,
 	municipalityController.deleteSource,
 );
+municipalityRoutes.get(
+	"/municipalities/completion",
+	municipalityController.completetion,
+);
 
 export { municipalityRoutes };
