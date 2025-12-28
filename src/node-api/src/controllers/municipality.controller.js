@@ -111,22 +111,26 @@ let municipalityController = {
   collections: async (req, res, next) => {
     const { municipality_id } = req.params;
 
+    console.log("//////// Fetching ////////");
+
     const municipality = await Municipality.findByPk(municipality_id, {
       include: [
         {
-          model: Requirement,
-          as: "requirements",
-          include: [
-            { model: Deadline, as: "deadline" },
-            { model: Form, as: "form" },
-          ],
+          model: Source,
+          as: "sources",
+          where: { deleted: false },
+          required: false,
         },
-        { model: Deadline, as: "deadlines" },
-        { model: Form, as: "forms" },
-        { model: Source, as: "sources", where: { deleted: false } },
-        { model: Note, as: "notes", where: { deleted: false } },
+        {
+          model: Note,
+          as: "notes",
+          where: { deleted: false },
+          required: false,
+        },
       ],
     });
+
+    console.log(municipality_id, municipality);
 
     return res.status(200).json(municipality);
   },
@@ -173,9 +177,7 @@ let municipalityController = {
           },
         ],
       },
-      include: [
-        { model: User, as: "user" },
-      ],
+      include: [{ model: User, as: "user" }],
       order: [["created_at", "DESC"]],
     });
 
@@ -211,7 +213,7 @@ let municipalityController = {
       });
     }
 
-    const source = await createNewVersion(Source, user, data)
+    const source = await createNewVersion(Source, user, data);
     return res.status(200).json(source);
   },
 
@@ -246,7 +248,7 @@ let municipalityController = {
         error_msg: error_codes["UNAUTHORIZED"],
       });
     }
-    
+
     const note = await createNewVersion(Note, user, data);
     return res.status(200).json(note);
   },
@@ -263,10 +265,10 @@ let municipalityController = {
     }
 
     if (!!note_id) {
-       const original = await Note.findByPk(note_id);
-       original.deleted = true;
-       await createNewVersion(Note, user, original.dataValues);
-       return res.status(200).json({ success: true, ...original.dataValues });
+      const original = await Note.findByPk(note_id);
+      original.deleted = true;
+      await createNewVersion(Note, user, original.dataValues);
+      return res.status(200).json({ success: true, ...original.dataValues });
     }
     return res.status(200).json({ success: true });
   },
