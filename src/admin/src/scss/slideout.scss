@@ -37,4 +37,16 @@
       padding: 30px 30px;
     }
   }
+
+  @media (max-width: 800px) {
+    &.active {
+      .slideout-wrapper {
+        left: 20%;
+      }
+    }
+
+    .slideout-wrapper {
+      width: 80%;
+    }
+  }
 }
