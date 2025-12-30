@@ -5,7 +5,7 @@ export const Slideout = ({ children, active, setActive }) => {
 		<div
 			className={`slideout ${active ? "active" : ""}`}
 			onClick={() => {
-				setActive(false);
+				//setActive(false);
 			}}
 		>
 			<div
