@@ -10,6 +10,10 @@ municipalityRoutes.get(
 	municipalityController.offices,
 );
 municipalityRoutes.get(
+	"/municipalities/:municipality_id/wards",
+	municipalityController.wards,
+);
+municipalityRoutes.get(
 	"/municipalities/:municipality_id/elections",
 	municipalityController.elections,
 );
@@ -22,9 +26,9 @@ municipalityRoutes.get(
 	municipalityController.history,
 );
 municipalityRoutes.post(
-	"/municipalities/:municipality_id", 
-	auth, 
-	municipalityController.save
+	"/municipalities/:municipality_id",
+	auth,
+	municipalityController.save,
 );
 municipalityRoutes.post(
 	"/municipalities/:municipality_id/note",
@@ -45,6 +49,16 @@ municipalityRoutes.delete(
 	"/municipalities/:municipality_id/source/:source_id",
 	auth,
 	municipalityController.deleteSource,
+);
+municipalityRoutes.post(
+	"/municipalities/:municipality_id/ward/",
+	auth,
+	municipalityController.createWard,
+);
+municipalityRoutes.delete(
+	"/municipalities/:municipality_id/ward/:ward_id",
+	auth,
+	municipalityController.deleteWard,
 );
 municipalityRoutes.get(
 	"/municipalities/completion",
