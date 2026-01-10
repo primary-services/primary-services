@@ -15,6 +15,10 @@ class Seat extends Model {
 					type: DataTypes.INTEGER,
 					allowNull: false,
 				},
+				ward_id: {
+					type: DataTypes.INTEGER,
+					allowNull: true,
+				},
 				name: {
 					type: DataTypes.STRING,
 					allowNull: true,
@@ -42,6 +46,11 @@ class Seat extends Model {
 			as: "office",
 			onDelete: "CASCADE",
 			onUpdate: "CASCADE",
+		});
+
+		this.belongsTo(models.Ward, {
+			foreignKey: "ward_id",
+			as: "ward",
 		});
 
 		this.hasMany(models.Term, {

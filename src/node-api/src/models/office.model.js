@@ -16,6 +16,10 @@ class Office extends Model {
           type: DataTypes.BOOLEAN,
           allowNull: true,
         },
+        warded: {
+          type: DataTypes.BOOLEAN,
+          allowNull: true,
+        },
         title: {
           type: DataTypes.STRING,
           allowNull: true,
@@ -59,6 +63,7 @@ class Office extends Model {
         },
         deleted: {
           type: DataTypes.BOOLEAN,
+          allowNull: true,
           defaultValue: false,
         },
       },

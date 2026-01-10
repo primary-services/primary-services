@@ -8,7 +8,7 @@ import { SubForm } from "./subform.js";
 
 import { arr, showNotification } from "../../utils.js";
 
-export const OfficeForm = ({ selected, onSave, onCancel }) => {
+export const OfficeForm = ({ wards, selected, onSave, onCancel }) => {
 	let [office, setOffice] = useState({
 		id: null,
 		title: "",
@@ -27,7 +27,10 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 	let [pendingSave, setPendingSave] = useState(false);
 
 	// If less than 30 days until new year, consider it next year
-	const currentYear = useMemo(() => +moment().add(30, "days").format("YYYY"), []);
+	const currentYear = useMemo(
+		() => +moment().add(30, "days").format("YYYY"),
+		[],
+	);
 
 	useEffect(() => {
 		let sorted = [...arr(selected.seats)].sort((a, b) => {
@@ -79,7 +82,14 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 	};
 
 	const update = (field, value) => {
-		// value = value.replace(/(?<!\.|\?)([\r|\n])+([^?\.]+)/gm, "");
+		if (field === "warded") {
+			if (!value) {
+				(office.seats || []).map((s) => {
+					s.ward_id = null;
+				});
+			}
+		}
+
 		setOffice({ ...office, [field]: value });
 	};
 
@@ -99,6 +109,11 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 			};
 		}
 		term.official[field] = value;
+		setOffice({ ...office, seats: [...office.seats] });
+	};
+
+	const updateSeat = (seat, field, value) => {
+		seat[field] = value;
 		setOffice({ ...office, seats: [...office.seats] });
 	};
 
@@ -267,6 +282,20 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 								board position)
 							</label>
 						</div>
+
+						<div className="width-1-1">
+							<input
+								id="warded"
+								name="warded"
+								type="checkbox"
+								key={`warded-${!!office.warded}`}
+								checked={!!office.warded}
+								onChange={(ev) => {
+									update("warded", ev.target.checked);
+								}}
+							/>
+							<label htmlFor="warded"> Office uses wards or districts</label>
+						</div>
 					</div>
 
 					<h3>Seats/Terms</h3>
@@ -291,6 +320,29 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 											</div>
 										</div>
 									</div>
+									{office.warded && (
+										<div className="input-wrapper">
+											<label>Incumbent</label>
+											<div className="grid">
+												<div className="width-1-1">
+													<select
+														type="text"
+														value={seat?.ward_id || null}
+														onInput={(e) => {
+															updateSeat(seat, "ward_id", e.target.value);
+														}}
+													>
+														<option value={null}>No Ward</option>
+														{wards.map((ward) => {
+															return (
+																<option value={ward.id}>{ward.name}</option>
+															);
+														})}
+													</select>
+												</div>
+											</div>
+										</div>
+									)}
 
 									<div className="input-wrapper term-year">
 										<div className="grid">
@@ -304,7 +356,9 @@ export const OfficeForm = ({ selected, onSave, onCancel }) => {
 												>
 													{new Array(10).fill(null).map((_, idx) => {
 														return (
-															<option value={currentYear - idx}>{currentYear - idx}</option>
+															<option value={currentYear - idx}>
+																{currentYear - idx}
+															</option>
 														);
 													})}
 												</select>

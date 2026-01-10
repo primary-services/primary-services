@@ -31,7 +31,7 @@ class Municipality extends Model {
         completionStatus: {
           type: DataTypes.ENUM("IN_PROGRESS", "DONE"),
           allowNull: true,
-        }
+        },
       },
       {
         sequelize,
@@ -61,8 +61,7 @@ class Municipality extends Model {
   }
 
   static associate(models) {
-
-		this.prototype.setUpVersioning(models, this.versionItemType);
+    this.prototype.setUpVersioning(models, this.versionItemType);
 
     // TODO: this is super annoying
     this.hasMany(models.Office, {
@@ -77,6 +76,13 @@ class Municipality extends Model {
       onDelete: "CASCADE",
       onUpdate: "CASCADE",
       as: "contacts",
+    });
+
+    this.hasMany(models.Ward, {
+      foreignKey: "municipality_id",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+      as: "wards",
     });
 
     this.belongsToMany(models.Requirement, {
