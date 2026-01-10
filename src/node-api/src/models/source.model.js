@@ -38,6 +38,7 @@ class Source extends Model {
 				},
 				deleted: {
 					type: DataTypes.BOOLEAN,
+					allowNull: true,
 					defaultValue: false,
 				},
 			},
