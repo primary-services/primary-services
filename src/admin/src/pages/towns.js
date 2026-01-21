@@ -18,16 +18,29 @@ import {
   useCreateRequirement,
   useMunicipality,
   useMunicipalityOffices,
+  useMunicipalityWards,
   useMunicipalityElections,
   useMunicipalityCollections,
   useUpdateTown,
-  useDeleteOffice
+  useDeleteOffice,
 } from "../api-hooks.js";
 
 import { useCreateNote, useDeleteNote } from "../api/hooks/note.hooks.js";
 import { useCreateSource, useDeleteSource } from "../api/hooks/source.hooks.js";
+import {
+  useWards,
+  useCreateWard,
+  useDeleteWard,
+} from "../api/hooks/municipality.hooks.js";
 
-import { cleanDateString, arr, obj, confirm, showNotification, confirmDeleteThen } from "../utils.js";
+import {
+  cleanDateString,
+  arr,
+  obj,
+  confirm,
+  showNotification,
+  confirmDeleteThen,
+} from "../utils.js";
 import { updateMunicipality } from "../api.js";
 import historyIcon from "../icons/history.svg";
 
@@ -110,13 +123,16 @@ export const Towns = () => {
   const [election, setElection] = useState(false);
   const [source, setSource] = useState(null);
   const [note, setNote] = useState(null);
+  const [ward, setWard] = useState(null);
   const [search, setSearch] = useState("");
+  const [usesWards, setUsesWards] = useState(false);
 
   const [showHistory, setShowHistory] = useState(false);
 
   const { data: offices, refetch: refetchOffices } = useMunicipalityOffices(
     town?.id,
   );
+  const { data: wards, refetch: refetchWards } = useMunicipalityWards(town?.id);
   const { data: elections, refetch: refetchElections } =
     useMunicipalityElections(town?.id);
   const { data: collections, refetch: refetchCollections } =
@@ -134,6 +150,14 @@ export const Towns = () => {
 
     setTown(town);
   }, [towns, params]);
+
+  useEffect(() => {
+    if ((wards || []).length > 0) {
+      setUsesWards(true);
+    } else {
+      setUsesWards(false);
+    }
+  }, [wards]);
 
   const getClerk = (t) => {
     if (!t || !t.contacts) {
@@ -156,12 +180,14 @@ export const Towns = () => {
   };
 
   const { mutateAsync: saveOffice } = useCreateOffice();
+  const { mutateAsync: deleteOffice } = useDeleteOffice();
   const { mutateAsync: saveElection } = useCreateElection();
   const { mutateAsync: saveNote } = useCreateNote();
   const { mutateAsync: deleteNote } = useDeleteNote();
   const { mutateAsync: saveSource } = useCreateSource();
   const { mutateAsync: deleteSource } = useDeleteSource();
-  const { mutateAsync: deleteOffice } = useDeleteOffice();
+  const { mutateAsync: saveWard } = useCreateWard();
+  const { mutateAsync: deleteWard } = useDeleteWard();
   const { mutateAsync: saveTown } = useUpdateTown();
 
   const removeElection = (e) => {
@@ -180,6 +206,14 @@ export const Towns = () => {
     return (e.terms || []).map((t) => {
       return t.seat?.name || "";
     });
+  };
+
+  const toggleWards = () => {
+    if (wards.length > 0) {
+      return;
+    }
+
+    setUsesWards(!usesWards);
   };
 
   const filteredTowns = useMemo(() => {
@@ -296,6 +330,46 @@ export const Towns = () => {
     );
   };
 
+  const wardForm = () => {
+    return (
+      <form>
+        <div className="note grid">
+          <div className="width-1-12">
+            <span
+              key="confirm"
+              className="icon affirm clickable action left-aligned"
+              data-uk-icon="check"
+              onClick={() => {
+                return saveWard({ ...ward, municipality_id: town.id }).then(
+                  () => {
+                    setWard(null);
+                    refetchWards();
+                  },
+                );
+              }}
+            ></span>
+            <span
+              key="cancel"
+              className="icon cancel clickable action left-aligned"
+              data-uk-icon="close"
+              onClick={() => {
+                setWard(null);
+              }}
+            ></span>
+          </div>
+          <div className="input-wrapper width-8-12">
+            <input
+              type="text"
+              value={ward.name}
+              placeholder="Ward Name"
+              onInput={(e) => setWard({ ...ward, name: e.target.value })}
+            />
+          </div>
+        </div>
+      </form>
+    );
+  };
+
   const authContext = useContext(AppContexts.AuthContext);
   const loadingAuth = authContext.loading;
   const authed = !!authContext.user;
@@ -318,7 +392,9 @@ export const Towns = () => {
           <>
             <div className="sidebar-header">
               {!loadingAuth && !authed && (
-                <div className="not-authed"><p>Please sign in or sign up to edit towns</p></div>
+                <div className="not-authed">
+                  <p>Please sign in or sign up to edit towns</p>
+                </div>
               )}
               <form className="uk-search uk-search-default">
                 <div className="input-wrapper">
@@ -394,13 +470,14 @@ export const Towns = () => {
                 </a>
               </div>
               <div>
-                <span 
-                  uk-icon="icon: history; ratio: 1.5" 
+                <span
+                  uk-icon="icon: history; ratio: 1.5"
                   uk-tooltip="Show town edit history"
                   className="history-icon"
                   onClick={() => {
                     setShowHistory((prev) => !prev);
-                  }}></span>
+                  }}
+                ></span>
               </div>
             </div>
 
@@ -412,6 +489,18 @@ export const Towns = () => {
                 {!!getAssistantClerk(town) && (
                   <Clerk official={getAssistantClerk(town)} />
                 )}
+              </div>
+            </div>
+
+            <div className="uk-width-1-1">
+              <div className="input-wrapper">
+                <input
+                  type="checkbox"
+                  checked={usesWards}
+                  id="usesWards"
+                  onChange={toggleWards}
+                />
+                <label>This town uses wards or districts</label>
               </div>
             </div>
 
@@ -466,14 +555,14 @@ export const Towns = () => {
                             className="icon clickable left-aligned"
                             uk-icon="trash"
                             onClick={() => {
-                              confirmDeleteThen(() => 
+                              confirmDeleteThen(() =>
                                 deleteOffice(o.id).then(() => {
                                   setOffice(false);
                                   refetchOffices();
                                   showNotification({
                                     message: `Deleted office successfully`,
                                   });
-                                })
+                                }),
                               );
                             }}
                           ></span>
@@ -541,6 +630,61 @@ export const Towns = () => {
               )}
             </section>*/}
 
+            {usesWards && (
+              <section className="uk-width-1-1">
+                <div className="section-header">
+                  <h2>Wards/Districts</h2>
+                  <span
+                    className="icon right-aligned clickable"
+                    data-uk-icon="plus-circle"
+                    onClick={() => {
+                      setWard({
+                        id: null,
+                        name: "",
+                      });
+                    }}
+                  ></span>
+                </div>
+
+                <div>
+                  {!!ward && !ward.id && wardForm()}
+
+                  {(wards || []).map((w) => {
+                    return w.id !== ward?.id ? (
+                      <div>
+                        <div className="note grid">
+                          <div className="width-1-12">
+                            <span
+                              className="icon clickable left-aligned"
+                              uk-icon="pencil"
+                              onClick={() => {
+                                setWard({ ...w });
+                              }}
+                            ></span>
+                            <span
+                              className="icon clickable left-aligned"
+                              uk-icon="trash"
+                              onClick={() => {
+                                confirmDeleteThen(() =>
+                                  deleteWard(w).then(() => {
+                                    setWard(null);
+                                    refetchWards();
+                                  }),
+                                );
+                              }}
+                            ></span>
+                          </div>
+                          <div className="summary width-11-12">{w.name}</div>
+                        </div>
+                      </div>
+                    ) : (
+                      wardForm()
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+
             <section className="uk-width-1-1">
               <div className="section-header">
                 <h2>Sources</h2>
@@ -589,7 +733,7 @@ export const Towns = () => {
                               }).then(() => {
                                 setSource(null);
                                 refetchCollections();
-                              })
+                              }),
                             );
                           }}
                         ></span>
@@ -651,7 +795,7 @@ export const Towns = () => {
                                 }).then(() => {
                                   setNote(null);
                                   refetchCollections();
-                                })
+                                }),
                               );
                             }}
                           ></span>
@@ -678,6 +822,7 @@ export const Towns = () => {
         <form>
           <OfficeForm
             municipality={town}
+            wards={wards || []}
             selected={office}
             onSave={async (o) => {
               return saveOffice({ municipality_id: town.id, office: o }).then(
@@ -716,7 +861,10 @@ export const Towns = () => {
         </form>
       </Slideout>
       <Slideout active={showHistory} setActive={setShowHistory}>
-        <MunicipalityHistory municipality={town} close={() => setShowHistory(false)} />
+        <MunicipalityHistory
+          municipality={town}
+          close={() => setShowHistory(false)}
+        />
       </Slideout>
     </section>
   );

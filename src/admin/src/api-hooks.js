@@ -1,4 +1,9 @@
-import { QueryClient, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   /////// Create Routes ///////
   createOffice,
@@ -14,6 +19,7 @@ import {
   /////// Seat Schema ///////
   getMunicipality,
   getMunicipalityOffices,
+  getMunicipalityWards,
   getMunicipalityElections,
   getMunicipalityCollections,
   getMunicipalityHistory,
@@ -74,7 +80,7 @@ export const useCreateOffice = () => {
       invalidateMunicipalityHistory(queryClient, office.municipality_id);
     },
   });
-}
+};
 
 export const useCreateElection = () => {
   const queryClient = useQueryClient();
@@ -110,7 +116,7 @@ export const useUpdateTown = () => {
       invalidateMunicipalityHistory(queryClient, town.id);
     },
   });
-}
+};
 
 /////////////// Delete Hooks ///////////////
 
@@ -139,6 +145,13 @@ export const useMunicipalityOffices = (municipality_id) =>
   useQuery({
     queryKey: ["municipalities", municipality_id, "offices"],
     queryFn: () => getMunicipalityOffices(municipality_id),
+    enabled: municipality_id !== undefined,
+  });
+
+export const useMunicipalityWards = (municipality_id) =>
+  useQuery({
+    queryKey: ["municipalities", municipality_id, "wards"],
+    queryFn: () => getMunicipalityWards(municipality_id),
     enabled: municipality_id !== undefined,
   });
 
@@ -183,13 +196,25 @@ export const invalidateMunicipalityOffices = (queryClient, municipality_id) => {
   });
 };
 
-export const invalidateMunicipalityElections = (queryClient, municipality_id) => {
+export const invalidateMunicipalityWards = (queryClient, municipality_id) => {
+  return queryClient.invalidateQueries({
+    queryKey: ["municipalities", municipality_id, "wards"],
+  });
+};
+
+export const invalidateMunicipalityElections = (
+  queryClient,
+  municipality_id,
+) => {
   return queryClient.invalidateQueries({
     queryKey: ["municipalities", municipality_id, "elections"],
   });
 };
 
-export const invalidateMunicipalityCollections = (queryClient, municipality_id) => {
+export const invalidateMunicipalityCollections = (
+  queryClient,
+  municipality_id,
+) => {
   return queryClient.invalidateQueries({
     queryKey: ["municipalities", municipality_id, "collections"],
   });
@@ -199,4 +224,4 @@ export const invalidateMunicipalityHistory = (queryClient, municipality_id) => {
   return queryClient.invalidateQueries({
     queryKey: ["municipalities", municipality_id, "history"],
   });
-}
+};

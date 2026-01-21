@@ -2,10 +2,14 @@ import { apiRoot } from "./constants.js";
 import { getCookie, fetchWithAuth } from "./utils.js";
 
 export const getTowns = () =>
-  fetchWithAuth(`${apiRoot}/municipalities/towns`).then((response) => response.json());
+  fetchWithAuth(`${apiRoot}/municipalities/towns`).then((response) =>
+    response.json(),
+  );
 
 export const getTown = (town_id) =>
-  fetchWithAuth(`${apiRoot}/town/${town_id}`).then((response) => response.json());
+  fetchWithAuth(`${apiRoot}/town/${town_id}`).then((response) =>
+    response.json(),
+  );
 
 export const getTownOffices = (town_id) =>
   fetchWithAuth(`${apiRoot}/town/${town_id}/offices`).then((response) =>
@@ -29,7 +33,6 @@ export const createOffice = (args) => {
 };
 
 export const deleteOffice = (office_id) => {
-
   return fetchWithAuth(`${apiRoot}/office/${office_id}`, {
     method: "DELETE",
   }).then((resp) => {
@@ -76,15 +79,20 @@ export const getMunicipalityOffices = (municipality_id) =>
     (response) => response.json(),
   );
 
+export const getMunicipalityWards = (municipality_id) =>
+  fetchWithAuth(`${apiRoot}/municipalities/${municipality_id}/wards`).then(
+    (response) => response.json(),
+  );
+
 export const getMunicipalityElections = (municipality_id) =>
   fetchWithAuth(`${apiRoot}/municipalities/${municipality_id}/elections`).then(
     (response) => response.json(),
   );
 
 export const getMunicipalityCollections = (municipality_id) =>
-  fetchWithAuth(`${apiRoot}/municipalities/${municipality_id}/collections`).then(
-    (response) => response.json(),
-  );
+  fetchWithAuth(
+    `${apiRoot}/municipalities/${municipality_id}/collections`,
+  ).then((response) => response.json());
 
 export const getMunicipalityHistory = (municipality_id) =>
   fetchWithAuth(`${apiRoot}/municipalities/${municipality_id}/history`).then(

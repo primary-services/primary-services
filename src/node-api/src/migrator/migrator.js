@@ -382,6 +382,7 @@ class Migrator {
 		let updates = [];
 
 		let dbNullable = dbAttrs.is_nullable === "NO" ? false : true;
+
 		if (mAttrs.allowNull !== dbNullable) {
 			let update = {
 				type: "column",
@@ -402,7 +403,7 @@ class Migrator {
 	compareDefaults(table, column, mAttrs, dbAttrs) {
 		let updates = [];
 
-		let mDefault = mAttrs.defaultValue || "";
+		let mDefault = mAttrs.defaultValue ?? "";
 		let dbDefault = dbAttrs.column_default || "";
 
 		if (mDefault !== dbDefault) {
@@ -669,11 +670,6 @@ class Migrator {
 	const migrator = new Migrator();
 
 	await migrator.run();
-
-	// console.log("Creates:", migrator.creates);
-	// console.log("Updates:", migrator.updates);
-	// console.log("Deletes:", migrator.deletes);
-	// console.log("Done");
 
 	// This will throw an error, but it's just a hack to get nodemon to fully exit
 	process.exit(1);

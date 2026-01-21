@@ -15,6 +15,7 @@ import Form from "../models/form.model.js";
 
 import Source from "../models/source.model.js";
 import Note from "../models/note.model.js";
+import Ward from "../models/ward.model.js";
 
 let municipalityController = {
   list: async (req, res, next) => {
@@ -56,6 +57,20 @@ let municipalityController = {
     });
 
     return res.status(200).json(offices);
+  },
+
+  wards: async (req, res, next) => {
+    const { municipality_id } = req.params;
+
+    // try {
+    const wards = await Ward.findAll({
+      where: {
+        municipality_id: municipality_id,
+        deleted: false,
+      },
+    });
+
+    return res.status(200).json(wards);
   },
 
   completetion: async (req, res, next) => {
@@ -144,6 +159,7 @@ let municipalityController = {
         { model: Source, as: "sources" },
         { model: Note, as: "notes" },
         { model: Office, as: "offices" },
+        { model: Ward, as: "wards" },
       ],
     });
     const sourceIds = municipality.sources.map((s) => s.id);
@@ -232,6 +248,44 @@ let municipalityController = {
       const original = await Source.findByPk(source_id);
       original.deleted = true;
       await createNewVersion(Source, user, original.dataValues);
+      return res.status(200).json({ success: true, ...original.dataValues });
+    }
+
+    return res.status(200).json({ success: true });
+  },
+
+  createWard: async (req, res, next) => {
+    let data = req.body;
+    let user = req.jwt?.user || null;
+
+    console.log(data);
+
+    if (!user) {
+      return res.status(401).json({
+        error_code: "UNAUTHORIZED",
+        error_msg: error_codes["UNAUTHORIZED"],
+      });
+    }
+
+    const ward = await createNewVersion(Ward, user, data);
+    return res.status(200).json(ward);
+  },
+
+  deleteWard: async (req, res, next) => {
+    let { ward_id } = req.params;
+    let user = req.jwt?.user || null;
+
+    if (!user) {
+      return res.status(401).json({
+        error_code: "UNAUTHORIZED",
+        error_msg: error_codes["UNAUTHORIZED"],
+      });
+    }
+
+    if (!!ward_id) {
+      const original = await Ward.findByPk(ward_id);
+      original.deleted = true;
+      await createNewVersion(Ward, user, original.dataValues);
       return res.status(200).json({ success: true, ...original.dataValues });
     }
 
