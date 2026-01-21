@@ -125,6 +125,7 @@ export const Towns = () => {
   const [note, setNote] = useState(null);
   const [ward, setWard] = useState(null);
   const [search, setSearch] = useState("");
+  const [usesWards, setUsesWards] = useState(false);
 
   const [showHistory, setShowHistory] = useState(false);
 
@@ -149,6 +150,14 @@ export const Towns = () => {
 
     setTown(town);
   }, [towns, params]);
+
+  useEffect(() => {
+    if ((wards || []).length > 0) {
+      setUsesWards(true);
+    } else {
+      setUsesWards(false);
+    }
+  }, [wards]);
 
   const getClerk = (t) => {
     if (!t || !t.contacts) {
@@ -197,6 +206,14 @@ export const Towns = () => {
     return (e.terms || []).map((t) => {
       return t.seat?.name || "";
     });
+  };
+
+  const toggleWards = () => {
+    if (wards.length > 0) {
+      return;
+    }
+
+    setUsesWards(!usesWards);
   };
 
   const filteredTowns = useMemo(() => {
@@ -475,6 +492,18 @@ export const Towns = () => {
               </div>
             </div>
 
+            <div className="uk-width-1-1">
+              <div className="input-wrapper">
+                <input
+                  type="checkbox"
+                  checked={usesWards}
+                  id="usesWards"
+                  onChange={toggleWards}
+                />
+                <label>This town uses wards or districts</label>
+              </div>
+            </div>
+
             <section className="uk-width-1-1">
               <div className="section-header">
                 <h2>Offices</h2>
@@ -601,58 +630,60 @@ export const Towns = () => {
               )}
             </section>*/}
 
-            <section className="uk-width-1-1">
-              <div className="section-header">
-                <h2>Wards</h2>
-                <span
-                  className="icon right-aligned clickable"
-                  data-uk-icon="plus-circle"
-                  onClick={() => {
-                    setWard({
-                      id: null,
-                      name: "",
-                    });
-                  }}
-                ></span>
-              </div>
+            {usesWards && (
+              <section className="uk-width-1-1">
+                <div className="section-header">
+                  <h2>Wards/Districts</h2>
+                  <span
+                    className="icon right-aligned clickable"
+                    data-uk-icon="plus-circle"
+                    onClick={() => {
+                      setWard({
+                        id: null,
+                        name: "",
+                      });
+                    }}
+                  ></span>
+                </div>
 
-              <div>
-                {!!ward && !ward.id && wardForm()}
+                <div>
+                  {!!ward && !ward.id && wardForm()}
 
-                {(wards || []).map((w) => {
-                  return w.id !== ward?.id ? (
-                    <div>
-                      <div className="note grid">
-                        <div className="width-1-12">
-                          <span
-                            className="icon clickable left-aligned"
-                            uk-icon="pencil"
-                            onClick={() => {
-                              setWard({ ...w });
-                            }}
-                          ></span>
-                          <span
-                            className="icon clickable left-aligned"
-                            uk-icon="trash"
-                            onClick={() => {
-                              confirmDeleteThen(() =>
-                                deleteWard(w).then(() => {
-                                  setWard(null);
-                                  refetchWards();
-                                }),
-                              );
-                            }}
-                          ></span>
+                  {(wards || []).map((w) => {
+                    return w.id !== ward?.id ? (
+                      <div>
+                        <div className="note grid">
+                          <div className="width-1-12">
+                            <span
+                              className="icon clickable left-aligned"
+                              uk-icon="pencil"
+                              onClick={() => {
+                                setWard({ ...w });
+                              }}
+                            ></span>
+                            <span
+                              className="icon clickable left-aligned"
+                              uk-icon="trash"
+                              onClick={() => {
+                                confirmDeleteThen(() =>
+                                  deleteWard(w).then(() => {
+                                    setWard(null);
+                                    refetchWards();
+                                  }),
+                                );
+                              }}
+                            ></span>
+                          </div>
+                          <div className="summary width-11-12">{w.name}</div>
                         </div>
-                        <div className="summary width-11-12">{w.name}</div>
                       </div>
-                    </div>
-                  ) : (
-                    wardForm()
-                  );
-                })}
-              </div>
-            </section>
+                    ) : (
+                      wardForm()
+                    );
+                  })}
+                </div>
+              </section>
+            )}
 
             <section className="uk-width-1-1">
               <div className="section-header">
