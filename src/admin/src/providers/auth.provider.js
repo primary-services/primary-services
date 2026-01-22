@@ -102,11 +102,31 @@ export const AuthProvider = ({ children }) => {
     },
 
     request_password_reset: (data) => {
-      // Stub
+      return fetch(`${apiRoot}/request_password_reset`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }).then((resp) => {
+        return resp.json();
+      });
     },
 
     reset_password: (data) => {
-      // Stub
+      return fetch(`${apiRoot}/reset-password`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }).then((resp) => {
+        return resp.json();
+      });
     },
   };
 

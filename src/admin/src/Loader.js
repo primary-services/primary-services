@@ -8,6 +8,8 @@ import { Towns } from "./pages/towns.js";
 
 import { SignupPage } from "./pages/auth/signup.js";
 import { LoginPage } from "./pages/auth/login.js";
+import { RequestPage } from "./pages/auth/request.js";
+import { ResetPage } from "./pages/auth/reset.js";
 
 export const Loader = () => {
   const { loading, authorize, logout, user } = useContext(
@@ -16,6 +18,20 @@ export const Loader = () => {
 
   useEffect(() => {
     authorize();
+  }, []);
+
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    const passwordReset = query.get("password_reset");
+
+    if (passwordReset === "1") {
+      window.UIkit.notification({
+        message: `Your password has been reset successfully. You have been logged in`,
+        status: "primary",
+        pos: "bottom-left",
+        timeout: 5000,
+      });
+    }
   }, []);
 
   return (
@@ -68,6 +84,8 @@ export const Loader = () => {
             <Routes>
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
+              <Route path="/request-password-reset" element={<RequestPage />} />
+              <Route path="/reset-password" element={<ResetPage />} />
 
               <Route path="/" element={<LandingPage />} />
               <Route path="/towns" element={<Towns />} />

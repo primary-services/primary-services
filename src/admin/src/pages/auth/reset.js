@@ -1,61 +1,44 @@
-import { useState, useEffect, useMemo, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router";
 
 import { AppContexts } from "../../providers";
+import { checkRequired, validPassword } from "../../utils.js";
 
-import { validPassword, checkRequired } from "../../utils.js";
-
-export const SignupPage = () => {
-  const { signup } = useContext(AppContexts.AuthContext);
-
+export const ResetPage = () => {
   let [user, setUser] = useState({
-    identities: [
-      {
-        first_name: "",
-        last_name: "",
-      },
-    ],
-    email: "",
     password: "",
     password_confirmation: "",
+    token: "",
     pword: "", // bot check, this field will be invisible. Bots will fill it, people will not
   });
 
   let [visible, setVisible] = useState(false);
-  let [error, setError] = useState("");
+  let [error, setError] = useState();
   let [errors, setErrors] = useState([]);
-  let [pending, setPending] = useState(false);
   let [validation, setValidation] = useState([]);
+  let [pending, setPending] = useState(false);
+
+  const { reset_password } = useContext(AppContexts.AuthContext);
+
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    const token = query.get("token");
+
+    setUser({ ...user, token: token });
+  }, []);
 
   useEffect(() => {
     setValidation(validPassword(user.password, user.password_confirmation));
   }, [user]);
 
-  const identity = useMemo(() => {
-    return (
-      (user?.identities || [])[0] || {
-        first_name: "",
-        last_name: "",
-      }
-    );
-  }, [user]);
+  const isValid = (check) => {
+    return !validation.includes(check);
+  };
 
   const update = (e) => {
-    let identityFields = ["first_name", "last_name"];
+    setUser({ ...user, [e.target.name]: e.target.value });
 
-    if (identityFields.includes(e.target.name)) {
-      setUser({
-        ...user,
-        identities: [
-          { ...user.identities[0], [e.target.name]: e.target.value },
-        ],
-      });
-    } else {
-      setUser({ ...user, [e.target.name]: e.target.value });
-    }
-
-    let errs = [...errors.filter((err) => err !== e.target.name)];
-
+    let errs = [];
     setErrors(errs);
     if (errs.length === 0) {
       setError("");
@@ -66,25 +49,16 @@ export const SignupPage = () => {
     return errors.includes(field) ? "error" : "";
   };
 
-  const isValid = (check) => {
-    return !validation.includes(check);
-  };
-
-  const handleSignup = async (e) => {
+  const handleReset = async (e) => {
     e.preventDefault();
 
-    const requiredFields = [
-      "identities.0.first_name",
-      "identities.0.last_name",
-      "email",
-      "password",
-      "password_confirmation",
-    ];
-
+    let requiredFields = ["password", "password_confirmation"];
     let missing_fields = checkRequired(requiredFields, user);
+
     if (missing_fields.length > 0) {
       setError("Please fill out all required fields");
       setErrors(missing_fields);
+
       return;
     }
 
@@ -95,13 +69,13 @@ export const SignupPage = () => {
       return;
     }
 
-    let resp = await signup(user);
+    let resp = await reset_password(user);
 
     if (resp.success === true) {
-      window.location.assign("/");
+      window.location.assign("/?password_reset=1");
     } else {
       setError(resp.error);
-      setErrors(resp.fields);
+      setErrors(resp.fields || ["password", "password_confirmation"]);
     }
   };
 
@@ -109,47 +83,12 @@ export const SignupPage = () => {
     <section id="auth-page" className="page">
       <div id="signup-form" className="auth">
         <div className="uk-modal-body">
-          <h2 className="uk-modal-title">Sign Up</h2>
+          <h2 className="uk-modal-title">Reset Password</h2>
+
           <form>
             <p className="error">{error}</p>
 
             <div className="grid">
-              <div
-                className={`input-wrapper width-6-12 ${errorClass("first_name")}`}
-              >
-                <label>First Name</label>
-                <input
-                  type="text"
-                  name="first_name"
-                  value={identity?.first_name || ""}
-                  onInput={update}
-                />
-              </div>
-
-              <div
-                className={`input-wrapper width-6-12 ${errorClass("last_name")}`}
-              >
-                <label>Last Name</label>
-                <input
-                  type="text"
-                  name="last_name"
-                  value={identity?.last_name || ""}
-                  onInput={update}
-                />
-              </div>
-
-              <div
-                className={`input-wrapper width-12-12 ${errorClass("email")}`}
-              >
-                <label>Email</label>
-                <input
-                  type="text"
-                  name="email"
-                  value={user?.email || ""}
-                  onInput={update}
-                />
-              </div>
-
               <div className="width-6-12">
                 <div
                   className={`input-wrapper password ${errorClass("password")}`}
@@ -229,26 +168,22 @@ export const SignupPage = () => {
                   </div>
                 </div>
               </div>
-
-              <div className="input-wrapper bot-check">
-                <label>Password Confirmation</label>
-                <input
-                  type="text"
-                  name="pword"
-                  value={user?.pword || ""}
-                  onInput={update}
-                />
-              </div>
             </div>
 
-            <div className="btn blocky clicky" onClick={handleSignup}>
-              {pending ? "Signing Up..." : "Sign Up"}
+            <div className="input-wrapper bot-check">
+              <label>Password Confirmation</label>
+              <input
+                type="text"
+                name="pword"
+                value={user?.pword || ""}
+                onInput={update}
+              />
+            </div>
+
+            <div className="btn blocky clicky" onClick={handleReset}>
+              {pending ? "Resetting..." : "Reset"}
             </div>
           </form>
-
-          <p>
-            Already have an account? <Link to="/login">Sign In</Link>
-          </p>
 
           <a
             className="uk-modal-close"
