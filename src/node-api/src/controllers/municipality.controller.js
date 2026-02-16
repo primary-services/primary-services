@@ -44,6 +44,8 @@ let municipalityController = {
             {
               model: Term,
               as: "terms",
+              order: [["end_year", "DESC"]],
+              separate: true,
               include: [
                 {
                   model: Official,
