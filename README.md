@@ -67,6 +67,7 @@ Run ``npm run dev`` and the server should be started
 
 **DB Migrations** 
 - ``npx sequelize-cli migration:generate --name migration-example``
+- Change the extension on the generated file from .js to .cjs
 - Then run ``npm run migration`` and copy the output to the migration file created above
 - Check it over, as that migration generator is still in development
 - When your confident the changes are accurate run ``npx sequelize-cli db:migrate``

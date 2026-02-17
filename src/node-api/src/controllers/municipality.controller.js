@@ -16,11 +16,15 @@ import Form from "../models/form.model.js";
 import Source from "../models/source.model.js";
 import Note from "../models/note.model.js";
 import Ward from "../models/ward.model.js";
+import Flag from "../models/flag.model.js";
 
 let municipalityController = {
   list: async (req, res, next) => {
     const municipalities = await Municipality.findAll({
-      include: [{ model: Contact, as: "contacts" }],
+      include: [
+        { model: Contact, as: "contacts" },
+        { model: Flag, as: "flags" },
+      ],
       order: [["id", "ASC"]],
     });
 
