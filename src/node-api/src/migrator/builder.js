@@ -177,7 +177,7 @@ const addConstraints = (dir, constraints) => {
 				    field: '${c.definition.target.field}'
 				  },
 				  onDelete: '${c.definition.onDelete || "SET NULL"}',
-				  onUpdate: '${c.definition.onDelete || "CASCADE"}'
+				  onUpdate: '${c.definition.onUpdate || "CASCADE"}'
 				});
 			`
 					.replace(/\s{2,}/g, " ")
@@ -226,7 +226,7 @@ const dropConstraints = (dir, constraints) => {
 	for (let key in constraints) {
 		let c = constraints[key];
 		queries[dir].push(
-			`await queryInterface.removeConstraint('${c.table}', ${c.name}, {})`,
+			`await queryInterface.removeConstraint('${c.table}', '${c.name}', {})`,
 		);
 	}
 };
