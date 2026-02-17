@@ -77,6 +77,13 @@ Run ``npm run dev`` and the server should be started
 Run ``terraform plan``, and make sure the changes look right
 If they do ``terraform apply``
 
+**Handle expired terms** 
+- ``cd src/node-api``
+- Run ``node src/scripts/handle-term-expiration.js``
+- Sanity check the log created in ``src/scripts/log` to make sure records were created as expected
+- To run the script on production, run ``NODE_ENV=production node src/scripts/handle-term-expiration.js``
+
+
 ### Dev workflow
 
 Here's some general guidelines for contributing
