@@ -133,6 +133,15 @@ class Municipality extends Model {
       as: "notes",
     });
 
+    this.hasMany(models.Flag, {
+      foreignKey: "item_id",
+      constraints: false,
+      scope: {
+        item_type: "municipality",
+      },
+      as: "flags",
+    });
+
     this.hasMany(models.Source, {
       foreignKey: "item_id",
       constraints: false,

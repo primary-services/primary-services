@@ -27,6 +27,8 @@ import {
 
 import { useCreateNote, useDeleteNote } from "../api/hooks/note.hooks.js";
 import { useCreateSource, useDeleteSource } from "../api/hooks/source.hooks.js";
+import { useToggleFlag } from "../api/hooks/utils.hooks.js";
+
 import {
   useWards,
   useCreateWard,
@@ -114,7 +116,11 @@ const Clerk = ({ official }) => {
 };
 
 export const Towns = () => {
-  const { data: towns, isLoading: townsLoading } = useTowns();
+  const {
+    data: towns,
+    isLoading: townsLoading,
+    refetch: refetchTowns,
+  } = useTowns();
 
   const params = useParams();
 
@@ -185,6 +191,7 @@ export const Towns = () => {
   const { mutateAsync: saveNote } = useCreateNote();
   const { mutateAsync: deleteNote } = useDeleteNote();
   const { mutateAsync: saveSource } = useCreateSource();
+  const { mutateAsync: toggleFlag } = useToggleFlag();
   const { mutateAsync: deleteSource } = useDeleteSource();
   const { mutateAsync: saveWard } = useCreateWard();
   const { mutateAsync: deleteWard } = useDeleteWard();
@@ -215,6 +222,26 @@ export const Towns = () => {
 
     setUsesWards(!usesWards);
   };
+
+  const handleToggleFlag = async (flag) => {
+    if (!town) {
+      return;
+    }
+
+    let resp = await toggleFlag({
+      item_id: town.id,
+      item_type: "municipality",
+      name: flag,
+    });
+
+    refetchTowns();
+  };
+
+  const usesTME = useMemo(() => {
+    return !!(town?.flags || []).find(
+      (f) => f.name === "uses_town_meeting_electors",
+    );
+  }, [town]);
 
   const filteredTowns = useMemo(() => {
     return (towns || []).filter((t) => {
@@ -501,6 +528,20 @@ export const Towns = () => {
                   onChange={toggleWards}
                 />
                 <label>This town uses wards or districts</label>
+              </div>
+            </div>
+
+            <div className="uk-width-1-1">
+              <div className="input-wrapper">
+                <input
+                  type="checkbox"
+                  checked={usesTME}
+                  id="usesTME"
+                  onChange={() => {
+                    handleToggleFlag("uses_town_meeting_electors");
+                  }}
+                />
+                <label>This town uses town meeting electors</label>
               </div>
             </div>
 

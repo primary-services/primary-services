@@ -9,4 +9,6 @@ utilsRoutes.get(
 	utilsController.fetch_markdown,
 );
 
+utilsRoutes.post("/utils/toggle_flag", auth, utilsController.toggle_flag);
+
 export { utilsRoutes };
