@@ -484,12 +484,6 @@ export const Towns = () => {
               </h2>
               <div>
                 <a
-                  href="https://docs.google.com/spreadsheets/d/1d4eHMwQLlPJGJvA7URVZ9ZICRqVVCny_uu6mj2j5a4Q/edit"
-                  target="_blank"
-                >
-                  Town Assignments
-                </a>
-                <a
                   href="https://docs.google.com/forms/d/e/1FAIpQLSekaJ1HUhgOj8M8gf6WsTKzslsCQXw7R8wGQh-swqlHv1QSww/viewform"
                   target="_blank"
                 >
