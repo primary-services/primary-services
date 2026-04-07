@@ -1,0 +1,81 @@
+@use "./components/header";
+@use "./components/dropdown";
+@use "./pages/home_page";
+@use "./pages/town_page";
+
+:root {
+  --theme-yellow: #f4ab00;
+  --theme-yellow-hover: #ac7d0f;
+  --theme-blue: #15008e;
+  --font-blue: #241673;
+  --light-blue: #0020c325;
+  --theme-light-grey: #f5f5f5;
+  --theme-font: "Instrument Sans", sans-serif;
+}
+
+@font-face {
+  font-family: "Instrument Sans";
+  font-style: italic;
+  font-weight: 400 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/instrumentsans/v4/pxitypc9vsFDm051Uf6KVwgkfoSbSnNPooZAN0lInHGpCWNu2ZGRqXp6pRwM.woff2)
+    format("woff2");
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--theme-font);
+  background: white;
+  color: var(--font-blue);
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  text-decoration: none;
+}
+
+.bold {
+  font-weight: 700;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.smoosh {
+  :not(:last-child) {
+    margin-bottom: 0;
+  }
+  :not(:first-child) {
+    margin-top: 0.3rem;
+  }
+}
+
+.indent {
+  margin-left: 1.5rem;
+}
+
+.decapitate {
+  margin-top: 0;
+}
+
+.skinny-margin-kids {
+  > * {
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
+  }
+}
+
+.blue {
+  color: var(--theme-blue);
+}

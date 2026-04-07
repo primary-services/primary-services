@@ -519,7 +519,9 @@ export const Towns = () => {
                   type="checkbox"
                   checked={usesWards}
                   id="usesWards"
-                  onChange={toggleWards}
+                  onChange={() => {
+                    handleToggleFlag("uses_wards_or_districts");
+                  }}
                 />
                 <label>This town uses wards or districts</label>
               </div>
