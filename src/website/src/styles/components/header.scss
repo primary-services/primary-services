@@ -1,0 +1,30 @@
+.header {
+  text-align: center;
+  padding: 2rem 1rem 2rem 1rem;
+  background-color: white;
+  :hover {
+    opacity: 0.85;
+  }
+
+  a {
+    text-decoration: none;
+  }
+}
+
+.header-title {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--theme-blue);
+
+  :first-child {
+    color: red;
+  }
+}
+
+.header-accent {
+  width: 80px;
+  height: 4px;
+  margin: 0.75rem auto 0;
+  background: var(--theme-yellow);
+  border-radius: 4px;
+}

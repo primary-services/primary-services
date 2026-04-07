@@ -1,0 +1,48 @@
+.hero {
+  padding: 1.5rem 1.5rem 3rem 1.5rem;
+  background-color: var(--theme-blue);
+  color: white;
+}
+
+.hero-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hero-title {
+  font-size: clamp(1.8rem, 3vw, 2.2rem);
+  margin-bottom: 0.75rem;
+}
+
+.hero-subtitle {
+  margin: 0 auto 2rem auto;
+  max-width: 520px;
+  line-height: 1.6;
+}
+
+.project-description {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+
+  .content h2 {
+    color: var(--theme-blue);
+  }
+
+  .content p {
+    line-height: 1.65;
+    font-size: 1.05rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    padding-top: 2rem;
+  }
+
+  .project-description {
+    padding: 2rem 1.25rem;
+  }
+}
