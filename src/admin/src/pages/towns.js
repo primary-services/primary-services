@@ -520,7 +520,7 @@ export const Towns = () => {
                   checked={usesWards}
                   id="usesWards"
                   onChange={() => {
-                    handleToggleFlag("uses_wards_or_districts");
+                    toggleWards();
                   }}
                 />
                 <label>This town uses wards or districts</label>
