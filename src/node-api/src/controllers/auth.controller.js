@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import owasp from "owasp-password-strength-test";
 import emailValidator from "email-validator";
+import { Op } from "sequelize";
 
 import User from "../models/user.model.js";
 
@@ -206,6 +207,28 @@ export default {
 
   logout: (req, res) => {
     res.status(200).json({ success: true });
+  },
+
+  resetPassword: async (req, res) => {
+    const { token, newPassword } = req.query;
+    try {
+      const user = await User.findOne({
+        where: {
+          resetToken: token,
+          resetTokenExpiry: { [Op.gt]: new Date() },
+        },
+      });
+
+      if (!user)
+        return res.status(400).json({ message: "Invalid or expired token" });
+
+      await user.setNewPassword(newPassword);
+      await user.save();
+
+      res.json({ message: "Password has been reset" });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
   },
 };
 //   requestPasswordReset: async (req, res) => {

@@ -90,4 +90,11 @@ class User extends Model {
   }
 }
 
+User.prototype.setNewPassword = async function (newPassword) {
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(newPassword, salt);
+  this.resetToken = null;
+  this.resetTokenExpiry = null;
+};
+
 export default User;
