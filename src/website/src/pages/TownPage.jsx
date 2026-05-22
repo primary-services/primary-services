@@ -89,11 +89,11 @@ function TownPage() {
           loading={isCollectionsLoading}
           error={isCollectionsError}
         />
-        <Notes
+        {/*<Notes
           notes={collectionsData?.notes}
           loading={isCollectionsLoading}
           error={isCollectionsError}
-        />
+        />*/}
       </section>
     </div>
   );

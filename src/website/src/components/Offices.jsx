@@ -1,18 +1,22 @@
 import moment from "moment";
 import { useMemo } from "react";
 
-function Terms({ terms }) {
+function Terms({ terms, office }) {
   return (
     <div className="indent skinny-margin-kids">
       {terms?.length ? (
-        terms.map((term, idx) => (
-          <p key={idx}>
-            <span className="bold">
-              {term.official.name || "Name not found"}
-            </span>
-            , {term.start_year} - {term.end_year || "Present"}
-          </p>
-        ))
+        terms.map((term, idx) => {
+          console.log(term);
+          return (
+            <p key={idx}>
+              <span className="bold">
+                {term.official.name || "Name not found"}
+              </span>
+              , {term.start_year} -{" "}
+              {term.start_year + (office.tenure || 0) || "Present"}
+            </p>
+          );
+        })
       ) : (
         <p className="italic">None</p>
       )}
@@ -55,11 +59,11 @@ function Office({ office, key }) {
           terms
         </p>
         <p className="bold">Incumbents</p>
-        <Terms terms={incumbents} />
+        <Terms terms={incumbents} office={office} />
         {previousOfficials?.length > 0 && (
           <>
             <p className="bold">Previous Officials</p>
-            <Terms terms={previousOfficials} />
+            <Terms terms={previousOfficials} office={office} />
           </>
         )}
       </div>
