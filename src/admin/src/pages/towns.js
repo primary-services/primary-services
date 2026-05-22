@@ -5,7 +5,7 @@ import { useParams } from "react-router";
 import { AppContexts } from "../providers";
 // import { TownForm } from "../components/forms/town.js";
 import { OfficeForm } from "../components/forms/office.js";
-import { ElectionForm } from "../components/forms/election.js";
+import { ElectionForm } from "../components/forms/new_elections.js";
 import { Slideout } from "../components/slideout.js";
 import { MunicipalityHistory } from "../components/history.js";
 import { RequirementForm } from "../components/forms/requirements.js";
@@ -617,21 +617,14 @@ export const Towns = () => {
               )}
             </section>
 
-            {/*<section className="uk-width-1-1">
+            <section className="uk-width-1-1">
               <div className="section-header">
                 <h2>Elections</h2>
                 <span
                   className="icon right-aligned clickable"
                   data-uk-icon="plus-circle"
                   onClick={() => {
-                    setElection({
-                      id: null,
-                      polling_date: null,
-                      deadlines: [],
-                      requirements: [],
-                      forms: [],
-                      terms: [],
-                    });
+                    setElection(true);
                   }}
                 ></span>
               </div>
@@ -665,7 +658,7 @@ export const Towns = () => {
                   })}
                 </div>
               )}
-            </section>*/}
+            </section>
 
             {usesWards && (
               <section className="uk-width-1-1">
@@ -881,16 +874,10 @@ export const Towns = () => {
       <Slideout active={election} setActive={setElection}>
         <form>
           <ElectionForm
-            municipality={town}
-            selected={election}
-            onSave={(e) => {
-              return saveElection({
-                municipality_id: town.id,
-                election: e,
-              }).then(() => {
-                return Promise.all([refetchElections(), refetchCollections()]);
-              });
-            }}
+            town={town}
+            offices={offices}
+            wards={wards}
+            onSave={() => setElection(false)}
             onCancel={() => {
               setElection(false);
             }}

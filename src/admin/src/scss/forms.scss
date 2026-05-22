@@ -147,3 +147,22 @@ form {
 		}
 	}
 }
+
+form {
+	#election-form {
+		.election-office-list {
+			li {
+				display: flex;
+				align-items: baseline;
+
+				& > input {
+					margin-right: 10px;
+				}
+
+				& > label {
+					flex: 1;
+				}
+			}
+		}
+	}
+}
