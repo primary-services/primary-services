@@ -24,20 +24,26 @@ function HomePage() {
           <h2>What is MADemocracy?</h2>
 
           <p>
-            A project to collect information about every elected position in
-            every city and town in Massachusetts into one place.
+            We believe good governance begins with competitive elections. 
+            The ultimate goal of Democracy Hub is to support a new generation 
+            of people finding their political voices by making running for local 
+            office simple and routine. We believe anyone who wants to be an agent 
+            of change, anyone who wants to challenge the status quo should be able 
+            to run for office without being a career politician. Our aim is to 
+            demystify the municipal electoral process in Massachusetts, 
+            and make it accessible to all. 
           </p>
 
-          <h2>Why are we doing this?</h2>
+          <h2>What is the goal of this first phase of this project?</h2>
 
           <p>
-            We believe that good governance begins with competitive elections,
-            but many local races go uncontested. By gathering information about
-            what seats are up for election next year and what the requirements
-            are to run, we can begin to see where MA citizens can step into
-            community and power. Wait, does this already exist? No, there is no
-            one publicly-accessible place to look up all elected positions in
-            MA, especially municipal (local/city/town-based elections)
+            We are collecting information about every elected position in every 
+            city and town in Massachusetts into one place. By gathering information 
+            about what seats are up for election and what the requirements are to run, 
+            we can begin to see where MA citizens can step into community and power. 
+            Wait, does this already exist? No, there is no one publicly-accessible 
+            place to look up all elected positions in MA, especially municipal 
+            (local/city/town-based elections).
           </p>
 
           <h2>How are we doing this?</h2>
