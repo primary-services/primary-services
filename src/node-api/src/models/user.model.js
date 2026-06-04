@@ -87,6 +87,13 @@ class User extends Model {
       constraints: false,
       as: "identities",
     });
+
+		this.hasMany(models.Version, {
+			foreignKey: "user_id",
+			sourceKey: "id",
+			as: "version",
+			constraints: false,
+		});
   }
 }
 
