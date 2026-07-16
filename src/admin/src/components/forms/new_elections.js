@@ -72,6 +72,8 @@ import {
 	confirmDeleteThen,
 } from "../../utils.js";
 
+import { Requirement } from "./requirements/requirement.js";
+
 import historyIcon from "../../icons/history.svg";
 
 export const ElectionForm = ({ town, offices, wards, onSave, onCancel }) => {
@@ -84,7 +86,11 @@ export const ElectionForm = ({ town, offices, wards, onSave, onCancel }) => {
 		election_type: "multiple_winner",
 		offices: (offices || []).reduce((a, c) => {
 			let ending = c.seats.filter((s) => {
-				return !!s.terms.find((t) => t.end_year === moment().format("YYYY"));
+				return !!s.terms.find(
+					(t) =>
+						moment(t.start_year, "YYYY").add(c.tenure, "years") ===
+						moment().format("YYYY"),
+				);
 			});
 
 			a[c.id] = ending.length;
@@ -107,6 +113,7 @@ export const ElectionForm = ({ town, offices, wards, onSave, onCancel }) => {
 				addition_information: "",
 				deadlines: [],
 				forms: [],
+				offices: (offices || []).map((o) => o.id),
 			},
 			{
 				type: "signatures",
@@ -115,6 +122,7 @@ export const ElectionForm = ({ town, offices, wards, onSave, onCancel }) => {
 				addition_information: "",
 				deadlines: [],
 				forms: [],
+				offices: (offices || []).map((o) => o.id),
 			},
 			{
 				type: "finance",
@@ -128,6 +136,7 @@ export const ElectionForm = ({ town, offices, wards, onSave, onCancel }) => {
 						url: "http://files.ocpf.us/pdf/forms/M102_edit.pdf",
 					},
 				],
+				offices: (offices || []).map((o) => o.id),
 			},
 			{
 				type: "ethics",
@@ -136,6 +145,7 @@ export const ElectionForm = ({ town, offices, wards, onSave, onCancel }) => {
 				addition_information: "",
 				deadlines: [],
 				forms: [],
+				offices: (offices || []).map((o) => o.id),
 			},
 		],
 		additional_deadlines: [],
@@ -309,6 +319,19 @@ export const ElectionForm = ({ town, offices, wards, onSave, onCancel }) => {
 						</ul>
 					</>
 				)}
+			</section>
+
+			<section className="requirements">
+				<h3>Requirements</h3>
+
+				{election.requirements.map((requirement) => {
+					return (
+						<Requirement
+							requirement={requirement}
+							offices={offices || []}
+						></Requirement>
+					);
+				})}
 			</section>
 
 			<section className="actions">

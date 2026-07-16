@@ -523,7 +523,7 @@ export const Towns = () => {
                     toggleWards();
                   }}
                 />
-                <label>This town uses wards or districts</label>
+                <label id="usesWards">This town uses wards or districts</label>
               </div>
             </div>
 

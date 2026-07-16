@@ -4,27 +4,27 @@ import { OtherRequirement } from "./other-requirement.js";
 import { ResidencyRequirement } from "./residency-requirement.js";
 import { SignatureRequirement } from "./signature-requirement.js";
 
-export const OtherRequirement = ({ requirement }) => {
+export const Requirement = ({ requirement, offices }) => {
 	return (
 		<div className="requirement">
 			{requirement.type === "ethics" && (
-				<EthicsRequirement requirement={requirement} />
+				<EthicsRequirement requirement={requirement} offices={offices} />
 			)}
 
 			{requirement.type === "finance" && (
-				<FinanceRequirement requirement={requirement} />
+				<FinanceRequirement requirement={requirement} offices={offices} />
 			)}
 
 			{requirement.type === "other" && (
-				<OtherRequirement requirement={requirement} />
+				<OtherRequirement requirement={requirement} offices={offices} />
 			)}
 
 			{requirement.type === "residency" && (
-				<ResidencyRequirement requirement={requirement} />
+				<ResidencyRequirement requirement={requirement} offices={offices} />
 			)}
 
-			{requirement.type === "signature" && (
-				<SignatureRequirement requirement={requirement} />
+			{requirement.type === "signatures" && (
+				<SignatureRequirement requirement={requirement} offices={offices} />
 			)}
 		</div>
 	);
