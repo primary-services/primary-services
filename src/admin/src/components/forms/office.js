@@ -260,7 +260,12 @@ export const OfficeForm = ({ wards, selected, onSave, onCancel }) => {
 								min="1"
 								step="1"
 								onInput={(e) => {
-									update("tenure", +e.target.value);
+									let tenure = +e.target.value || 1;
+									office.seats.forEach((seat, index) => {
+										let t = currentTerm(seat) || seat.terms[0];
+										updateTerm(t, "end_year", t.start_year + tenure);
+									});
+									update("tenure", tenure);
 								}}
 							/>
 						</div>
@@ -352,6 +357,7 @@ export const OfficeForm = ({ wards, selected, onSave, onCancel }) => {
 													value={+term.start_year}
 													onInput={(e) => {
 														updateTerm(term, "start_year", e.target.value);
+														updateTerm(term, "end_year", +e.target.value + +office.tenure);
 													}}
 												>
 													{new Array(10).fill(null).map((_, idx) => {
