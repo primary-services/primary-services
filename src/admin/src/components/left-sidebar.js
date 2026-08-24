@@ -11,7 +11,7 @@ export const LeftSidebar = () => {
     const [progress, setProgress] = useState(null);
 
     const authContext = useContext(AppContexts.AuthContext);
-    const hasAdminPermissions = !!authContext?.user?.admin; // TODO ACTUALLY CHECK PERMISSIONS
+    const hasSuperuserPermissions = !!authContext?.user?.superuser;
 
     useEffect(() => {
         (async () => {
@@ -39,7 +39,7 @@ export const LeftSidebar = () => {
               Report a Bug
             </a>
           </li>
-          {hasAdminPermissions && <li>
+          {hasSuperuserPermissions && <li>
             <Link to="/bulk-actions">Bulk Actions</Link>
           </li>}
         </ul>

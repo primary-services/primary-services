@@ -9,7 +9,7 @@ import { useGetCompletion } from "../api/hooks/municipality.hooks.js";
 export const BulkActions = () => {
     const authContext = useContext(AppContexts.AuthContext);
     const loadingAuth = authContext.loading;
-    const hasPermissions = !!authContext.user?.admin;
+    const hasSuperuserPermissions = !!authContext.user?.superuser;
 
     return (
     <section id="landing-page" className="page">
@@ -17,14 +17,14 @@ export const BulkActions = () => {
         <div className="landing-content">
             {loadingAuth && <div data-uk-spinner></div>}
 
-            {!loadingAuth && hasPermissions && (
+            {!loadingAuth && hasSuperuserPermissions && (
                 <div className="uk-width-1-1">
                     <button className="bulk-actions-button" onClick={() => {}}>Download town contacts</button>
                     <button className="bulk-actions-button" onClick={() => {}}>Upload updated town contacts</button>
                 </div>
             )}
             
-            {!loadingAuth && !hasPermissions && (
+            {!loadingAuth && !hasSuperuserPermissions && (
                 <div className="uk-width-1-1">
                     <h2>You do not have permission to perform bulk actions</h2>
                 </div>
