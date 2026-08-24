@@ -37,7 +37,7 @@ class Municipality extends Model {
           allowNull: true,
         },
         clerk_office_provided_info: {
-          type: DataTypes.DATE,
+          type: DataTypes.BOOLEAN,
           allowNull: true,
         },
       },
