@@ -31,6 +31,10 @@ class Contact extends Model {
           type: DataTypes.TEXT,
           allowNull: true,
         },
+        office_email: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
         contact_form: {
           type: DataTypes.TEXT,
           allowNull: true,
