@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useContext } from "react";
+import React, { useState, useEffect, useMemo, useContext } from "react";
 import { Link } from "react-router";
 import { useParams } from "react-router";
 
@@ -79,37 +79,36 @@ const getNextCompletionStatus = (status) => {
   }
 };
 
-const Clerk = ({ official }) => {
-  if (!official) {
+const Clerk = ({ contact }) => {
+  if (!contact) {
     return null;
   }
 
   return (
     <div>
       <div>
-        <b>
-          {official?.office?.title || "Clerk"}: {official?.name || ""}
+        <b className="label">
+          {contact.title || "Contact"}:
         </b>
+        {contact.name ? <span>{contact.name}</span> : <span className="none">None</span>}
       </div>
       <div>
-        {!!official.email && (
-          <div>
-            <b>Email: </b>
-            <a href={`mailto:${official.email}`}>{official.email}</a>
-          </div>
-        )}
-        {!!official.contact_form && (
-          <div>
-            <b>Contact Form: </b>
-            <a href={official.contact_form}>{official.contact_form}</a>
-          </div>
-        )}
-        {!!official.phone && (
-          <div>
-            <b>Phone: </b>
-            <a href={`tel:${official.phone}`}>{official.phone}</a>
-          </div>
-        )}
+        <div>
+          <b className="label">Individual email:</b>
+          {contact.email ? <a href={`mailto:${contact.email}`}>{contact.email}</a> : <span className="none">None</span>}
+        </div>
+        <div>
+          <b className="label">Office email:</b>
+          {contact.office_email ? <a href={`mailto:${contact.office_email}`}>{contact.office_email}</a> : <span className="none">None</span>}
+        </div>
+        <div>
+          <b className="label">Contact Form:</b>
+          {contact.contact_form ? <a href={contact.contact_form}>{contact.contact_form}</a> : <span className="none">None</span>}
+        </div>
+        <div>
+          <b className="label">Phone:</b>
+          {contact.phone ? <a href={`tel:${contact.phone}`}>{contact.phone}</a> : <span className="none">None</span>}
+        </div>
       </div>
     </div>
   );
@@ -164,26 +163,6 @@ export const Towns = () => {
       setUsesWards(false);
     }
   }, [wards]);
-
-  const getClerk = (t) => {
-    if (!t || !t.contacts) {
-      return null;
-    }
-
-    return t.contacts.find((o) => {
-      return o.title === "Town Clerk";
-    });
-  };
-
-  const getAssistantClerk = (t) => {
-    if (!t || !t.contacts) {
-      return null;
-    }
-
-    return t.contacts.find((o) => {
-      return o.title === "Assistant Town Clerk";
-    });
-  };
 
   const { mutateAsync: saveOffice } = useCreateOffice();
   const { mutateAsync: deleteOffice } = useDeleteOffice();
@@ -502,15 +481,31 @@ export const Towns = () => {
               </div>
             </div>
 
-            <div className="uk-width-1-1 uk-flex">
-              <div className="uk-width-1-2">
-                {!!getClerk(town) && <Clerk official={getClerk(town)} />}
-              </div>
-              <div className="uk-width-1-2">
-                {!!getAssistantClerk(town) && (
-                  <Clerk official={getAssistantClerk(town)} />
-                )}
-              </div>
+            <div className="uk-width-1-1 bottom-spacing">
+              <div><b className="label">Contact info last updated:</b> {town?.contactInfoLastUpdated || "3/5/2025"}</div>
+              <div><b className="label">Has the clerk's office provided us any info?</b> {town?.clerkProvidedInfo ? "Yes" : "No"}</div>
+            </div>
+
+            <div className="uk-width-1-1 uk-flex bottom-spacing">
+              {town.contacts?.reduce((acc, c, idx) => {
+                if (idx % 2 === 0) {
+                  acc[idx/2] = [c];
+                } else {
+                  acc[Math.floor(idx/2)].push(c);
+                }
+
+                return acc;
+              }, []).map((pair, idx) => {
+                return (
+                  <React.Fragment key={idx}>
+                    {pair.map((c) => (
+                      <div className={pair.length == 1 ? "uk-width-1-1" : "uk-width-1-2"} key={c.id}>
+                        <Clerk contact={c} />
+                      </div>
+                    ))}
+                  </React.Fragment>
+                );
+              })}
             </div>
 
             <div className="uk-width-1-1">
