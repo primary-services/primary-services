@@ -198,7 +198,8 @@
 
 	.contacts {
 		display: inline-grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: repeat(auto-fit, minmax(390px, 1fr)); ;
 		grid-gap: 20px;
+		width: 100%;
 	}
 }
