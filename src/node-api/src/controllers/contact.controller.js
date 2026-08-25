@@ -10,10 +10,12 @@ import {
   ROLES,
   TOWN_COLUMN,
   MUNICIPALITY_ID_COLUMN,
+  COMPLETION_STATUS_COLUMN,
   CLERK_OFFICE_PROVIDED_INFO_COLUMN,
   CONTACT_FORM,
   TOWN_CLERK_TITLE,
   parseBoolean,
+  parseCompletionStatus,
   buildExportRow,
 } from "../utils/contacts-csv.js";
 
@@ -85,7 +87,7 @@ let contactController = {
       try {
         const municipalityId = parseInt(row[MUNICIPALITY_ID_COLUMN], 10);
 
-        if (!municipalityId || Number.isNaN(municipalityId)) {
+        if (municipalityId === undefined || Number.isNaN(municipalityId)) {
           throw new Error(
             `Missing or invalid ${MUNICIPALITY_ID_COLUMN}: "${row[MUNICIPALITY_ID_COLUMN]}"`,
           );
@@ -112,6 +114,9 @@ let contactController = {
         const providedInfo = parseBoolean(
           row[CLERK_OFFICE_PROVIDED_INFO_COLUMN],
         );
+        const completionStatus = parseCompletionStatus(
+          row[COMPLETION_STATUS_COLUMN],
+        );
 
         let changed = false;
 
@@ -120,13 +125,18 @@ let contactController = {
             const name = (row[role.nameCol] || "").trim() || null;
             const email = (row[role.emailCol] || "").trim() || null;
             const officeEmail = (row[role.officeEmailCol] || "").trim() || null;
+            const phone = (row[role.phoneCol] || "").trim() || null;
+            const isTownClerk = role.title === TOWN_CLERK_TITLE;
+            const contactForm = isTownClerk
+              ? (row[CONTACT_FORM] || "").trim() || null
+              : undefined;
 
             const existing = municipality.contacts.find(
               (c) => c.title === role.title,
             );
 
             if (!existing) {
-              if (!name && !email && !officeEmail) {
+              if (!name && !email && !officeEmail && !phone && !contactForm) {
                 continue;
               }
 
@@ -137,6 +147,8 @@ let contactController = {
                   name,
                   email,
                   office_email: officeEmail,
+                  phone,
+                  ...(isTownClerk ? { contact_form: contactForm } : {}),
                 },
                 { transaction },
               );
@@ -144,13 +156,22 @@ let contactController = {
               continue;
             }
 
-            if (
+            const fieldsChanged =
               existing.name !== name ||
               existing.email !== email ||
-              existing.office_email !== officeEmail
-            ) {
+              existing.office_email !== officeEmail ||
+              existing.phone !== phone ||
+              (isTownClerk && existing.contact_form !== contactForm);
+
+            if (fieldsChanged) {
               await existing.update(
-                { name, email, office_email: officeEmail },
+                {
+                  name,
+                  email,
+                  office_email: officeEmail,
+                  phone,
+                  ...(isTownClerk ? { contact_form: contactForm } : {}),
+                },
                 { transaction },
               );
               changed = true;
@@ -159,6 +180,11 @@ let contactController = {
 
           if (municipality.clerk_office_provided_info !== providedInfo) {
             municipality.clerk_office_provided_info = providedInfo;
+            changed = true;
+          }
+
+          if (municipality.completionStatus !== completionStatus) {
+            municipality.completionStatus = completionStatus;
             changed = true;
           }
 
@@ -199,7 +225,7 @@ let contactController = {
     const municipalities = await Municipality.findAll({
       where: { type: "TOWN" },
       include: [{ model: Contact, as: "contacts" }],
-      order: [["name", "ASC"]],
+      order: [["id", "ASC"]],
     });
 
     const rows = municipalities.map(buildExportRow);
