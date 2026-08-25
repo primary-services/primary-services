@@ -79,13 +79,13 @@ const getNextCompletionStatus = (status) => {
   }
 };
 
-const Clerk = ({ contact }) => {
+const Clerk = ({ contact, key }) => {
   if (!contact) {
     return null;
   }
 
   return (
-    <div>
+    <div key={key}>
       <div>
         <b className="label">
           {contact.title || "Contact"}:
@@ -100,10 +100,6 @@ const Clerk = ({ contact }) => {
         <div>
           <b className="label">Office email:</b>
           {contact.office_email ? <a href={`mailto:${contact.office_email}`}>{contact.office_email}</a> : <span className="none">None</span>}
-        </div>
-        <div>
-          <b className="label">Contact Form:</b>
-          {contact.contact_form ? <a href={contact.contact_form}>{contact.contact_form}</a> : <span className="none">None</span>}
         </div>
         <div>
           <b className="label">Phone:</b>
@@ -231,6 +227,16 @@ export const Towns = () => {
       }
     });
   }, [towns, search]);
+
+  const contactForms = useMemo(() => {
+    if (!town) {
+      return null;
+    }
+
+    const forms = (town.contacts || []).filter((c) => c.contact_form && c.contact_form.trim() !== "").map((c) => c.contact_form);
+    
+    return forms.map((c, index) => <span key={index}><a href={c}>{c}</a>{index < forms.length - 1 ? ", " : ""}</span>);
+  }, [town]);
 
   const sourceForm = () => {
     return (
@@ -482,11 +488,19 @@ export const Towns = () => {
             </div>
 
             <div className="uk-width-1-1 bottom-spacing">
-              <div><b className="label">Contact info last updated:</b> {town?.contactInfoLastUpdated || "3/5/2025"}</div>
-              <div><b className="label">Has the clerk's office provided us any info?</b> {town?.clerkProvidedInfo ? "Yes" : "No"}</div>
+              <div><b className="label">Contact info last updated:</b> {new Date(town?.contact_info_last_updated).toLocaleString() || "3/5/2025"}</div>
+              <div><b className="label">Has the clerk's office provided us any info?</b> {town?.clerk_office_provided_info ? "Yes" : "No"}</div>
             </div>
 
-            <div className="uk-width-1-1 uk-flex bottom-spacing">
+
+            {contactForms.length > 0 && (
+              <div className="uk-width-1-1 bottom-spacing">
+                <div><b className="label">Contact {contactForms.length > 1 ? "forms" : "form"}: </b>{contactForms}</div>
+              </div>
+            )}
+
+            <div className="contacts bottom-spacing">
+              {/* I want the contacts side by side so I'mma do a reduce to make an array of pairs, and then map through that */}
               {town.contacts?.reduce((acc, c, idx) => {
                 if (idx % 2 === 0) {
                   acc[idx/2] = [c];
@@ -499,9 +513,7 @@ export const Towns = () => {
                 return (
                   <React.Fragment key={idx}>
                     {pair.map((c) => (
-                      <div className={pair.length == 1 ? "uk-width-1-1" : "uk-width-1-2"} key={c.id}>
-                        <Clerk contact={c} />
-                      </div>
+                        <Clerk contact={c} key={c.id} />
                     ))}
                   </React.Fragment>
                 );
