@@ -14,6 +14,6 @@ contactRoutes.post(
   upload.single("file"),
   contactController.upload,
 );
-contactRoutes.post("/contacts/download", auth, contactController.download);
+contactRoutes.get("/contacts/download", auth, contactController.download);
 
 export { contactRoutes };
