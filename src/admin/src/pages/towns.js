@@ -79,13 +79,13 @@ const getNextCompletionStatus = (status) => {
   }
 };
 
-const Clerk = ({ contact, key }) => {
+const Clerk = ({ contact }) => {
   if (!contact) {
     return null;
   }
 
   return (
-    <div key={key}>
+    <div>
       <div>
         <b className="label">
           {contact.title || "Contact"}:
@@ -488,8 +488,8 @@ export const Towns = () => {
             </div>
 
             <div className="uk-width-1-1 bottom-spacing">
-              <div><b className="label">Contact info last updated:</b> {new Date(town?.contact_info_last_updated).toLocaleString() || "3/5/2025"}</div>
-              <div><b className="label">Has the clerk's office provided us any info?</b> {town?.clerk_office_provided_info ? "Yes" : "No"}</div>
+              <div><b className="label">Contact info last updated:</b> {town?.contact_info_last_updated ? new Date(town.contact_info_last_updated).toLocaleString() : <span className="none">3/5/25</span>}</div>
+              <div><b className="label">Has the clerk's office provided us any info?</b> {town?.clerk_office_provided_info === null || town?.clerk_office_provided_info === undefined ? <span className="none">Unknown</span> : (town.clerk_office_provided_info ? "Yes" : "No")}</div>
             </div>
 
 

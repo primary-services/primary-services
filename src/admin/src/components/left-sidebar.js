@@ -17,7 +17,6 @@ export const LeftSidebar = () => {
         (async () => {
             setLoading(true);
             let progressResp = await getCompletion();
-            console.log("progressResp", progressResp);
             if (progressResp.done !== undefined && progressResp.in_progress !== undefined) {
                 setProgress(progressResp);
             }

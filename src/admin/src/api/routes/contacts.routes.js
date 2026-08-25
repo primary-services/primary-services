@@ -1,10 +1,6 @@
 import { apiRoot } from "../../constants.js";
 import { fetchWithAuth } from "../../utils.js";
 
-const routeMap = {
-  municipality: "municipalities",
-};
-
 export const uploadContacts = (file) => {
   let formData = new FormData();
   formData.append("file", file);

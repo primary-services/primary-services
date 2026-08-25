@@ -1,4 +1,4 @@
-import { QueryClient, useQueryClient, useMutation } from "@tanstack/react-query";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 
 import { downloadBlob } from "../../utils.js";
 

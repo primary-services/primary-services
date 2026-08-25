@@ -1,11 +1,9 @@
-import { parse } from "csv-parse/sync";
-
 export const TOWN_COLUMN = "Town";
 export const COMPLETION_STATUS_COLUMN = "Completion Status";
 export const MUNICIPALITY_ID_COLUMN = "Municipality ID";
 export const CLERK_OFFICE_PROVIDED_INFO_COLUMN = "Clerk Office Provided Info";
 export const CONTACT_INFO_LAST_UPDATED_COLUMN = "Contact Info Last Updated";
-export const CONTACT_FORM = "Contact Form"
+export const CONTACT_FORM = "Contact Form";
 export const TOWN_CLERK_TITLE = "Town Clerk";
 
 export const ROLES = [

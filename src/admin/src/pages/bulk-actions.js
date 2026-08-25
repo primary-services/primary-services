@@ -1,11 +1,8 @@
-import { useState, useEffect, useContext } from "react";
+import { useContext } from "react";
 import { AppContexts } from "../providers";
-import { Link } from "react-router";
 import { LeftSidebar } from "../components/left-sidebar.js";
 
 import { useUploadContacts, useDownloadContacts } from "../api/hooks/contacts.hooks.js";
-import { useGetCompletion } from "../api/hooks/municipality.hooks.js";
-
 
 export const BulkActions = () => {
     const authContext = useContext(AppContexts.AuthContext);
