@@ -1,6 +1,7 @@
 import { parse } from "csv-parse/sync";
 
 export const TOWN_COLUMN = "Town";
+export const COMPLETION_STATUS_COLUMN = "Completion Status";
 export const MUNICIPALITY_ID_COLUMN = "Municipality ID";
 export const CLERK_OFFICE_PROVIDED_INFO_COLUMN = "Clerk Office Provided Info";
 export const CONTACT_INFO_LAST_UPDATED_COLUMN = "Contact Info Last Updated";
@@ -13,27 +14,36 @@ export const ROLES = [
     nameCol: "Clerk Name",
     emailCol: "Clerk Individual Email",
     officeEmailCol: "Clerk Office Email",
+    phoneCol: "Clerk Phone",
   },
   {
     title: "Assistant Town Clerk",
     nameCol: "Assistant Clerk Name",
     emailCol: "Assistant Clerk Individual Email",
     officeEmailCol: "Assistant Clerk Office Email",
+    phoneCol: "Assistant Clerk Phone",
   },
   {
     title: "Admin Assistant",
     nameCol: "Admin Assistant Name",
     emailCol: "Admin Assistant Individual Email",
-    officeEmailCol: "Admin Assistant Email",
+    officeEmailCol: "Admin Assistant Office Email",
+    phoneCol: "Admin Assistant Phone",
   },
 ];
 
 export const CSV_COLUMNS = [
-  TOWN_COLUMN,
   MUNICIPALITY_ID_COLUMN,
-  CONTACT_FORM,
-  ...ROLES.flatMap((role) => [role.nameCol, role.emailCol, role.officeEmailCol]),
+  TOWN_COLUMN,
+  COMPLETION_STATUS_COLUMN,
   CLERK_OFFICE_PROVIDED_INFO_COLUMN,
+  CONTACT_FORM,
+  ...ROLES.flatMap((role) => [
+    role.nameCol,
+    role.emailCol,
+    role.officeEmailCol,
+    role.phoneCol,
+  ]),
   CONTACT_INFO_LAST_UPDATED_COLUMN,
 ];
 
@@ -54,6 +64,21 @@ export const parseBoolean = (raw) => {
   );
 };
 
+const COMPLETION_STATUSES = ["IN_PROGRESS", "DONE"];
+
+// Accepts "" as null (status not set) rather than defaulting to one of the
+// two real statuses.
+export const parseCompletionStatus = (raw) => {
+  const value = (raw || "").trim().toUpperCase();
+
+  if (value === "") return null;
+  if (COMPLETION_STATUSES.includes(value)) return value;
+
+  throw new Error(
+    `Could not interpret "${raw}" for "${COMPLETION_STATUS_COLUMN}" - must be one of ${COMPLETION_STATUSES.join(", ")}`,
+  );
+};
+
 export const formatBoolean = (value) => {
   if (value === true) return "TRUE";
   if (value === false) return "FALSE";
@@ -68,6 +93,7 @@ export const formatDate = (value) => {
 export const buildExportRow = (municipality) => {
   const row = {
     [TOWN_COLUMN]: municipality.name,
+    [COMPLETION_STATUS_COLUMN]: municipality.completionStatus,
     [MUNICIPALITY_ID_COLUMN]: municipality.id,
     [CLERK_OFFICE_PROVIDED_INFO_COLUMN]: formatBoolean(
       municipality.clerk_office_provided_info,
@@ -85,6 +111,7 @@ export const buildExportRow = (municipality) => {
     row[role.nameCol] = contact?.name || "";
     row[role.emailCol] = contact?.email || "";
     row[role.officeEmailCol] = contact?.office_email || "";
+    row[role.phoneCol] = contact?.phone || "";
 
     // Add contact form for Town Clerk if it exists
     // Later, make contact form a town-level field instead of a contact-level field
