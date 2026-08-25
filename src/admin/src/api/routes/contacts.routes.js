@@ -8,15 +8,25 @@ export const uploadContacts = (file) => {
   return fetchWithAuth(`${apiRoot}/contacts/upload`, {
     method: "POST",
     body: formData,
-  }).then((resp) => {
-    return resp.json();
+  }).then(async (resp) => {
+    let data = await resp.json();
+
+    if (!resp.ok) {
+      throw new Error(data.error || data.error_msg || "Failed to upload contacts");
+    }
+
+    return data;
   });
 };
 
 export const downloadContacts = () => {
   return fetchWithAuth(`${apiRoot}/contacts/download`, {
     method: "GET",
-  }).then((resp) => {
+  }).then(async (resp) => {
+    if (!resp.ok) {
+      throw new Error("Failed to download contacts");
+    }
+
     return resp.blob();
   });
 };
