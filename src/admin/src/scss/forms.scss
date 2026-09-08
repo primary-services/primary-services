@@ -150,6 +150,18 @@ form {
 
 form {
 	#election-form {
+		section {
+			padding-left: 10px;
+
+			h3 {
+				margin-left: -10px;
+			}
+
+			hr {
+				border-color: black;
+			}
+		}
+
 		.election-office-list {
 			li {
 				display: flex;

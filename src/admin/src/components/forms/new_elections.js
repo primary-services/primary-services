@@ -37,13 +37,6 @@
  * 	- Professional/Technical requirements
  * 		- Probably none, but maybe?
  * 		-- Applicable offices
- * 	- Deadlines
- * 		- Filing Deadline (auto populated)
- * 		- Voter Registration Deadline (optional)
- * 		- Peliminary Election (if applicable, auto populated)
- * 		- Campaign Finance Reporting (auto-populate from above?)
- * 		- Election (auto-populate)
- * 		- Term Start (auto-populate from municipal data (which needs to be ))
  */
 
 import moment from "moment";
@@ -111,8 +104,8 @@ export const ElectionForm = ({ town, offices, wards, onSave, onCancel }) => {
 				value: !!wards ? "ward" : "town/city",
 				label: "Residency Requirements",
 				addition_information: "",
-				deadlines: [],
-				forms: [],
+				deadline: null,
+				form: null,
 				offices: (offices || []).map((o) => o.id),
 			},
 			{
@@ -120,8 +113,8 @@ export const ElectionForm = ({ town, offices, wards, onSave, onCancel }) => {
 				value: 0,
 				label: "Required Signatures",
 				addition_information: "",
-				deadlines: [],
-				forms: [],
+				deadline: null,
+				form: null,
 				offices: (offices || []).map((o) => o.id),
 			},
 			{
@@ -129,22 +122,8 @@ export const ElectionForm = ({ town, offices, wards, onSave, onCancel }) => {
 				value: "",
 				label: "Campaign Finance Report",
 				addition_information: "",
-				deadlines: [],
-				forms: [
-					{
-						label: "CPF M 102",
-						url: "http://files.ocpf.us/pdf/forms/M102_edit.pdf",
-					},
-				],
-				offices: (offices || []).map((o) => o.id),
-			},
-			{
-				type: "ethics",
-				value: "",
-				label: "Ethics form? Some kind of disclosure? Is this standard",
-				addition_information: "",
-				deadlines: [],
-				forms: [],
+				deadline: null,
+				form: "http://files.ocpf.us/pdf/forms/M102_edit.pdf",
 				offices: (offices || []).map((o) => o.id),
 			},
 		],
@@ -153,6 +132,7 @@ export const ElectionForm = ({ town, offices, wards, onSave, onCancel }) => {
 
 	let [requiresConfirmation, setRequiresConfirmation] = useState(false);
 	let [pendingSave, setPendingSave] = useState(false);
+	let [showAdd, setShowAdd] = useState(false);
 
 	useEffect(() => {
 		setElection({
@@ -196,6 +176,26 @@ export const ElectionForm = ({ town, offices, wards, onSave, onCancel }) => {
 		setElection({
 			...election,
 			peliminary: { ...election.peliminary, [field]: value },
+		});
+	};
+
+	const updateRequirement = (requirement, field, value) => {
+		let idx = election.requirements.indexOf(requirement);
+		if (idx === -1) {
+			console.warn(
+				"Couldn't find requirement:",
+				requirement,
+				election.requirements,
+			);
+			return;
+		}
+
+		setElection({
+			...election,
+			requirements: election.requirements.toSpliced(idx, 1, {
+				...requirement,
+				[field]: value,
+			}),
 		});
 	};
 
@@ -324,12 +324,16 @@ export const ElectionForm = ({ town, offices, wards, onSave, onCancel }) => {
 			<section className="requirements">
 				<h3>Requirements</h3>
 
-				{election.requirements.map((requirement) => {
+				{election.requirements.map((requirement, idx) => {
 					return (
-						<Requirement
-							requirement={requirement}
-							offices={offices || []}
-						></Requirement>
+						<div>
+							<Requirement
+								requirement={requirement}
+								offices={offices || []}
+								update={updateRequirement}
+							></Requirement>
+							{idx !== election.requirements.length - 1 && <hr />}
+						</div>
 					);
 				})}
 			</section>
