@@ -1,0 +1,22 @@
+.bulk-actions-button {
+	box-sizing: border-box;
+	display: block;
+	width: 40%;
+	font-family: inherit;
+	font-size: 16px;
+	text-align: center;
+	padding: 10px;
+	background-color: var(--democrat-blue);
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	opacity: 0.8;
+	flex-shrink: 0;
+	margin: 20px 20px 20px 0;
+}
+
+.bulk-action {
+	display: flex;
+	flex-direction: row;
+}

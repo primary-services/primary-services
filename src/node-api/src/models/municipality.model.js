@@ -32,6 +32,14 @@ class Municipality extends Model {
           type: DataTypes.ENUM("IN_PROGRESS", "DONE"),
           allowNull: true,
         },
+        contact_info_last_updated: {
+          type: DataTypes.DATE,
+          allowNull: true,
+        },
+        clerk_office_provided_info: {
+          type: DataTypes.BOOLEAN,
+          allowNull: true,
+        },
       },
       {
         sequelize,
