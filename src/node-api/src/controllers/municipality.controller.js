@@ -22,12 +22,7 @@ let municipalityController = {
   list: async (req, res, next) => {
     const municipalities = await Municipality.findAll({
       include: [
-        {
-          model: Contact,
-          as: "contacts",
-          order: [["title", "DESC"]],
-          separate: true,
-        },
+        { model: Contact, as: "contacts" },
         { model: Flag, as: "flags" },
       ],
       order: [["id", "ASC"]],

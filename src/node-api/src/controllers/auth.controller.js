@@ -5,7 +5,6 @@ import emailValidator from "email-validator";
 import { Op } from "sequelize";
 
 import User from "../models/user.model.js";
-import { error_codes } from "../utils/error_codes.js";
 
 const cookieConfig = {
   path: "/",
@@ -29,14 +28,11 @@ owasp.config({
 
 export default {
   authorize: async (req, res) => {
-    if (!req.jwt){
-      return res.status(401).json({ success: false, error_msg: error_codes["UNAUTHORIZED"] });
+    if (!!req.jwt) {
+      return res.status(200).json(req.jwt.user);
+    } else {
+      return res.status(401).json({ success: false });
     }
-    const userRecord = await User.findByPk(req.jwt.user.id);
-    if (!userRecord) {
-      return res.status(401).json({ success: false, error_msg: error_codes["USER_DOES_NOT_EXIST"] });
-    }
-    return res.status(200).json({...req.jwt.user, superuser: userRecord.superuser});
   },
 
   signup: async (req, res) => {
@@ -153,7 +149,6 @@ export default {
       user: {
         id: user.id,
         email: user.email,
-        superuser: user.superuser
       },
     });
   },
@@ -206,7 +201,6 @@ export default {
       user: {
         id: user.id,
         email: user.email,
-        superuser: user.superuser
       },
     });
   },

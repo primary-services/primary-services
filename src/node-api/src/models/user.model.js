@@ -34,10 +34,6 @@ class User extends Model {
           type: DataTypes.DATE,
           allowNull: true,
         },
-        superuser: {
-          type: DataTypes.BOOLEAN,
-          allowNull: true
-        }
       },
       {
         sequelize,

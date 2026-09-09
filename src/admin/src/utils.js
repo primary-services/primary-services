@@ -186,37 +186,16 @@ export const confirmDeleteThen = (callbackFn) => {
 export const fetchWithAuth = (url, options = {}) => {
   let token = getCookie("auth_token") || "";
 
-  // FormData bodies need the browser to set Content-Type itself (it embeds a
-  // boundary generated from the body), so don't default it in that case.
-  let isFormData = options.body instanceof FormData;
-
   return fetch(url, {
     ...options,
     credentials: "include",
     headers: {
       Accept: "application/json",
-      ...(isFormData ? {} : { "Content-Type": "application/json" }),
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
       ...options.headers,
     },
   });
-};
-
-/**
- * Saves a Blob to disk by simulating a click on a temporary download link.
- * @param  {Blob}   blob
- * @param  {String} filename
- */
-export const downloadBlob = (blob, filename) => {
-  let url = URL.createObjectURL(blob);
-  let link = document.createElement("a");
-
-  link.href = url;
-  link.download = filename;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
 };
 
 export const capitalizeFirstLetter = (str) => {

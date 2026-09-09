@@ -13,7 +13,6 @@
 
 @use "./pages/towns.scss";
 @use "./pages/landing.scss";
-@use "./pages/bulk-actions.scss";
 
 :root {
 	--democrat-blue: #15008e;
@@ -122,6 +121,7 @@ header {
 	display: block;
 	margin: 0px 30px;
 	padding: 60px;
+	width: var(--page-width);
 	@media (max-width: 767px) {
 		padding: 60px 30px 30px 30px;
 		width: 100%;
@@ -178,19 +178,4 @@ input[type="radio"] {
 	.clickable {
 		pointer-events: none;
 	}
-}
-
-.none {
-	opacity: .7;
-	font-style: italic;
-}
-
-.label {
-	display:inline;
-	font-weight: bold;
-	padding-right: 8px;
-}
-
-.bottom-spacing { 
-	margin-bottom: 20px;
 }

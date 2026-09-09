@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useContext } from "react";
+import { useState, useEffect, useMemo, useContext } from "react";
 import { Link } from "react-router";
 import { useParams } from "react-router";
 
@@ -79,32 +79,37 @@ const getNextCompletionStatus = (status) => {
   }
 };
 
-const Clerk = ({ contact }) => {
-  if (!contact) {
+const Clerk = ({ official }) => {
+  if (!official) {
     return null;
   }
 
   return (
     <div>
       <div>
-        <b className="label">
-          {contact.title || "Contact"}:
+        <b>
+          {official?.office?.title || "Clerk"}: {official?.name || ""}
         </b>
-        {contact.name ? <span>{contact.name}</span> : <span className="none">None</span>}
       </div>
       <div>
-        <div>
-          <b className="label">Individual email:</b>
-          {contact.email ? <a href={`mailto:${contact.email}`}>{contact.email}</a> : <span className="none">None</span>}
-        </div>
-        <div>
-          <b className="label">Office email:</b>
-          {contact.office_email ? <a href={`mailto:${contact.office_email}`}>{contact.office_email}</a> : <span className="none">None</span>}
-        </div>
-        <div>
-          <b className="label">Phone:</b>
-          {contact.phone ? <a href={`tel:${contact.phone}`}>{contact.phone}</a> : <span className="none">None</span>}
-        </div>
+        {!!official.email && (
+          <div>
+            <b>Email: </b>
+            <a href={`mailto:${official.email}`}>{official.email}</a>
+          </div>
+        )}
+        {!!official.contact_form && (
+          <div>
+            <b>Contact Form: </b>
+            <a href={official.contact_form}>{official.contact_form}</a>
+          </div>
+        )}
+        {!!official.phone && (
+          <div>
+            <b>Phone: </b>
+            <a href={`tel:${official.phone}`}>{official.phone}</a>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -159,6 +164,26 @@ export const Towns = () => {
       setUsesWards(false);
     }
   }, [wards]);
+
+  const getClerk = (t) => {
+    if (!t || !t.contacts) {
+      return null;
+    }
+
+    return t.contacts.find((o) => {
+      return o.title === "Town Clerk";
+    });
+  };
+
+  const getAssistantClerk = (t) => {
+    if (!t || !t.contacts) {
+      return null;
+    }
+
+    return t.contacts.find((o) => {
+      return o.title === "Assistant Town Clerk";
+    });
+  };
 
   const { mutateAsync: saveOffice } = useCreateOffice();
   const { mutateAsync: deleteOffice } = useDeleteOffice();
@@ -227,16 +252,6 @@ export const Towns = () => {
       }
     });
   }, [towns, search]);
-
-  const contactForms = useMemo(() => {
-    if (!town) {
-      return null;
-    }
-
-    const forms = (town.contacts || []).filter((c) => c.contact_form && c.contact_form.trim() !== "").map((c) => c.contact_form);
-    
-    return forms.map((c, index) => <span key={index}><a href={c}>{c}</a>{index < forms.length - 1 ? ", " : ""}</span>);
-  }, [town]);
 
   const sourceForm = () => {
     return (
@@ -487,37 +502,15 @@ export const Towns = () => {
               </div>
             </div>
 
-            <div className="uk-width-1-1 bottom-spacing">
-              <div><b className="label">Contact info last updated:</b> {town?.contact_info_last_updated ? new Date(town.contact_info_last_updated).toLocaleString() : <span className="none">3/5/25</span>}</div>
-              <div><b className="label">Has the clerk's office provided us any info?</b> {town?.clerk_office_provided_info === null || town?.clerk_office_provided_info === undefined ? <span className="none">Unknown</span> : (town.clerk_office_provided_info ? "Yes" : "No")}</div>
-            </div>
-
-
-            {contactForms.length > 0 && (
-              <div className="uk-width-1-1 bottom-spacing">
-                <div><b className="label">Contact {contactForms.length > 1 ? "forms" : "form"}: </b>{contactForms}</div>
+            <div className="uk-width-1-1 uk-flex">
+              <div className="uk-width-1-2">
+                {!!getClerk(town) && <Clerk official={getClerk(town)} />}
               </div>
-            )}
-
-            <div className="contacts bottom-spacing">
-              {/* I want the contacts side by side so I'mma do a reduce to make an array of pairs, and then map through that */}
-              {town.contacts?.reduce((acc, c, idx) => {
-                if (idx % 2 === 0) {
-                  acc[idx/2] = [c];
-                } else {
-                  acc[Math.floor(idx/2)].push(c);
-                }
-
-                return acc;
-              }, []).map((pair, idx) => {
-                return (
-                  <React.Fragment key={idx}>
-                    {pair.map((c) => (
-                        <Clerk contact={c} key={c.id} />
-                    ))}
-                  </React.Fragment>
-                );
-              })}
+              <div className="uk-width-1-2">
+                {!!getAssistantClerk(town) && (
+                  <Clerk official={getAssistantClerk(town)} />
+                )}
+              </div>
             </div>
 
             <div className="uk-width-1-1">

@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route, Link } from "react-router";
 
 import { LandingPage } from "./pages/landing.js";
 import { Towns } from "./pages/towns.js";
-import { BulkActions } from "./pages/bulk-actions.js";
+
 import { SignupPage } from "./pages/auth/signup.js";
 import { LoginPage } from "./pages/auth/login.js";
 
@@ -72,7 +72,6 @@ export const Loader = () => {
               <Route path="/" element={<LandingPage />} />
               <Route path="/towns" element={<Towns />} />
               <Route path="/towns/ma/:slug" element={<Towns />} />
-              <Route path="/bulk-actions" element={<BulkActions />} />
             </Routes>
           </div>
         </BrowserRouter>
