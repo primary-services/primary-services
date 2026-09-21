@@ -171,11 +171,13 @@ let municipalityController = {
         { model: Note, as: "notes" },
         { model: Office, as: "offices" },
         { model: Ward, as: "wards" },
+        { model: Contact, as: "contacts" },
       ],
     });
     const sourceIds = municipality.sources.map((s) => s.id);
     const noteIds = municipality.notes.map((n) => n.id);
     const officeIds = municipality.offices.map((o) => o.id);
+    const contactIds = municipality.contacts.map((c) => c.id);
 
     const versions = await Version.findAll({
       where: {
@@ -202,8 +204,15 @@ let municipalityController = {
               [Op.in]: officeIds,
             },
           },
+          {
+            item_type: "Contact",
+            item_id: {
+              [Op.in]: contactIds,
+            },
+          },
         ],
       },
+      
       include: [{ model: User, as: "user" }],
       order: [["created_at", "DESC"]],
     });
