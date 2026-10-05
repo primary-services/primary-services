@@ -11,12 +11,5 @@ import contactController from "../controllers/contact.controller.js";
 const contactRoutes = Router();
 
 // contactRoutes.post("/contacts/create", auth, contactController.create);
-contactRoutes.post(
-  "/contacts/upload",
-  auth,
-  upload.single("file"),
-  contactController.upload,
-);
-contactRoutes.get("/contacts/download", auth, contactController.download);
 
 export { contactRoutes };

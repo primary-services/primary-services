@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { AppContexts } from "../providers";
 import { LeftSidebar } from "../components/left-sidebar.js";
 
-import { useUploadContacts, useDownloadContacts } from "../api/hooks/contacts.hooks.js";
+import { useUploadContacts, useDownloadContacts, useDownloadMailMerge } from "../api/hooks/bulk-actions.hooks.js";
 
 export const BulkActions = () => {
     const authContext = useContext(AppContexts.AuthContext);
@@ -11,6 +11,7 @@ export const BulkActions = () => {
 
     const { mutate: downloadContacts} = useDownloadContacts();
     const { mutate: uploadContacts} = useUploadContacts();
+    const { mutate: downloadMailMerge} = useDownloadMailMerge();
 
     return (
     <section id="landing-page" className="page">
@@ -50,6 +51,12 @@ export const BulkActions = () => {
                                 e.target.value = "";
                             }}
                         />
+                        <hr />
+                        <p>
+                            Download a CSV file for sending mail merge emails to clerks containing the following information: 
+                            municipality ID, town name, town status, clerk office has provided info, contact name, contact email, cc's emails, contact info blurb, & office info blurb. 
+                        </p>
+                        <button className="bulk-actions-button" onClick={() => downloadMailMerge()}>Download mail merge CSV</button>
                 </div>
             )}
             

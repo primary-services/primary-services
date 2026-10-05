@@ -4,7 +4,16 @@ export const MUNICIPALITY_ID_COLUMN = "Municipality ID";
 export const CLERK_OFFICE_PROVIDED_INFO_COLUMN = "Clerk Office Provided Info";
 export const CONTACT_INFO_LAST_UPDATED_COLUMN = "Contact Info Last Updated";
 export const CONTACT_FORM = "Contact Form";
+
 export const TOWN_CLERK_TITLE = "Town Clerk";
+export const ASSISTANT_TOWN_CLERK_TITLE = "Assistant Town Clerk";
+export const ADMIN_ASSISTANT_TITLE = "Admin Assistant";
+
+export const CONTACT_NAME_COLUMN = "Contact Name";
+export const CONTACT_EMAIL_COLUMN = "Contact Email";
+export const CONTACT_CC_EMAILS_COLUMN = "Contact CC Emails";
+export const CONTACT_INFO_BLURB_COLUMN = "Contact Info Blurb";
+export const OFFICE_INFO_BLURB_COLUMN = "Office Info Blurb";
 
 export const ROLES = [
   {
@@ -15,34 +24,19 @@ export const ROLES = [
     phoneCol: "Clerk Phone",
   },
   {
-    title: "Assistant Town Clerk",
+    title: ASSISTANT_TOWN_CLERK_TITLE,
     nameCol: "Assistant Clerk Name",
     emailCol: "Assistant Clerk Individual Email",
     officeEmailCol: "Assistant Clerk Office Email",
     phoneCol: "Assistant Clerk Phone",
   },
   {
-    title: "Admin Assistant",
+    title: ADMIN_ASSISTANT_TITLE,
     nameCol: "Admin Assistant Name",
     emailCol: "Admin Assistant Individual Email",
     officeEmailCol: "Admin Assistant Office Email",
     phoneCol: "Admin Assistant Phone",
   },
-];
-
-export const CSV_COLUMNS = [
-  MUNICIPALITY_ID_COLUMN,
-  TOWN_COLUMN,
-  COMPLETION_STATUS_COLUMN,
-  CLERK_OFFICE_PROVIDED_INFO_COLUMN,
-  CONTACT_FORM,
-  ...ROLES.flatMap((role) => [
-    role.nameCol,
-    role.emailCol,
-    role.officeEmailCol,
-    role.phoneCol,
-  ]),
-  CONTACT_INFO_LAST_UPDATED_COLUMN,
 ];
 
 const TRUE_VALUES = ["true", "yes", "y", "1"];
@@ -86,38 +80,4 @@ export const formatBoolean = (value) => {
 export const formatDate = (value) => {
   if (!value) return "";
   return new Date(value).toISOString();
-};
-
-export const buildExportRow = (municipality) => {
-  const row = {
-    [TOWN_COLUMN]: municipality.name,
-    [COMPLETION_STATUS_COLUMN]: municipality.completionStatus,
-    [MUNICIPALITY_ID_COLUMN]: municipality.id,
-    [CLERK_OFFICE_PROVIDED_INFO_COLUMN]: formatBoolean(
-      municipality.clerk_office_provided_info,
-    ),
-    [CONTACT_INFO_LAST_UPDATED_COLUMN]: formatDate(
-      municipality.contact_info_last_updated,
-    ),
-  };
-
-  for (const role of ROLES) {
-    const contact = (municipality.contacts || []).find(
-      (c) => c.title === role.title,
-    );
-
-    row[role.nameCol] = contact?.name || "";
-    row[role.emailCol] = contact?.email || "";
-    row[role.officeEmailCol] = contact?.office_email || "";
-    row[role.phoneCol] = contact?.phone || "";
-
-    // Add contact form for Town Clerk if it exists
-    // Later, make contact form a town-level field instead of a contact-level field
-    // But for now we'll just add/export from the Town Clerk
-    if (role.title === TOWN_CLERK_TITLE && contact?.contact_form) {
-      row[CONTACT_FORM] = contact.contact_form;
-    }
-  }
-
-  return row;
 };
