@@ -10,7 +10,7 @@ function Terms({ terms, office }) {
           return (
             <p key={idx}>
               <span className="bold">
-                {term.official.name || "Name not found"}
+                {term.official?.name || "Name not found"}
               </span>
               , {term.start_year} -{" "}
               {term.start_year + (office.tenure || 0) || "Present"}
