@@ -4,9 +4,9 @@ import { stringify } from "csv-stringify/sync";
 import Municipality from "../models/municipality.model.js";
 import User from "../models/user.model.js";
 import { error_codes } from "../utils/error_codes.js";
+import { CONTACT_INFO_LAST_UPDATED_COLUMN, formatBoolean, formatDate } from "../utils/csv.js";
 import Contact from "../models/contact.model.js";
 import {
-  CSV_COLUMNS,
   ROLES,
   TOWN_COLUMN,
   MUNICIPALITY_ID_COLUMN,
@@ -16,8 +16,56 @@ import {
   TOWN_CLERK_TITLE,
   parseBoolean,
   parseCompletionStatus,
-  buildExportRow,
-} from "../utils/contacts-csv.js";
+} from "../utils/csv.js";
+
+const CSV_COLUMNS = [
+  MUNICIPALITY_ID_COLUMN,
+  TOWN_COLUMN,
+  COMPLETION_STATUS_COLUMN,
+  CLERK_OFFICE_PROVIDED_INFO_COLUMN,
+  CONTACT_FORM,
+  ...ROLES.flatMap((role) => [
+    role.nameCol,
+    role.emailCol,
+    role.officeEmailCol,
+    role.phoneCol,
+  ]),
+  CONTACT_INFO_LAST_UPDATED_COLUMN,
+];
+
+const buildExportRow = (municipality) => {
+  const row = {
+    [TOWN_COLUMN]: municipality.name,
+    [COMPLETION_STATUS_COLUMN]: municipality.completionStatus,
+    [MUNICIPALITY_ID_COLUMN]: municipality.id,
+    [CLERK_OFFICE_PROVIDED_INFO_COLUMN]: formatBoolean(
+      municipality.clerk_office_provided_info,
+    ),
+    [CONTACT_INFO_LAST_UPDATED_COLUMN]: formatDate(
+      municipality.contact_info_last_updated,
+    ),
+  };
+
+  for (const role of ROLES) {
+    const contact = (municipality.contacts || []).find(
+      (c) => c.title === role.title,
+    );
+
+    row[role.nameCol] = contact?.name || "";
+    row[role.emailCol] = contact?.email || "";
+    row[role.officeEmailCol] = contact?.office_email || "";
+    row[role.phoneCol] = contact?.phone || "";
+
+    // Add contact form for Town Clerk if it exists
+    // Later, make contact form a town-level field instead of a contact-level field
+    // But for now we'll just add/export from the Town Clerk
+    if (role.title === TOWN_CLERK_TITLE && contact?.contact_form) {
+      row[CONTACT_FORM] = contact.contact_form;
+    }
+  }
+
+  return row;
+};
 
 let contactController = {
   // Route for the import from JSON. Probably should remove at some point

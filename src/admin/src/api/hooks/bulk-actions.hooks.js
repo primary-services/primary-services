@@ -2,7 +2,7 @@ import { useQueryClient, useMutation } from "@tanstack/react-query";
 
 import { downloadBlob, showNotification } from "../../utils.js";
 
-import { uploadContacts, downloadContacts } from "../routes/contacts.routes.js";
+import { uploadContacts, downloadContacts, downloadMailMerge } from "../routes/bulk-actions.routes.js";
 
 export const useUploadContacts = () => {
   const queryClient = useQueryClient();
@@ -43,6 +43,23 @@ export const useDownloadContacts = () => {
     onError: (error) => {
       showNotification({
         message: error.message || "Failed to download contacts",
+        status: "danger",
+      });
+    },
+  });
+};
+
+export const useDownloadMailMerge = () => {
+  return useMutation({
+    mutationKey: ["contacts", "downloadMailMerge"],
+    mutationFn: () => downloadMailMerge(),
+    onSuccess: (blob) => {
+      const timestamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
+      downloadBlob(blob, `mail-merge-${timestamp}.csv`);
+    },
+    onError: (error) => {
+      showNotification({
+        message: error.message || "Failed to download mail merge CSV",
         status: "danger",
       });
     },
