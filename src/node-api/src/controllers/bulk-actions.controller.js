@@ -52,14 +52,11 @@ const buildExportRow = async (town) => {
   }
 
   // Construct the contacts blurb
-  const contactsBlurb = town.contacts.reduce((acc, contact) => {
-    if (acc) {
-      const info = [contact.name, contact.office_email, contact.email, contact.phone_number].filter(Boolean).join(", ");
-      return acc + `${contact.title}: ${info}`;
-    }
-    return acc;
-  }, "").trim();
-  const contactForms = town.contacts.map(contact => contact.contactForm).filter(Boolean);
+  const contactsBlurb = town.contacts.map(contact => {
+    const info = [contact.name, contact.office_email, contact.email, contact.phone_number].filter(Boolean).join(", ");
+    return `${contact.title}: ${info}`;
+  }).join("\n").trim();
+  const contactForms = town.contacts.map(contact => contact.contact_form).filter(Boolean);
   const contactFormsBlurb = (() => {
     switch (contactForms.length) {
       case 0:
@@ -72,7 +69,7 @@ const buildExportRow = async (town) => {
   })();
 
   // Find & construct the person to email, their email, 
-  const contactsPriorityOrder = town.contacts.sort((a,b) => {
+  const contactsPriorityOrder = town.contacts.filter(contact => CONTACTS_PRIORITY_ORDER.includes(contact.title)).sort((a,b) => {
     return CONTACTS_PRIORITY_ORDER.indexOf(a.title) - CONTACTS_PRIORITY_ORDER.indexOf(b.title);
   }).filter(contact => contact.email || contact.office_email);
   const firstContact = contactsPriorityOrder[0];
@@ -80,14 +77,13 @@ const buildExportRow = async (town) => {
   if (!firstEmail) {
     return undefined; // Skip contacts without an email
   }
-  const ccEmails = contactsPriorityOrder.flatMap(contact => contact.email || contact.office_email).filter(email => email).join(", ");
+  const ccEmails = contactsPriorityOrder.flatMap(contact => contact.email || contact.office_email).filter(email => !!email && email != firstEmail).join(", ");
 
   // Construct the office info blurb (office title - seat name - term date range)
-  const officeInfoBlurb = town.offices.map(office => {
+  const officeInfoBlurb = town.offices.filter(office => !office.deleted).map(office => {
     const seats = office.seats || [];
     return seats.map(seat => {
       const term = seat.terms?.[0];
-      const official = term?.official;
       // Construct the date range for the term in the form "start_year - end_year"
       const dateRange = [term?.start_year, term?.end_year].filter(Boolean).join("-");
       return [office.title, term?.official?.name || "Vacant", dateRange].filter(Boolean).join(" - ");
@@ -95,10 +91,10 @@ const buildExportRow = async (town) => {
   }).filter(Boolean).join("\n");
 
   const row = {
-    [MUNICIPALITY_ID_COLUMN]: firstContact.municipality?.id || "",
-    [TOWN_COLUMN]: firstContact.municipality?.name || "",
-    [COMPLETION_STATUS_COLUMN]: firstContact.municipality?.completionStatus || "",
-    [CLERK_OFFICE_PROVIDED_INFO_COLUMN]: firstContact.municipality?.clerk_office_provided_info || "",
+    [MUNICIPALITY_ID_COLUMN]: town.id || "",
+    [TOWN_COLUMN]: town.name || "",
+    [COMPLETION_STATUS_COLUMN]: town.completionStatus || "",
+    [CLERK_OFFICE_PROVIDED_INFO_COLUMN]: town.clerk_office_provided_info || "",
     [CONTACT_NAME_COLUMN]: firstContact.name || "",
     [CONTACT_EMAIL_COLUMN]: firstEmail,
     [CONTACT_CC_EMAILS_COLUMN]: ccEmails || "",
@@ -159,7 +155,7 @@ let bulkActionsController = {
     res.setHeader("Content-Type", "text/csv");
     res.setHeader(
       "Content-Disposition",
-      'attachment; filename="contacts.csv"',
+      'attachment; filename="mail-merge.csv"',
     );
     return res.send(csv);
   },
