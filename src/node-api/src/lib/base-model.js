@@ -280,7 +280,7 @@ Sequelize.Model.prototype.upsertAllAndDiff = function async(data, transaction = 
             {},
           );
 
-          if (Object.keys(updates.fields).length !== 0) {
+          if (!isNoOp(updates)) {
             tracking.push(updates);
           }
         }
@@ -298,7 +298,7 @@ Sequelize.Model.prototype.upsertAllAndDiff = function async(data, transaction = 
             {},
           );
 
-          if (Object.keys(updates.fields).length !== 0) {
+          if (!isNoOp(updates)) {
             diff.fields[x] = updates;
           }
         }
@@ -416,13 +416,31 @@ Sequelize.Model.prototype.upsertAllAndDiff = function async(data, transaction = 
     return createItem(transaction, parent, child, association);
   };
 
+  // An update that only carries the humanReadableIdentifier (which is always
+  // stored for display purposes) didn't actually change anything
+  const isNoOp = (diff) => {
+    return diff.action === "update" && Object.keys(diff.fields).every((key) => {
+      return key === "humanReadableIdentifier";
+    });
+  };
+
+  // Returns a null diff if an update didn't actually change anything
+  const parseRoot = async (transaction) => {
+    let [instance, diff] = await parse(transaction, this.constructor, data, null, {});
+    if (isNoOp(diff)) {
+      return [instance, null];
+    }
+
+    return [instance, diff];
+  };
+
   // If a transaction was passed in, use it for parsing instead of creating a new one.
   if (transaction) {
-    return parse(transaction, this.constructor, data, null, {});
+    return parseRoot(transaction);
   }
 
   return this.constructor.sequelize.transaction(async (t) => {
-    return parse(t, this.constructor, data, null, {});
+    return parseRoot(t);
   });
 };
 
