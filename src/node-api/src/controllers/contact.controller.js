@@ -172,7 +172,7 @@ let contactController = {
         );
 
         const contacts = municipality.contacts.reduce((acc, curr) => {
-          acc[curr.title] = { id: curr.id };
+          acc[curr.title] = { id: curr.id, title: curr.title };
           return acc;
         }, {});
 
@@ -189,7 +189,7 @@ let contactController = {
 
           const existing = contacts[role.title];
           if (existing) {
-            contacts[role.title] = { id: existing.id, ...contactData };
+            contacts[existing.title] = { ...existing, ...contactData };
           } else if (Object.values(contactData).some((value) => value !== null)) {
             // Only create a new contact if the row actually has info for this role
             contacts[role.title] = {

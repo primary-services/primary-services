@@ -54,13 +54,10 @@ class Contact extends Model {
         ],
       },
     );
-    this.humanReadableIdentifier = "name";
-    this.versionItemType = "Contact";
+    this.humanReadableIdentifier = "title";
   }
 
   static associate(models) {
-    this.prototype.setUpVersioning(models, this.versionItemType);
-
     this.belongsTo(models.Municipality, {
       foreignKey: "municipality_id",
       onDelete: "CASCADE",
