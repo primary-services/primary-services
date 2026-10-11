@@ -45,3 +45,7 @@ override.tf.json
 .terraformrc
 terraform.rc
 config.json
+
+# Ignore node_modules
+src/node-api/node_modules
+src/admin/node_modules/
