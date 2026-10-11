@@ -1,4 +1,5 @@
 export const TOWN_COLUMN = "Town";
+export const TOWN_LINK_COLUMN = "Town Link";
 export const COMPLETION_STATUS_COLUMN = "Completion Status";
 export const MUNICIPALITY_ID_COLUMN = "Municipality ID";
 export const CLERK_OFFICE_PROVIDED_INFO_COLUMN = "Clerk Office Provided Info";
