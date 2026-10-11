@@ -193,7 +193,7 @@ Sequelize.Model.prototype.upsertAll = function async(data) {
   });
 };
 
-Sequelize.Model.prototype.upsertAllAndDiff = function async(data) {
+Sequelize.Model.prototype.upsertAllAndDiff = function async(data, transaction = undefined) {
   const singleTypes = ["HasOne", "BelongsTo"];
   const multipleTypes = ["HasMany", "BelongsToMany"];
 
@@ -413,6 +413,11 @@ Sequelize.Model.prototype.upsertAllAndDiff = function async(data) {
     let association = associations[match];
     return createItem(transaction, parent, child, association);
   };
+
+  // If a transaction was passed in, use it for parsing instead of creating a new one.
+  if (transaction) {
+    return parse(transaction, this.constructor, data, null, {});
+  }
 
   return this.constructor.sequelize.transaction(async (t) => {
     return parse(t, this.constructor, data, null, {});

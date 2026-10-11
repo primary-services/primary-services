@@ -3,6 +3,7 @@ import { stringify } from "csv-stringify/sync";
 
 import Municipality from "../models/municipality.model.js";
 import User from "../models/user.model.js";
+import { createNewVersion } from "../models/version.model.js";
 import { error_codes } from "../utils/error_codes.js";
 import { CONTACT_INFO_LAST_UPDATED_COLUMN, formatBoolean, formatDate } from "../utils/csv.js";
 import Contact from "../models/contact.model.js";
@@ -93,7 +94,11 @@ let contactController = {
   // },
   upload: async (req, res, next) => {
     // Only allow superusers to upload the CSV
-    const userRecord = await User.findByPk(req.jwt.user.id);
+    const user = req.jwt.user;
+    if (!user) {
+      return res.status(401).json({ success: false, error_msg: error_codes["UNAUTHORIZED"] });
+    }
+    const userRecord = await User.findByPk(user.id);
     if (!userRecord) {
       return res.status(401).json({ success: false, error_msg: error_codes["USER_DOES_NOT_EXIST"] });
     }
@@ -183,62 +188,52 @@ let contactController = {
               (c) => c.title === role.title,
             );
 
-            if (!existing) {
-              if (!name && !email && !officeEmail && !phone && !contactForm) {
-                continue;
-              }
+            const fieldsToUpsert = {};
+            if (existing?.name !== name) {
+              fieldsToUpsert.name = name;
+            }
+            if (existing?.email !== email) {
+              fieldsToUpsert.email = email;
+            }
+            if (existing?.office_email !== officeEmail) {
+              fieldsToUpsert.office_email = officeEmail;
+            }
+            if (existing?.phone !== phone) {
+              fieldsToUpsert.phone = phone;
+            }
+            if (isTownClerk && existing?.contact_form !== contactForm) {
+              fieldsToUpsert.contact_form = contactForm;
+            }
 
-              await Contact.create(
-                {
-                  municipality_id: municipality.id,
-                  title: role.title,
-                  name,
-                  email,
-                  office_email: officeEmail,
-                  phone,
-                  ...(isTownClerk ? { contact_form: contactForm } : {}),
-                },
-                { transaction },
-              );
-              changed = true;
+            if (Object.keys(fieldsToUpsert).length === 0) {
               continue;
             }
 
-            const fieldsChanged =
-              existing.name !== name ||
-              existing.email !== email ||
-              existing.office_email !== officeEmail ||
-              existing.phone !== phone ||
-              (isTownClerk && existing.contact_form !== contactForm);
-
-            if (fieldsChanged) {
-              await existing.update(
-                {
-                  name,
-                  email,
-                  office_email: officeEmail,
-                  phone,
-                  ...(isTownClerk ? { contact_form: contactForm } : {}),
-                },
-                { transaction },
-              );
-              changed = true;
+            if (!existing) {
+              fieldsToUpsert.municipality_id = municipality.id;
+              fieldsToUpsert.title = role.title;
+            } else {
+              fieldsToUpsert.id = existing.id;
             }
+
+            await createNewVersion(Contact, user, fieldsToUpsert, transaction);
           }
 
+          // Update municipality data if any changes occurred
+          const municipalityData = {}
           if (municipality.clerk_office_provided_info !== providedInfo) {
-            municipality.clerk_office_provided_info = providedInfo;
+            municipalityData.clerk_office_provided_info = providedInfo;
             changed = true;
           }
 
           if (municipality.completionStatus !== completionStatus) {
-            municipality.completionStatus = completionStatus;
+            municipalityData.completionStatus = completionStatus;
             changed = true;
           }
 
           if (changed) {
-            municipality.contact_info_last_updated = new Date();
-            await municipality.save({ transaction });
+            municipalityData.contact_info_last_updated = new Date();
+            await createNewVersion(Municipality, user, municipalityData, transaction);
           }
         });
 
