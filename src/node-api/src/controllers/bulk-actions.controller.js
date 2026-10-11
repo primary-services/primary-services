@@ -12,6 +12,7 @@ import Official from "../models/official.model.js";
 import {
   ROLES,
   TOWN_COLUMN,
+  TOWN_LINK_COLUMN,
   MUNICIPALITY_ID_COLUMN,
   COMPLETION_STATUS_COLUMN,
   CLERK_OFFICE_PROVIDED_INFO_COLUMN,
@@ -31,6 +32,7 @@ import { error_codes } from "../utils/error_codes.js";
 const CSV_COLUMNS = [
   MUNICIPALITY_ID_COLUMN,
   TOWN_COLUMN,
+  TOWN_LINK_COLUMN,
   COMPLETION_STATUS_COLUMN,
   CLERK_OFFICE_PROVIDED_INFO_COLUMN,
   CONTACT_NAME_COLUMN,
@@ -77,7 +79,7 @@ const buildExportRow = async (town) => {
   if (!firstEmail) {
     return undefined; // Skip contacts without an email
   }
-  const ccEmails = contactsPriorityOrder.flatMap(contact => contact.email || contact.office_email).filter(email => !!email && email != firstEmail).join(", ");
+  const ccEmailsList = contactsPriorityOrder.flatMap(contact => contact.email || contact.office_email).filter(email => !!email && email != firstEmail);
 
   // Construct the office info blurb (office title - seat name - term date range)
   const officeInfoBlurb = town.offices.filter(office => !office.deleted).map(office => {
@@ -86,18 +88,19 @@ const buildExportRow = async (town) => {
       const term = seat.terms?.[0];
       // Construct the date range for the term in the form "start_year - end_year"
       const dateRange = [term?.start_year, term?.end_year].filter(Boolean).join("-");
-      return [office.title, term?.official?.name || "Vacant", dateRange].filter(Boolean).join(" - ");
+      return [office.title, term?.official?.name || "Unknown", dateRange].filter(Boolean).join(" - ");
     }).filter(Boolean).join("\n");
   }).filter(Boolean).join("\n");
 
   const row = {
     [MUNICIPALITY_ID_COLUMN]: town.id || "",
     [TOWN_COLUMN]: town.name || "",
+    [TOWN_LINK_COLUMN]: `https://mademocracy.com/${town.slug}`,
     [COMPLETION_STATUS_COLUMN]: town.completionStatus || "",
     [CLERK_OFFICE_PROVIDED_INFO_COLUMN]: town.clerk_office_provided_info || "",
     [CONTACT_NAME_COLUMN]: firstContact.name || "",
     [CONTACT_EMAIL_COLUMN]: firstEmail,
-    [CONTACT_CC_EMAILS_COLUMN]: ccEmails || "",
+    [CONTACT_CC_EMAILS_COLUMN]: [...ccEmailsList, "mademocracyhub@gmail.com"].join(","),
     [CONTACT_INFO_BLURB_COLUMN]: contactsBlurb + contactFormsBlurb,
     [OFFICE_INFO_BLURB_COLUMN]: officeInfoBlurb || "",
   };
@@ -106,7 +109,7 @@ const buildExportRow = async (town) => {
 };
 
 let bulkActionsController = {
-  // Download CSV with municipality ID, town name, town status, clerk office has provided info, contact name, contact email, cc’s emails, contact info blurb, office info blurb
+  // Download CSV with municipality ID, town name, town link, town status, clerk office has provided info, contact name, contact email, cc’s emails, contact info blurb, office info blurb
   // For mail merge to send out to municipalities
   downloadMailMerge: async (req, res, next) => {
     // Only allow superusers to download the CSV

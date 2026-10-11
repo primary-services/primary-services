@@ -9,8 +9,8 @@ function Terms({ terms, office }) {
           console.log(term);
           return (
             <p key={idx}>
-              <span className="bold">
-                {term.official?.name || "Name not found"}
+              <span className={term.official?.name ? "bold" : "italic"}>
+                {term.official?.name || "Unknown"}
               </span>
               , {term.start_year} -{" "}
               {term.start_year + (office.tenure || 0) || "Present"}
