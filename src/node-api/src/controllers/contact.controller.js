@@ -3,7 +3,7 @@ import { stringify } from "csv-stringify/sync";
 
 import Municipality from "../models/municipality.model.js";
 import User from "../models/user.model.js";
-import { createNewVersion } from "../models/version.model.js";
+import { createNewVersionWithDiff } from "../models/version.model.js";
 import { error_codes } from "../utils/error_codes.js";
 import { CONTACT_INFO_LAST_UPDATED_COLUMN, formatBoolean, formatDate } from "../utils/csv.js";
 import Contact from "../models/contact.model.js";
@@ -171,73 +171,44 @@ let contactController = {
           row[COMPLETION_STATUS_COLUMN],
         );
 
-        let changed = false;
+        const contacts = municipality.contacts.reduce((acc, curr) => {
+          acc[curr.title] = { id: curr.id };
+          return acc;
+        }, {});
 
-        await Municipality.sequelize.transaction(async (transaction) => {
-          for (const role of ROLES) {
-            const name = (row[role.nameCol] || "").trim() || null;
-            const email = (row[role.emailCol] || "").trim() || null;
-            const officeEmail = (row[role.officeEmailCol] || "").trim() || null;
-            const phone = (row[role.phoneCol] || "").trim() || null;
-            const isTownClerk = role.title === TOWN_CLERK_TITLE;
-            const contactForm = isTownClerk
-              ? (row[CONTACT_FORM] || "").trim() || null
-              : undefined;
-
-            const existing = municipality.contacts.find(
-              (c) => c.title === role.title,
-            );
-
-            const fieldsToUpsert = {};
-            if (existing?.name !== name) {
-              fieldsToUpsert.name = name;
-            }
-            if (existing?.email !== email) {
-              fieldsToUpsert.email = email;
-            }
-            if (existing?.office_email !== officeEmail) {
-              fieldsToUpsert.office_email = officeEmail;
-            }
-            if (existing?.phone !== phone) {
-              fieldsToUpsert.phone = phone;
-            }
-            if (isTownClerk && existing?.contact_form !== contactForm) {
-              fieldsToUpsert.contact_form = contactForm;
-            }
-
-            if (Object.keys(fieldsToUpsert).length === 0) {
-              continue;
-            }
-
-            if (!existing) {
-              fieldsToUpsert.municipality_id = municipality.id;
-              fieldsToUpsert.title = role.title;
-            } else {
-              fieldsToUpsert.id = existing.id;
-            }
-
-            await createNewVersion(Contact, user, fieldsToUpsert, transaction);
+        for (const role of ROLES) {
+          const contactData = {
+            name: (row[role.nameCol] || "").trim() || null,
+            email: (row[role.emailCol] || "").trim() || null,
+            office_email: (row[role.officeEmailCol] || "").trim() || null,
+            phone: (row[role.phoneCol] || "").trim() || null,
+          };
+          if (role.title === TOWN_CLERK_TITLE) {
+            contactData.contact_form = (row[CONTACT_FORM] || "").trim() || null;
           }
 
-          // Update municipality data if any changes occurred
-          const municipalityData = {}
-          if (municipality.clerk_office_provided_info !== providedInfo) {
-            municipalityData.clerk_office_provided_info = providedInfo;
-            changed = true;
+          const existing = contacts[role.title];
+          if (existing) {
+            contacts[role.title] = { id: existing.id, ...contactData };
+          } else if (Object.values(contactData).some((value) => value !== null)) {
+            // Only create a new contact if the row actually has info for this role
+            contacts[role.title] = {
+              municipality_id: municipality.id,
+              title: role.title,
+              ...contactData,
+            };
           }
+        }
 
-          if (municipality.completionStatus !== completionStatus) {
-            municipalityData.completionStatus = completionStatus;
-            changed = true;
-          }
-
-          if (changed) {
-            municipalityData.contact_info_last_updated = new Date();
-            await createNewVersion(Municipality, user, municipalityData, transaction);
-          }
+        const [, diff] = await createNewVersionWithDiff(Municipality, user, {
+          id: municipality.id,
+          clerk_office_provided_info: providedInfo,
+          completionStatus: completionStatus,
+          contacts: Object.values(contacts),
         });
 
-        if (changed) {
+        if (diff !== null) {
+          await municipality.update({ contact_info_last_updated: new Date() });
           results.updated++;
         } else {
           results.unchanged++;

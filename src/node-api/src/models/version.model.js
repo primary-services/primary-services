@@ -70,34 +70,27 @@ class Version extends Model {
 	}
 }
 
-export const createNewVersion = async (model, user, data, transaction = undefined) => {
-	const inner = async (model, user, data, transaction) => {
-		let [item, diff] = await model.prototype.upsertAllAndDiff(data, transaction);
+// Same as createNewVersion, but also returns the diff (null if nothing changed)
+export const createNewVersionWithDiff = async (model, user, data) => {
+	let [item, diff] = await model.prototype.upsertAllAndDiff(data);
 
-		if (diff !== null) {
-			let version = Version.build({
-				user_id: user.id,
-				item_id: item.id,
-				item_type: model.name,
-				fields: diff,
-			});
+	if (diff !== null) {
+		let version = Version.build({
+			user_id: user.id,
+			item_id: item.id,
+			item_type: model.name,
+			fields: diff,
+		});
 
-			await version.save({ transaction });
-		}
-
-		return item;
+		await version.save();
 	}
 
-	// If a transaction was passed in, use it for creating the version & committing changes instead of starting a new one.
-	if (transaction) {
-		return await inner(model, user, data, transaction);
-	}
+	return [item, diff];
+}
 
-	// If no transaction was passed in, start a new transaction for creating the version & committing changes
-	// since it makes sense to ensure that both the creation of the version and the changes to the item are committed together.
-	return model.sequelize.transaction(async (t) => {
-		return await inner(model, user, data, t);
-	});
-};
+export const createNewVersion = async (model, user, data) => {
+	let [item] = await createNewVersionWithDiff(model, user, data);
+	return item;
+}
 
 export default Version;
