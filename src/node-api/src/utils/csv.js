@@ -12,7 +12,7 @@ export const ADMIN_ASSISTANT_TITLE = "Admin Assistant";
 
 export const CONTACT_NAME_COLUMN = "Contact Name";
 export const CONTACT_EMAIL_COLUMN = "Contact Email";
-export const CONTACT_CC_EMAILS_COLUMN = "Contact CC Emails";
+export const CONTACT_CC_EMAILS_COLUMN = "cc";
 export const CONTACT_INFO_BLURB_COLUMN = "Contact Info Blurb";
 export const OFFICE_INFO_BLURB_COLUMN = "Office Info Blurb";
 
@@ -82,3 +82,5 @@ export const formatDate = (value) => {
   if (!value) return "";
   return new Date(value).toISOString();
 };
+
+export const properizeName = (str) => str ? str.toLowerCase().replace(/\b./g, s => s.toUpperCase()) : "";

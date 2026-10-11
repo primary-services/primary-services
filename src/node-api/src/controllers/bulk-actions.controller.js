@@ -24,8 +24,7 @@ import {
   TOWN_CLERK_TITLE,
   ASSISTANT_TOWN_CLERK_TITLE,
   ADMIN_ASSISTANT_TITLE,
-  parseBoolean,
-  parseCompletionStatus,
+  properizeName,
 } from "../utils/csv.js";
 import { error_codes } from "../utils/error_codes.js";
 
@@ -90,7 +89,7 @@ const buildExportRow = async (town) => {
       const dateRange = [term?.start_year, term?.end_year].filter(Boolean).join("-");
       return [office.title, term?.official?.name || "Unknown", dateRange].filter(Boolean).join(" - ");
     }).filter(Boolean).join("\n");
-  }).filter(Boolean).join("\n");
+  }).filter(Boolean).join("\n\n");
 
   const row = {
     [MUNICIPALITY_ID_COLUMN]: town.id || "",
@@ -98,7 +97,7 @@ const buildExportRow = async (town) => {
     [TOWN_LINK_COLUMN]: `https://mademocracy.com/${town.slug}`,
     [COMPLETION_STATUS_COLUMN]: town.completionStatus || "",
     [CLERK_OFFICE_PROVIDED_INFO_COLUMN]: town.clerk_office_provided_info || "",
-    [CONTACT_NAME_COLUMN]: firstContact.name || "",
+    [CONTACT_NAME_COLUMN]: properizeName(firstContact.name),
     [CONTACT_EMAIL_COLUMN]: firstEmail,
     [CONTACT_CC_EMAILS_COLUMN]: [...ccEmailsList, "mademocracyhub@gmail.com"].join(","),
     [CONTACT_INFO_BLURB_COLUMN]: contactsBlurb + contactFormsBlurb,
