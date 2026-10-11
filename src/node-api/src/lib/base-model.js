@@ -213,8 +213,12 @@ Sequelize.Model.prototype.upsertAllAndDiff = function async(data, transaction = 
 
     for (let x in attributes) {
       if (data.hasOwnProperty(x)) {
-        // For update, track all changes
-        if (diff.action === "update" && instance[x] !== data[x]) {
+        let previous = instance[x];
+        instance[x] = data[x];
+
+        // For update, track all changes. Uses sequelize's own change detection so
+        // that values are compared after type conversion (e.g. date strings vs Dates)
+        if (diff.action === "update" && instance.changed(x)) {
           diff.fields[x] = data[x];
         }
 
@@ -225,10 +229,8 @@ Sequelize.Model.prototype.upsertAllAndDiff = function async(data, transaction = 
 
         // Also store human readable identifier
         if (model.humanReadableIdentifier == x) {
-          diff.fields["humanReadableIdentifier"] = instance[x] || data[x];
+          diff.fields["humanReadableIdentifier"] = previous || data[x];
         }
-
-        instance[x] = data[x];
       }
     }
 
