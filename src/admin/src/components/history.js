@@ -70,7 +70,7 @@ const getHistoryChanges = (entry, item_type) => {
         <div className="history-changes-properties">
             {Object.entries(fields)
               .filter(([key, _]) => key !== "humanReadableIdentifier")
-              .sort(([_, val1], [__, val2]) => val1.toString().length - val2.toString().length)
+              .sort(([_, val1], [__, val2]) => (val1?.toString().length || 0) - (val2?.toString().length || 0))
               .map(([key, val], changeIdx) => (
                 getHistoryChangePropertyUpdate(key, val, changeIdx)
             ))}
