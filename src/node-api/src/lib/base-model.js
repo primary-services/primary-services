@@ -93,7 +93,7 @@ Sequelize.Model.prototype.upsertAll = function async(data) {
 
     console.log("Filters:", filters);
 
-    let instance = await model.findOne({ where: filters }, { transaction });
+    let instance = await model.findOne({ where: filters, transaction });
     return !!instance ? instance : new model();
   };
 
@@ -193,7 +193,7 @@ Sequelize.Model.prototype.upsertAll = function async(data) {
   });
 };
 
-Sequelize.Model.prototype.upsertAllAndDiff = function async(data, transaction = undefined) {
+Sequelize.Model.prototype.upsertAllAndDiff = async function (data, transaction = undefined) {
   const singleTypes = ["HasOne", "BelongsTo"];
   const multipleTypes = ["HasMany", "BelongsToMany"];
 
@@ -262,9 +262,13 @@ Sequelize.Model.prototype.upsertAllAndDiff = function async(data, transaction = 
         for (let i = 0; i < existing.length; i++) {
           let current = existing[i];
           if (isDeleted(associations[x].target, current, data[x])) {
+            // Store human readable identifier of the removed child
+            let identifier = associations[x].target.humanReadableIdentifier;
             tracking.push({
               action: "delete",
-              fields: { ...instance[x] },
+              fields: !!identifier
+                ? { humanReadableIdentifier: current[identifier] }
+                : {},
             });
 
             await removeItem(transaction, instance, current, associations[x]);
@@ -321,7 +325,7 @@ Sequelize.Model.prototype.upsertAllAndDiff = function async(data, transaction = 
       return a;
     }, {});
 
-    let instance = await model.findOne({ where: filters }, { transaction });
+    let instance = await model.findOne({ where: filters, transaction });
     return !!instance ? instance : new model();
   };
 

@@ -94,7 +94,7 @@ let contactController = {
   // },
   upload: async (req, res, next) => {
     // Only allow superusers to upload the CSV
-    const user = req.jwt.user;
+    const user = req.jwt?.user;
     if (!user) {
       return res.status(401).json({ success: false, error_msg: error_codes["UNAUTHORIZED"] });
     }
