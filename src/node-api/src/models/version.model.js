@@ -70,20 +70,28 @@ class Version extends Model {
 	}
 }
 
+// Same as createNewVersion, but also returns the diff (null if nothing changed)
+export const createNewVersionWithDiff = async (model, user, data) => {
+	return Version.sequelize.transaction(async (transaction) => {
+		let [item, diff] = await model.prototype.upsertAllAndDiff(data, transaction);
+
+		if (diff !== null) {
+			let version = Version.build({
+				user_id: user.id,
+				item_id: item.id,
+				item_type: model.name,
+				fields: diff,
+			});
+
+			await version.save({ transaction });
+		}
+
+		return [item, diff];
+	});
+}
+
 export const createNewVersion = async (model, user, data) => {
-	let [item, diff] = await model.prototype.upsertAllAndDiff(data);
-
-	if (diff !== null) {
-		let version = Version.build({
-			user_id: user.id,
-			item_id: item.id,
-			item_type: model.name,
-			fields: diff,
-		});
-
-		await version.save();
-	}
-
+	let [item] = await createNewVersionWithDiff(model, user, data);
 	return item;
 }
 

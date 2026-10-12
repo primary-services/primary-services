@@ -93,7 +93,7 @@ Sequelize.Model.prototype.upsertAll = function async(data) {
 
     console.log("Filters:", filters);
 
-    let instance = await model.findOne({ where: filters }, { transaction });
+    let instance = await model.findOne({ where: filters, transaction });
     return !!instance ? instance : new model();
   };
 
@@ -193,7 +193,7 @@ Sequelize.Model.prototype.upsertAll = function async(data) {
   });
 };
 
-Sequelize.Model.prototype.upsertAllAndDiff = function async(data) {
+Sequelize.Model.prototype.upsertAllAndDiff = async function (data, transaction = undefined) {
   const singleTypes = ["HasOne", "BelongsTo"];
   const multipleTypes = ["HasMany", "BelongsToMany"];
 
@@ -213,8 +213,12 @@ Sequelize.Model.prototype.upsertAllAndDiff = function async(data) {
 
     for (let x in attributes) {
       if (data.hasOwnProperty(x)) {
-        // For update, track all changes
-        if (diff.action === "update" && instance[x] !== data[x]) {
+        let previous = instance[x];
+        instance[x] = data[x];
+
+        // For update, track all changes. Uses sequelize's own change detection so
+        // that values are compared after type conversion (e.g. date strings vs Dates)
+        if (diff.action === "update" && instance.changed(x)) {
           diff.fields[x] = data[x];
         }
 
@@ -225,10 +229,8 @@ Sequelize.Model.prototype.upsertAllAndDiff = function async(data) {
 
         // Also store human readable identifier
         if (model.humanReadableIdentifier == x) {
-          diff.fields["humanReadableIdentifier"] = instance[x] || data[x];
+          diff.fields["humanReadableIdentifier"] = previous || data[x];
         }
-
-        instance[x] = data[x];
       }
     }
 
@@ -260,9 +262,13 @@ Sequelize.Model.prototype.upsertAllAndDiff = function async(data) {
         for (let i = 0; i < existing.length; i++) {
           let current = existing[i];
           if (isDeleted(associations[x].target, current, data[x])) {
+            // Store human readable identifier of the removed child
+            let identifier = associations[x].target.humanReadableIdentifier;
             tracking.push({
               action: "delete",
-              fields: { ...instance[x] },
+              fields: !!identifier
+                ? { humanReadableIdentifier: current[identifier] }
+                : {},
             });
 
             await removeItem(transaction, instance, current, associations[x]);
@@ -278,7 +284,7 @@ Sequelize.Model.prototype.upsertAllAndDiff = function async(data) {
             {},
           );
 
-          if (Object.keys(updates.fields).length !== 0) {
+          if (!isNoOp(updates)) {
             tracking.push(updates);
           }
         }
@@ -296,7 +302,7 @@ Sequelize.Model.prototype.upsertAllAndDiff = function async(data) {
             {},
           );
 
-          if (Object.keys(updates.fields).length !== 0) {
+          if (!isNoOp(updates)) {
             diff.fields[x] = updates;
           }
         }
@@ -319,7 +325,7 @@ Sequelize.Model.prototype.upsertAllAndDiff = function async(data) {
       return a;
     }, {});
 
-    let instance = await model.findOne({ where: filters }, { transaction });
+    let instance = await model.findOne({ where: filters, transaction });
     return !!instance ? instance : new model();
   };
 
@@ -414,8 +420,31 @@ Sequelize.Model.prototype.upsertAllAndDiff = function async(data) {
     return createItem(transaction, parent, child, association);
   };
 
+  // An update that only carries the humanReadableIdentifier (which is always
+  // stored for display purposes) didn't actually change anything
+  const isNoOp = (diff) => {
+    return diff.action === "update" && Object.keys(diff.fields).every((key) => {
+      return key === "humanReadableIdentifier";
+    });
+  };
+
+  // Returns a null diff if an update didn't actually change anything
+  const parseRoot = async (transaction) => {
+    let [instance, diff] = await parse(transaction, this.constructor, data, null, {});
+    if (isNoOp(diff)) {
+      return [instance, null];
+    }
+
+    return [instance, diff];
+  };
+
+  // If a transaction was passed in, use it for parsing instead of creating a new one.
+  if (transaction) {
+    return parseRoot(transaction);
+  }
+
   return this.constructor.sequelize.transaction(async (t) => {
-    return parse(t, this.constructor, data, null, {});
+    return parseRoot(t);
   });
 };
 

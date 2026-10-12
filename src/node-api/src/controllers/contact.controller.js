@@ -3,6 +3,7 @@ import { stringify } from "csv-stringify/sync";
 
 import Municipality from "../models/municipality.model.js";
 import User from "../models/user.model.js";
+import { createNewVersionWithDiff } from "../models/version.model.js";
 import { error_codes } from "../utils/error_codes.js";
 import { CONTACT_INFO_LAST_UPDATED_COLUMN, formatBoolean, formatDate } from "../utils/csv.js";
 import Contact from "../models/contact.model.js";
@@ -93,7 +94,11 @@ let contactController = {
   // },
   upload: async (req, res, next) => {
     // Only allow superusers to upload the CSV
-    const userRecord = await User.findByPk(req.jwt.user.id);
+    const user = req.jwt?.user;
+    if (!user) {
+      return res.status(401).json({ success: false, error_msg: error_codes["UNAUTHORIZED"] });
+    }
+    const userRecord = await User.findByPk(user.id);
     if (!userRecord) {
       return res.status(401).json({ success: false, error_msg: error_codes["USER_DOES_NOT_EXIST"] });
     }
@@ -166,83 +171,44 @@ let contactController = {
           row[COMPLETION_STATUS_COLUMN],
         );
 
-        let changed = false;
+        const contacts = municipality.contacts.reduce((acc, curr) => {
+          acc[curr.title] = { id: curr.id, title: curr.title };
+          return acc;
+        }, {});
 
-        await Municipality.sequelize.transaction(async (transaction) => {
-          for (const role of ROLES) {
-            const name = (row[role.nameCol] || "").trim() || null;
-            const email = (row[role.emailCol] || "").trim() || null;
-            const officeEmail = (row[role.officeEmailCol] || "").trim() || null;
-            const phone = (row[role.phoneCol] || "").trim() || null;
-            const isTownClerk = role.title === TOWN_CLERK_TITLE;
-            const contactForm = isTownClerk
-              ? (row[CONTACT_FORM] || "").trim() || null
-              : undefined;
-
-            const existing = municipality.contacts.find(
-              (c) => c.title === role.title,
-            );
-
-            if (!existing) {
-              if (!name && !email && !officeEmail && !phone && !contactForm) {
-                continue;
-              }
-
-              await Contact.create(
-                {
-                  municipality_id: municipality.id,
-                  title: role.title,
-                  name,
-                  email,
-                  office_email: officeEmail,
-                  phone,
-                  ...(isTownClerk ? { contact_form: contactForm } : {}),
-                },
-                { transaction },
-              );
-              changed = true;
-              continue;
-            }
-
-            const fieldsChanged =
-              existing.name !== name ||
-              existing.email !== email ||
-              existing.office_email !== officeEmail ||
-              existing.phone !== phone ||
-              (isTownClerk && existing.contact_form !== contactForm);
-
-            if (fieldsChanged) {
-              await existing.update(
-                {
-                  name,
-                  email,
-                  office_email: officeEmail,
-                  phone,
-                  ...(isTownClerk ? { contact_form: contactForm } : {}),
-                },
-                { transaction },
-              );
-              changed = true;
-            }
+        for (const role of ROLES) {
+          const contactData = {
+            name: (row[role.nameCol] || "").trim() || null,
+            email: (row[role.emailCol] || "").trim() || null,
+            office_email: (row[role.officeEmailCol] || "").trim() || null,
+            phone: (row[role.phoneCol] || "").trim() || null,
+          };
+          if (role.title === TOWN_CLERK_TITLE) {
+            contactData.contact_form = (row[CONTACT_FORM] || "").trim() || null;
           }
 
-          if (municipality.clerk_office_provided_info !== providedInfo) {
-            municipality.clerk_office_provided_info = providedInfo;
-            changed = true;
+          const existing = contacts[role.title];
+          if (existing) {
+            contacts[existing.title] = { ...existing, ...contactData };
+          } else if (Object.values(contactData).some((value) => value !== null)) {
+            // Only create a new contact if the row actually has info for this role
+            contacts[role.title] = {
+              municipality_id: municipality.id,
+              title: role.title,
+              ...contactData,
+            };
           }
+        }
 
-          if (municipality.completionStatus !== completionStatus) {
-            municipality.completionStatus = completionStatus;
-            changed = true;
-          }
-
-          if (changed) {
-            municipality.contact_info_last_updated = new Date();
-            await municipality.save({ transaction });
-          }
+        const [, diff] = await createNewVersionWithDiff(Municipality, user, {
+          id: municipality.id,
+          clerk_office_provided_info: providedInfo,
+          completionStatus: completionStatus,
+          contacts: Object.values(contacts),
         });
 
-        if (changed) {
+        if (diff !== null) {
+          await municipality.update({ contact_info_last_updated: new Date() });
           results.updated++;
         } else {
           results.unchanged++;
