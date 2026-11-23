@@ -54,6 +54,7 @@ class Contact extends Model {
         ],
       },
     );
+    this.humanReadableIdentifier = "title";
   }
 
   static associate(models) {
